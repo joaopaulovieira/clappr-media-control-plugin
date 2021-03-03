@@ -1,0 +1,70 @@
+{
+  "name": "@joaopaulo.vieira/clappr-media-control-plugin",
+  "version": "0.0.1",
+  "description": "A media control plugin for Clappr.",
+  "keywords": [
+    "clappr",
+    "controls",
+    "media",
+    "media-control",
+    "video UI"
+  ],
+  "homepage": "https://github.com/joaopaulovieira/clappr-media-control-plugin",
+  "bugs": {
+    "url": "https://github.com/joaopaulovieira/clappr-media-control-plugin/issues",
+    "email": "vieira.joaopaulo.91@gmail.com"
+  },
+  "license": "BSD-3-Clause",
+  "author": "Joao Paulo Vieira <vieira.joaopaulo.91@gmail.com>",
+  "files": [
+    "/dist",
+    "/src"
+  ],
+  "main": "dist/clappr-media-control-plugin.js",
+  "module": "dist/clappr-media-control-plugin.esm.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:joaopaulovieira/clappr-media-control-plugin.git"
+  },
+  "scripts": {
+    "bundle-check": "ANALYZE_BUNDLE=true rollup --config",
+    "build": "rollup --config",
+    "release": "MINIMIZE=true rollup --config",
+    "start": "DEV=true rollup --config --watch",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "test": "jest --coverage",
+    "test:debug": "node --inspect node_modules/.bin/jest --runInBand",
+    "test:coverage": "open coverage/lcov-report/index.html"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.13.8",
+    "@babel/plugin-transform-runtime": "^7.13.8",
+    "@babel/preset-env": "^7.13.8",
+    "@clappr/core": "^0.4.17",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-node-resolve": "^11.2.0",
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.21.0",
+    "html-loader": "0.5.5",
+    "jest": "^26.6.3",
+    "node-sass": "^5.0.0",
+    "postcss": "8",
+    "rollup": "^2.40.0",
+    "rollup-plugin-filesize": "^9.1.1",
+    "rollup-plugin-html": "^0.2.1",
+    "rollup-plugin-livereload": "^2.0.0",
+    "rollup-plugin-postcss": "^4.0.0",
+    "rollup-plugin-serve": "^1.1.0",
+    "rollup-plugin-sizes": "^1.0.4",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-visualizer": "^4.2.0"
+  },
+  "peerDependencies": {
+    "@clappr/core": "^0.4.17"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

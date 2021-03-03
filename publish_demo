@@ -1,0 +1,30 @@
+#!/bin/sh
+
+if [[ $(git status -s) ]]
+then
+    echo "The working directory is dirty. Please commit any pending changes."
+    exit 1;
+fi
+
+echo "Checkout to demo page branch"
+git co gh-pages
+
+echo "Updating files"
+git show master:public/index.html > index.html
+git show master:public/images/favico.png > ./images/favico.png
+git show master:public/javascript/main.js > ./javascript/main.js
+git show master:public/javascript/clappr-config.js > ./javascript/clappr-config.js
+git show master:public/javascript/editor/ace.js > ./javascript/editor/ace.js
+git show master:public/javascript/editor/mode-javascript.js > ./javascript/editor/mode-javascript.js
+git show master:public/javascript/editor/theme-katzenmilch.js > ./javascript/editor/theme-katzenmilch.js
+git show master:public/javascript/editor/worker-javascript.js > ./javascript/editor/worker-javascript.js
+git show master:public/stylesheets/bootstrap-theme.min.css > ./stylesheets/bootstrap-theme.min.css
+git show master:public/stylesheets/bootstrap.min.css > ./stylesheets/bootstrap.min.css
+git show master:public/stylesheets/bootstrap.min.css > ./stylesheets/bootstrap.min.css
+git show master:public/stylesheets/style.css > ./stylesheets/style.css
+rm -rf node_modules
+
+echo "Publishing"
+git add . && git commit -m "Update demo page" && git push origin gh-pages && git co master
+
+echo "Done!"
