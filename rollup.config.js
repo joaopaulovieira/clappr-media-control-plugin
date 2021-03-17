@@ -31,17 +31,17 @@ const plugins = [
 ]
 
 const mainBundle = {
-  input: 'src/media_control.js',
+  input: 'src/main.js',
   external: ['@clappr/core'],
   output: [
     {
-      name: 'MediaControlPlugin',
+      name: 'MediaControl',
       file: pkg.main,
       format: 'umd',
       globals: { '@clappr/core': 'Clappr' },
     },
     minimize && {
-      name: 'MediaControlPlugin',
+      name: 'MediaControl',
       file: 'dist/clappr-media-control-plugin.min.js',
       format: 'umd',
       globals: { '@clappr/core': 'Clappr' },
@@ -52,10 +52,10 @@ const mainBundle = {
 }
 
 const esmBundle = {
-  input: 'src/media_control.js',
+  input: 'src/main.js',
   external: ['@clappr/core', /@babel\/runtime/],
   output: {
-    name: 'MediaControlPlugin',
+    name: 'MediaControl',
     file: pkg.module,
     format: 'esm',
     globals: { '@clappr/core': 'Clappr' },
