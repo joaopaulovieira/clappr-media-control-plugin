@@ -8,6 +8,11 @@
   will-change: opacity;
   transition: visibility .3s ease, opacity .3s ease;
 
+  &--hide {
+    opacity: 0;
+    visibility: hidden;
+  }
+
   &__layers {
     position: inherit;
     height: inherit;
