@@ -115,6 +115,17 @@ describe('MediaControl Plugin', () => {
   })
 
   describe('hide method', () => {
+    test('adds \'.media-control--hide\' css class from plugin DOM element', () => {
+      const { plugin } = setupTest()
+
+      expect(plugin.$el[0].classList.contains('media-control--hide')).toBeFalsy()
+
+      plugin.isVideoStarted = true
+      plugin.hide()
+
+      expect(plugin.$el[0].classList.contains('media-control--hide')).toBeTruthy()
+    })
+
     test('triggers MEDIACONTROL_HIDE event at core scope', () => {
       const { plugin } = setupTest()
       const cb = jest.fn()

@@ -34,6 +34,7 @@ export default class MediaControlPlugin extends UICorePlugin {
   }
 
   hide() {
+    this.$el[0].classList.add('media-control--hide')
     this.core.trigger(Events.MEDIACONTROL_HIDE)
   }
 
