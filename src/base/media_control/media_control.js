@@ -103,7 +103,10 @@ export default class MediaControlPlugin extends UICorePlugin {
   buildLayers() {
     for (let index = 1; index <= this.layersQuantity; index++) {
       const layerElement = document.createElement('div')
+      const config = this.layersSettings && this.layersSettings.find(config => config.id === index)
+      const sectionsDirection = !config || typeof config.flexDirection === 'undefined' ? 'column' : config.flexDirection
 
+      layerElement.style.flexDirection = sectionsDirection
       layerElement.classList.add('media-control__layers', `media-control__layer-${index}`)
 
       this.$el[0].appendChild(layerElement)

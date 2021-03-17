@@ -488,6 +488,15 @@ describe('MediaControl Plugin', () => {
 
       expect(plugin.el.innerHTML).toEqual(expectedTemplate)
     })
+
+    test('uses options.mediaControl.layersConfig[n].flexDirection to define sections direction if this config exists', () => {
+      const { plugin } = setupTest({ mediaControl: { layersQuantity: 1, layersConfig: [{ id: 1, flexDirection: 'row' }] } })
+      const expectedTemplate = '<div style="flex-direction: row;" class="media-control__layers media-control__layer-1"></div>'
+      plugin.el.innerHTML = ''
+      plugin.buildLayers()
+
+      expect(plugin.el.innerHTML).toEqual(expectedTemplate)
+    })
   })
 
   test('cacheElements method saves all layers DOM element locally', () => {
