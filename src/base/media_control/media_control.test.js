@@ -48,6 +48,16 @@ describe('MediaControl Plugin', () => {
     expect(plugin.defaultTemplate()).toEqual(defaultTemplate)
   })
 
+  test('have a getter called config', () => {
+    const { plugin } = setupTest()
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(plugin), 'config').get).toBeTruthy()
+  })
+
+  test('config getter returns the options.mediaControl', () => {
+    const { plugin } = setupTest({ mediaControl: { disableBeforeVideoStarts: true } })
+    expect(plugin.config).toEqual(plugin.options.mediaControl)
+  })
+
   describe('bindEvents method', () => {
     test('stops the current listeners before add new ones', () => {
       const { plugin } = setupTest()

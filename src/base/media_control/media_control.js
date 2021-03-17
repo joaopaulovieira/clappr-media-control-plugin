@@ -12,6 +12,8 @@ export default class MediaControlPlugin extends UICorePlugin {
 
   get defaultTemplate() { return template(defaultTemplateHtml) }
 
+  get config() { return this.options.mediaControl }
+
   bindEvents() {
     const coreEventListenerData = [
       { object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged },
