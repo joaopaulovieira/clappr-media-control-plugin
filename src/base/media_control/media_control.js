@@ -16,6 +16,11 @@ export default class MediaControlPlugin extends UICorePlugin {
 
   get disableBeforeVideoStarts() { return this.config && this.config.disableBeforeVideoStarts }
 
+  constructor(core) {
+    super(core)
+    this.disableBeforeVideoStarts && this.$el[0].classList.add('media-control--hide')
+  }
+
   bindEvents() {
     const coreEventListenerData = [
       { object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged },

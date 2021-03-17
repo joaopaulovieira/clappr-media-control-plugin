@@ -68,6 +68,11 @@ describe('MediaControl Plugin', () => {
     expect(plugin.disableBeforeVideoStarts).toEqual(plugin.options.mediaControl.disableBeforeVideoStarts)
   })
 
+  test('constructor hides plugin adding CSS class if options.mediaControl.disableBeforeVideoStarts config is true', () => {
+    const { plugin } = setupTest({ mediaControl: { disableBeforeVideoStarts: true } })
+    expect(plugin.$el[0].className).toEqual('media-control media-control--hide')
+  })
+
   describe('bindEvents method', () => {
     test('stops the current listeners before add new ones', () => {
       const { plugin } = setupTest()
