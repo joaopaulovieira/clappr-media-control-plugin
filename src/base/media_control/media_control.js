@@ -30,6 +30,8 @@ export default class MediaControlPlugin extends UICorePlugin {
   }
 
   show() {
+    clearTimeout(this._hideId)
+    this._hideId = setTimeout(() => this.hide(), 2000)
     this.$el[0].classList.remove('media-control--hide')
     this.core.trigger(Events.MEDIACONTROL_SHOW)
   }

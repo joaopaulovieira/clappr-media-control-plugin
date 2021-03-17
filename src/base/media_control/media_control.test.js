@@ -103,6 +103,39 @@ describe('MediaControl Plugin', () => {
   })
 
   describe('show method', () => {
+    test('calls hide method after 2 seconds', () => {
+      jest.useFakeTimers()
+
+      const { plugin } = setupTest()
+      jest.spyOn(plugin, 'hide')
+      plugin.isVideoStarted = true
+      plugin.show()
+
+      expect(plugin.hide).not.toHaveBeenCalled()
+
+      jest.advanceTimersByTime(2000)
+
+      expect(plugin.hide).toHaveBeenCalledTimes(1)
+    })
+
+    test('resets hide timer if new call occurs', () => {
+      jest.useFakeTimers()
+
+      const { plugin } = setupTest()
+      jest.spyOn(plugin, 'hide')
+      plugin.isVideoStarted = true
+      plugin.show()
+      jest.advanceTimersByTime(1000)
+      plugin.show()
+      jest.advanceTimersByTime(1000)
+
+      expect(plugin.hide).not.toHaveBeenCalled()
+
+      jest.advanceTimersByTime(1000)
+
+      expect(plugin.hide).toHaveBeenCalledTimes(1)
+    })
+
     test('removes \'.media-control--hide\' css class from plugin DOM element', () => {
       const { plugin } = setupTest({ mediaControl: { disableBeforeVideoStarts: true } })
 
