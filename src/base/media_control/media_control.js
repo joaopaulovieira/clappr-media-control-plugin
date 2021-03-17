@@ -14,6 +14,8 @@ export default class MediaControlPlugin extends UICorePlugin {
 
   get config() { return this.options.mediaControl }
 
+  get layersQuantity() { return this.config && this.config.layersQuantity }
+
   get disableBeforeVideoStarts() { return this.config && this.config.disableBeforeVideoStarts }
 
   constructor(core) {
