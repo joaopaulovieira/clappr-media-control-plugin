@@ -109,8 +109,13 @@ export default class MediaControlPlugin extends UICorePlugin {
       layerElement.style.flexDirection = sectionsDirection
       layerElement.classList.add('media-control__layers', `media-control__layer-${index}`)
 
+      config && config.sectionsQuantity && config.sectionsQuantity > 0 && this.buildSections(layerElement, config, sectionsDirection)
+
       this.$el[0].appendChild(layerElement)
     }
+  }
+
+  buildSections(layerElement, layerConfig, sectionsDirection) {
   }
 
   cacheElements() {

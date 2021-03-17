@@ -497,6 +497,37 @@ describe('MediaControl Plugin', () => {
 
       expect(plugin.el.innerHTML).toEqual(expectedTemplate)
     })
+
+    test('calls buildSections method for each custom layer element with options.mediaControl.layersConfig[n].sectionsQuantity defined', () => {
+      const options = {
+        mediaControl: {
+          layersQuantity: 5,
+          layersConfig: [
+            { id: 1, sectionsQuantity: 2, flexDirection: 'row' },
+            { id: 4, sectionsQuantity: 1 },
+            { id: 3 },
+            { id: 5, flexDirection: 'row' },
+          ],
+        },
+      }
+      const { plugin } = setupTest({ ...options })
+      plugin.el.innerHTML = ''
+      jest.spyOn(plugin, 'buildSections')
+      plugin.buildLayers()
+
+      expect(plugin.buildSections).toHaveBeenNthCalledWith(
+        1,
+        plugin.el.querySelector('.media-control__layer-1'),
+        options.mediaControl.layersConfig.find(config => config.id === 1),
+        'row',
+      )
+      expect(plugin.buildSections).toHaveBeenNthCalledWith(
+        2,
+        plugin.el.querySelector('.media-control__layer-4'),
+        options.mediaControl.layersConfig.find(config => config.id === 4),
+        'column',
+      )
+    })
   })
 
   test('cacheElements method saves all layers DOM element locally', () => {
