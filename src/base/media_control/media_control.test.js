@@ -1,5 +1,6 @@
 import { Events, Core, Container, Playback, version } from '@clappr/core'
 import MediaControlPlugin from './media_control'
+import defaultTemplate from './public/default_template.html'
 
 const setupTest = (options = {}, fullSetup = false) => {
   const core = new Core(options)

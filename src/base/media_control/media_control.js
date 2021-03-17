@@ -15,6 +15,7 @@ export default class MediaControlPlugin extends UICorePlugin {
   bindEvents() {
     const coreEventListenerData = [
       { object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged },
+      { object: this.core, event: Events.CORE_MOUSE_MOVE, callback: this.show },
     ]
     coreEventListenerData.forEach(item => this.stopListening(item.object, item.event, item.callback))
     coreEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
