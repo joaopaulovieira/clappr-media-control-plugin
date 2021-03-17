@@ -103,6 +103,9 @@ export default class MediaControlPlugin extends UICorePlugin {
   buildLayers() {
     for (let index = 1; index <= this.layersQuantity; index++) {
       const layerElement = document.createElement('div')
+
+      layerElement.classList.add('media-control__layers', `media-control__layer-${index}`)
+
       this.$el[0].appendChild(layerElement)
     }
   }
