@@ -33,12 +33,30 @@ export default class MediaControlPlugin extends UICorePlugin {
 
   onContainerChanged() {
     this.container && this.stopListening(this.container)
+    this.playback && this.stopListening(this.playback)
 
     this.container = this.core.activeContainer
+    this.playback = this.core.activePlayback
 
+    this.bindContainerEvents()
+    this.bindPlaybackEvents()
+  }
+
+  bindContainerEvents() {
+    const containerEventListenerData = [
+      { object: this.container, event: Events.CONTAINER_STOP, callback: this.resetVideoStartedStatus },
+      { object: this.container, event: Events.CONTAINER_ENDED, callback: this.resetVideoStartedStatus },
+    ]
+    this.container && containerEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
+  }
+
+  bindPlaybackEvents() {
+    const playbackEventListenerData = [{ object: this.playback, event: Events.PLAYBACK_PLAY_INTENT, callback: this.setVideoStartedStatus }]
+    this.playback && playbackEventListenerData.forEach(item => this.listenToOnce(item.object, item.event, item.callback))
   }
 
   show() {
+    if (!this.isVideoStarted) return
     clearTimeout(this._hideId)
     this._hideId = setTimeout(() => this.hide(), 2000)
     this.$el[0].classList.remove('media-control--hide')
@@ -46,8 +64,20 @@ export default class MediaControlPlugin extends UICorePlugin {
   }
 
   hide() {
+    if (!this.isVideoStarted) return
     this.$el[0].classList.add('media-control--hide')
     this.core.trigger(Events.MEDIACONTROL_HIDE)
+  }
+
+  setVideoStartedStatus() {
+    this.isVideoStarted = true
+    !this.disableBeforeVideoStarts && this.hide()
+  }
+
+  resetVideoStartedStatus() {
+    this.disableBeforeVideoStarts ? this.hide() : this.show()
+    this.isVideoStarted = false
+    this.bindPlaybackEvents()
   }
 
   render() {

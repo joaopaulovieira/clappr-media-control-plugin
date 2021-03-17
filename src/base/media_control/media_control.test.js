@@ -118,6 +118,16 @@ describe('MediaControl Plugin', () => {
       expect(plugin.stopListening).toHaveBeenCalledWith(oldContainer)
     })
 
+    test('removes all listeners from old playback reference', () => {
+      const { core, container, plugin } = setupTest({}, true)
+      jest.spyOn(plugin, 'stopListening')
+      core.activeContainer = container
+      const oldPlayback = plugin.playback
+      plugin.onContainerChanged()
+
+      expect(plugin.stopListening).toHaveBeenCalledWith(oldPlayback)
+    })
+
     test('saves core.activeContainer reference locally', () => {
       const { core, container, plugin } = setupTest({}, true)
       core.activeContainer = container
@@ -125,9 +135,115 @@ describe('MediaControl Plugin', () => {
 
       expect(plugin.container).toEqual(core.activeContainer)
     })
+
+    test('saves core.activePlayback reference locally', () => {
+      const { core, container, plugin } = setupTest({}, true)
+      core.activeContainer = container
+      plugin.onContainerChanged()
+
+      expect(plugin.playback).toEqual(core.activePlayback)
+    })
+
+    test('calls bindContainerEvents method', () => {
+      const { plugin } = setupTest()
+      jest.spyOn(plugin, 'bindContainerEvents')
+      plugin.onContainerChanged()
+
+      expect(plugin.bindContainerEvents).toHaveBeenCalledTimes(1)
+    })
+
+    test('calls bindPlaybackEvents method', () => {
+      const { plugin } = setupTest()
+      jest.spyOn(plugin, 'bindPlaybackEvents')
+      plugin.onContainerChanged()
+
+      expect(plugin.bindPlaybackEvents).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('bindContainerEvents method', () => {
+    test('only unbind events when is necessary', () => {
+      const { core, container, plugin } = setupTest({}, true)
+      jest.spyOn(plugin, 'stopListening')
+
+      core.activeContainer = container
+      const oldContainer = { ...container }
+
+      expect(plugin.stopListening).not.toHaveBeenCalledWith(container)
+
+      core.activeContainer = container
+
+      expect(plugin.stopListening).toHaveBeenCalledWith(oldContainer)
+    })
+
+    test('avoid register callback for events on container scope without a valid reference', () => {
+      const { container, plugin } = setupTest({}, true)
+      jest.spyOn(plugin, 'resetVideoStartedStatus')
+      container.trigger(Events.CONTAINER_STOP)
+
+      expect(plugin.resetVideoStartedStatus).not.toHaveBeenCalled()
+    })
+
+    test('register resetVideoStartedStatus method as callback for CONTAINER_STOP event', () => {
+      const { core, container, plugin } = setupTest({}, true)
+      jest.spyOn(plugin, 'resetVideoStartedStatus')
+      core.activeContainer = container
+      container.trigger(Events.CONTAINER_STOP)
+
+      expect(plugin.resetVideoStartedStatus).toHaveBeenCalledTimes(1)
+    })
+
+    test('register resetVideoStartedStatus method as callback for CONTAINER_ENDED event', () => {
+      const { core, container, plugin } = setupTest({}, true)
+      jest.spyOn(plugin, 'resetVideoStartedStatus')
+      core.activeContainer = container
+      container.trigger(Events.CONTAINER_ENDED)
+
+      expect(plugin.resetVideoStartedStatus).toHaveBeenCalledTimes(1)
+    })
+  })
+  describe('bindPlaybackEvents callback', () => {
+    test('only unbind events when is necessary', () => {
+      const { core, container, plugin } = setupTest({}, true)
+      jest.spyOn(plugin, 'stopListening')
+
+      core.activeContainer = container
+
+      expect(plugin.stopListening).not.toHaveBeenCalledWith(plugin.playback)
+
+      core.activeContainer = container
+
+      expect(plugin.stopListening).toHaveBeenCalledWith(plugin.playback)
+    })
+
+    test('avoid register callback for events on container scope without a valid reference', () => {
+      const { container, plugin } = setupTest({}, true)
+      jest.spyOn(plugin, 'setVideoStartedStatus')
+      container.playback.trigger(Events.PLAYBACK_PLAY_INTENT)
+
+      expect(plugin.setVideoStartedStatus).not.toHaveBeenCalled()
+    })
+
+    test('register setVideoStartedStatus method as callback for PLAYBACK_PLAY_INTENT event', () => {
+      const { core, container, plugin } = setupTest({}, true)
+      jest.spyOn(plugin, 'setVideoStartedStatus')
+      core.activeContainer = container
+      plugin.playback.trigger(Events.PLAYBACK_PLAY_INTENT)
+
+      expect(plugin.setVideoStartedStatus).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('show method', () => {
+    test('ignores the invocation if isVideoStarted flag is false', () => {
+      const { plugin } = setupTest()
+      const cb = jest.fn()
+      plugin.listenToOnce(plugin.core, Events.MEDIACONTROL_SHOW, cb)
+      plugin.show()
+
+      expect(cb).not.toHaveBeenCalledTimes(1)
+    })
+
     test('calls hide method after 2 seconds', () => {
       jest.useFakeTimers()
 
@@ -184,6 +300,15 @@ describe('MediaControl Plugin', () => {
   })
 
   describe('hide method', () => {
+    test('ignores the invocation if isVideoStarted flag is false', () => {
+      const { plugin } = setupTest()
+      const cb = jest.fn()
+      plugin.listenToOnce(plugin.core, Events.MEDIACONTROL_HIDE, cb)
+      plugin.hide()
+
+      expect(cb).not.toHaveBeenCalledTimes(1)
+    })
+
     test('adds \'.media-control--hide\' css class from plugin DOM element', () => {
       const { plugin } = setupTest()
 
@@ -203,6 +328,62 @@ describe('MediaControl Plugin', () => {
       plugin.hide()
 
       expect(cb).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('setVideoStartedStatus method', () => {
+    test('sets isVideoStarted flag to true', () => {
+      const { plugin } = setupTest()
+
+      expect(plugin.isVideoStarted).toBeUndefined()
+
+      plugin.setVideoStartedStatus()
+
+      expect(plugin.isVideoStarted).toBeTruthy()
+    })
+
+    test('calls hide method if options.mediaControl.disableBeforeVideoStarts is falsy', () => {
+      const { plugin } = setupTest()
+      jest.spyOn(plugin, 'hide')
+      plugin.setVideoStartedStatus()
+
+      expect(plugin.hide).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('resetVideoStartedStatus method', () => {
+    test('calls show method if options.mediaControl.disableBeforeVideoStarts is falsy', () => {
+      const { plugin } = setupTest()
+      jest.spyOn(plugin, 'show')
+      plugin.resetVideoStartedStatus()
+
+      expect(plugin.show).toHaveBeenCalledTimes(1)
+    })
+
+    test('calls hide method if options.mediaControl.disableBeforeVideoStarts is truthy', () => {
+      const { plugin } = setupTest({ mediaControl: { disableBeforeVideoStarts: true } })
+      jest.spyOn(plugin, 'hide')
+      plugin.resetVideoStartedStatus()
+
+      expect(plugin.hide).toHaveBeenCalledTimes(1)
+    })
+
+    test('sets isVideoStarted flag to false', () => {
+      const { plugin } = setupTest()
+
+      expect(plugin.isVideoStarted).toBeUndefined()
+
+      plugin.resetVideoStartedStatus()
+
+      expect(plugin.isVideoStarted).toBeFalsy()
+    })
+
+    test('calls bindPlaybackEvents method', () => {
+      const { plugin } = setupTest()
+      jest.spyOn(plugin, 'bindPlaybackEvents')
+      plugin.resetVideoStartedStatus()
+
+      expect(plugin.bindPlaybackEvents).toHaveBeenCalledTimes(1)
     })
   })
 
