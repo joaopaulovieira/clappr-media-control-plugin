@@ -68,6 +68,16 @@ describe('MediaControl Plugin', () => {
     expect(plugin.layersQuantity).toEqual(plugin.options.mediaControl.layersQuantity)
   })
 
+  test('have a getter called layersSettings', () => {
+    const { plugin } = setupTest()
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(plugin), 'layersSettings').get).toBeTruthy()
+  })
+
+  test('layerSettings getter returns the options.mediaControl.layersConfig config', () => {
+    const { plugin } = setupTest({ mediaControl: { layersConfig: [{ sections: [] }, { sections: [] }] } })
+    expect(plugin.layersSettings).toEqual(plugin.options.mediaControl.layersConfig)
+  })
+
   test('have a getter called disableBeforeVideoStarts', () => {
     const { plugin } = setupTest()
     expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(plugin), 'disableBeforeVideoStarts').get).toBeTruthy()
