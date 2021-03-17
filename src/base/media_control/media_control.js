@@ -86,12 +86,25 @@ export default class MediaControlPlugin extends UICorePlugin {
 
   render() {
     if (this.isRendered) return
-    this.$el.html(this.defaultTemplate({ options: this.options }))
+    this.buildTemplate()
     this.cacheElements()
     this.$el.append(Styler.getStyleFor(pluginStyle))
     this.core.$el[0].append(this.$el[0])
     this.isRendered = true
     return this
+  }
+
+  buildTemplate() {
+    !this.layersQuantity || this.layersQuantity <= 0
+      ? this.$el.html(this.defaultTemplate({ options: this.options }))
+      : this.buildLayers()
+  }
+
+  buildLayers() {
+    for (let index = 1; index <= this.layersQuantity; index++) {
+      const layerElement = document.createElement('div')
+      this.$el[0].appendChild(layerElement)
+    }
   }
 
   cacheElements() {

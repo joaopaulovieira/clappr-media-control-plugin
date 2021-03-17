@@ -222,6 +222,7 @@ describe('MediaControl Plugin', () => {
       expect(plugin.resetVideoStartedStatus).toHaveBeenCalledTimes(1)
     })
   })
+
   describe('bindPlaybackEvents callback', () => {
     test('only unbind events when is necessary', () => {
       const { core, container, plugin } = setupTest({}, true)
@@ -460,6 +461,34 @@ describe('MediaControl Plugin', () => {
 
       expect(core.el.contains(plugin.el)).toBeTruthy()
     })
+
+  describe('buildTemplate method', () => {
+    test('adds default template at plugin DOM element if options.mediaControl.layersQuantity doesn\'t exists', () => {
+      const { plugin } = setupTest()
+      plugin.buildTemplate()
+
+      expect(plugin.el.innerHTML).toEqual(defaultTemplate)
+    })
+
+    test('calls buildLayers method if receives a valid options.mediaControl.layersQuantity config', () => {
+      const { plugin } = setupTest({ mediaControl: { layersQuantity: 1 } })
+      jest.spyOn(plugin, 'buildLayers')
+      plugin.buildTemplate()
+
+      expect(plugin.buildLayers).toHaveBeenCalled()
+    })
+  })
+
+  describe('buildLayer method', () => {
+    test('adds custom layers DOM elements defined at options.mediaControl.layersQuantity as a child of plugin DOM element', () => {
+      const { plugin } = setupTest({ mediaControl: { layersQuantity: 1 } })
+      const expectedTemplate = '<div style="flex-direction: column;" class="media-control__layers media-control__layer-1"></div>'
+      plugin.el.innerHTML = ''
+      plugin.buildLayers()
+
+      expect(plugin.el.innerHTML).toEqual(expectedTemplate)
+    })
+  })
 
   test('cacheElements method saves all layers DOM element locally', () => {
     const { plugin } = setupTest({ mediaControl: { layersQuantity: 2 } })
