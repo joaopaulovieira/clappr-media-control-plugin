@@ -530,6 +530,20 @@ describe('MediaControl Plugin', () => {
     })
   })
 
+  describe('buildSections method', () => {
+    const baseOptions = { mediaControl: { layersQuantity: 1, layersConfig: [{ id: 1, sectionsQuantity: 1, sectionsConfig: [] }] } }
+
+    test('adds custom sections DOM elements defined at layersConfig[n].sectionsQuantity as a child of parent layer DOM element', () => {
+      const { plugin } = setupTest({ ...baseOptions })
+      const layerExample = plugin.el.querySelector('.media-control__layer-1')
+      const expectedTemplate = layerExample.outerHTML
+      layerExample.innerHTML = ''
+      plugin.buildSections(layerExample, plugin.layersSettings[0], layerExample.style.flexDirection)
+
+      expect(layerExample.outerHTML).toEqual(expectedTemplate)
+    })
+  })
+
   test('cacheElements method saves all layers DOM element locally', () => {
     const { plugin } = setupTest({ mediaControl: { layersQuantity: 2 } })
     plugin.cacheElements()

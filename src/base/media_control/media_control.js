@@ -116,6 +116,10 @@ export default class MediaControlPlugin extends UICorePlugin {
   }
 
   buildSections(layerElement, layerConfig, sectionsDirection) {
+    for (let index = 1; index <= layerConfig.sectionsQuantity; index++) {
+      const section = document.createElement('div')
+      layerElement.appendChild(section)
+    }
   }
 
   cacheElements() {
