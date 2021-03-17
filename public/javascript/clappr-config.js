@@ -5,6 +5,9 @@ const player = new Clappr.Player({
   poster: 'http://clappr.io/poster.png',
   playback: { controls: false },
   includeResetStyle: false,
+  plugins: [
+    window.MediaControl.MainPlugin,
+  ],
 })
 
 player.attachTo(playerElement)
