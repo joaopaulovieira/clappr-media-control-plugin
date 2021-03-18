@@ -21,6 +21,13 @@ export default class MediaControlPlugin extends UICorePlugin {
 
   get disableBeforeVideoStarts() { return this.config && this.config.disableBeforeVideoStarts }
 
+  get cll() {
+    if (this._cll) return this._cll
+    const { compare } = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' })
+    this._cll = compare
+    return this._cll
+  }
+
   constructor(core) {
     super(core)
     this.disableBeforeVideoStarts && this.$el[0].classList.add('media-control--hide')
@@ -174,6 +181,18 @@ export default class MediaControlPlugin extends UICorePlugin {
   }
 
   appendMediaControlComponent(items, item, sectionElement) {
+    let firstID = 0
+    let lastID = items.length
+
+    while (firstID < lastID) {
+      const middleID = (firstID + lastID) >> 1
+      this.cll(parseInt(items[middleID].id, 10), parseInt(item.id, 10)) > 0
+        ? lastID = middleID
+        : firstID = middleID + 1
+    }
+    if (firstID === 0) return sectionElement.insertAdjacentElement('afterbegin', item)
+    const sibling = sectionElement.querySelectorAll('.media-control__elements')[firstID - 1]
+    sibling.insertAdjacentElement('afterend', item)
   }
 
   destroy() {
