@@ -24,6 +24,12 @@
     display: flex !important;
   }
 
+  &__elements {
+    display: flex;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
   &__sections, &__elements {
     &--push-column {
       margin-top: auto !important;
