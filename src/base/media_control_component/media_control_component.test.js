@@ -95,6 +95,11 @@ describe('MediaControlComponentPlugin', () => {
 
       expect(cb).not.toHaveBeenCalled()
     })
+
+    test('adds css class on plugin to apply default media control element styles', () => {
+      const { plugin } = setupTest()
+      expect(plugin.el.classList.contains('media-control__elements')).toBeTruthy()
+    })
   })
 
   describe('destroy method', () => {
