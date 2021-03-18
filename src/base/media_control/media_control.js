@@ -126,6 +126,7 @@ export default class MediaControlPlugin extends UICorePlugin {
         config.separator && section.classList.add(`media-control__sections--push-${sectionsDirection}`)
         config.height && (section.style.height = config.height)
         config.width && (section.style.width = config.width)
+        config.alignItems && (section.style.alignItems = config.alignItems)
       }
 
       layerElement.appendChild(section)
