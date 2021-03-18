@@ -128,6 +128,7 @@ export default class MediaControlPlugin extends UICorePlugin {
         config.width && (section.style.width = config.width)
         config.alignItems && (section.style.alignItems = config.alignItems)
         config.justifyContent && (section.style.justifyContent = config.justifyContent)
+        config.flexGrow && (section.style.flexGrow = config.flexGrow)
       }
 
       layerElement.appendChild(section)

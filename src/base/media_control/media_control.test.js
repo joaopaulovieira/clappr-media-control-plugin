@@ -597,6 +597,17 @@ describe('MediaControl Plugin', () => {
 
       expect(layerExample.querySelector('.media-control__section-1').style.justifyContent).toEqual('center')
     })
+
+    test('adds flexGrow style on section DOM element if sectionsConfig[n].flexGrow exists', () => {
+      const options = { ...baseOptions }
+      options.mediaControl.layersConfig[0].sectionsConfig[0] = { id: 1, flexGrow: 1 }
+      const { plugin } = setupTest(options)
+      const layerExample = plugin.el.querySelector('.media-control__layer-1')
+      layerExample.innerHTML = ''
+      plugin.buildSections(layerExample, plugin.layersSettings[0], layerExample.style.flexDirection)
+
+      expect(layerExample.querySelector('.media-control__section-1').style.flexGrow).toEqual('1')
+    })
   })
 
   test('cacheElements method saves all layers DOM element locally', () => {
