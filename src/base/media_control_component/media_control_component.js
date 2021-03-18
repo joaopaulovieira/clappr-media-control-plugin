@@ -11,6 +11,8 @@ export default class MediaControlComponentPlugin extends UICorePlugin {
 
   get separator() { return false }
 
+  get mediaControl() { return this._mediaControl || (this._mediaControl = this.core.getPlugin('media_control')) }
+
   constructor(core) {
     super(core)
     this.$el[0].addEventListener('click', e => { e.stopPropagation() })
