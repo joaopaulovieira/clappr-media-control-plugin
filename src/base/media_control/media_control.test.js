@@ -553,6 +553,17 @@ describe('MediaControl Plugin', () => {
 
       expect(layerExample.querySelector('.media-control__section-1').classList.contains('media-control__sections--push-column')).toBeTruthy()
     })
+
+    test('adds height style on section DOM element if sectionsConfig[n].height exists', () => {
+      const options = { ...baseOptions }
+      options.mediaControl.layersConfig[0].sectionsConfig[0] = { id: 1, height: '100%' }
+      const { plugin } = setupTest(options)
+      const layerExample = plugin.el.querySelector('.media-control__layer-1')
+      layerExample.innerHTML = ''
+      plugin.buildSections(layerExample, plugin.layersSettings[0], layerExample.style.flexDirection)
+
+      expect(layerExample.querySelector('.media-control__section-1').style.height).toEqual('100%')
+    })
   })
 
   test('cacheElements method saves all layers DOM element locally', () => {
