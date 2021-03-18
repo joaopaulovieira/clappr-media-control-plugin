@@ -154,6 +154,11 @@ export default class MediaControlPlugin extends UICorePlugin {
     const parentSelector = `.media-control__layer-${layer} .media-control__section-${section}`
     const sectionElement = this.$el[0].querySelector(parentSelector)
 
+    if (position) {
+      el.setAttribute('id', position)
+      el.classList.add(`media-control__element-${position}`)
+    }
+
     if (sectionElement) {
       const renderedItems = sectionElement.querySelectorAll('.media-control__elements')
       renderedItems.length > 0 && position

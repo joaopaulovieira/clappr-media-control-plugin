@@ -664,6 +664,19 @@ describe('MediaControl Plugin', () => {
       expect(mediaControlComponentPlugin.render).not.toHaveBeenCalled()
     })
 
+    test('adds position getter value of media control component plugin as id and class of your DOM element', () => {
+      jest.spyOn(MediaControlComponentPlugin.prototype, 'layer', 'get').mockReturnValueOnce(1)
+      jest.spyOn(MediaControlComponentPlugin.prototype, 'section', 'get').mockReturnValueOnce(1)
+      jest.spyOn(MediaControlComponentPlugin.prototype, 'position', 'get').mockReturnValueOnce(1)
+      jest.spyOn(MediaControlComponentPlugin.prototype, 'attributes', 'get').mockReturnValueOnce({ class: 'test' })
+      const { core, plugin } = setupTest()
+      const mediaControlComponentPlugin = new MediaControlComponentPlugin(core)
+      plugin.renderMediaControlComponent(mediaControlComponentPlugin)
+
+      expect(mediaControlComponentPlugin.el.id).toEqual('1')
+      expect(mediaControlComponentPlugin.el.classList.contains('media-control__element-1')).toBeTruthy()
+    })
+
     test('calls appendMediaControlComponent method only if already have at least one plugin rendered', () => {
       jest.spyOn(MediaControlComponentPlugin.prototype, 'layer', 'get').mockReturnValue(1)
       jest.spyOn(MediaControlComponentPlugin.prototype, 'section', 'get').mockReturnValue(1)
