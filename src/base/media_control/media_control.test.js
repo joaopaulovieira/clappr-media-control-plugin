@@ -677,6 +677,30 @@ describe('MediaControl Plugin', () => {
       expect(mediaControlComponentPlugin.el.classList.contains('media-control__element-1')).toBeTruthy()
     })
 
+    test('adds css class on plugin DOM element to push in the opposite direction if plugin.separator getter returns true', () => {
+      jest.spyOn(MediaControlComponentPlugin.prototype, 'layer', 'get').mockReturnValue(1)
+      jest.spyOn(MediaControlComponentPlugin.prototype, 'section', 'get').mockReturnValue(1)
+      jest.spyOn(MediaControlComponentPlugin.prototype, 'position', 'get').mockReturnValue(1)
+      jest.spyOn(MediaControlComponentPlugin.prototype, 'attributes', 'get').mockReturnValue({ class: 'test' })
+      jest.spyOn(MediaControlComponentPlugin.prototype, 'separator', 'get').mockReturnValue(true)
+      const { core: core1, plugin: plugin1 } = setupTest()
+      const mediaControlComponentPlugin1 = new MediaControlComponentPlugin(core1)
+      plugin1.renderMediaControlComponent(mediaControlComponentPlugin1)
+
+      expect(mediaControlComponentPlugin1.el.classList.contains('media-control__elements--push-row')).toBeTruthy()
+
+      const { core: core2, plugin: plugin2 } = setupTest({
+        mediaControl: {
+          layersQuantity: 1,
+          layersConfig: [{ id: 1, sectionsQuantity: 2, flexDirection: 'row' }],
+        },
+      })
+      const mediaControlComponentPlugin2 = new MediaControlComponentPlugin(core2)
+      plugin2.renderMediaControlComponent(mediaControlComponentPlugin2)
+
+      expect(mediaControlComponentPlugin2.el.classList.contains('media-control__elements--push-column')).toBeTruthy()
+    })
+
     test('calls appendMediaControlComponent method only if already have at least one plugin rendered', () => {
       jest.spyOn(MediaControlComponentPlugin.prototype, 'layer', 'get').mockReturnValue(1)
       jest.spyOn(MediaControlComponentPlugin.prototype, 'section', 'get').mockReturnValue(1)

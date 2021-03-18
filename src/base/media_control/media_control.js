@@ -160,7 +160,11 @@ export default class MediaControlPlugin extends UICorePlugin {
     }
 
     if (sectionElement) {
+      const sectionsDirection = parentLayer.style.flexDirection
       const renderedItems = sectionElement.querySelectorAll('.media-control__elements')
+
+      plugin.separator && plugin.$el[0].classList.add(`media-control__elements--push-${sectionsDirection === 'column' ? 'row' : 'column'}`)
+
       renderedItems.length > 0 && position
         ? this.appendMediaControlComponent(renderedItems, el, sectionElement)
         : sectionElement.append(el)
