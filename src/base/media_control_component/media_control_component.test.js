@@ -95,4 +95,22 @@ describe('MediaControlComponentPlugin', () => {
 
       expect(cb).not.toHaveBeenCalled()
     })
+  })
+
+  describe('destroy method', () => {
+    test('destroys plugin DOM element when Core is destroyed too', () => {
+      const { core, plugin } = setupTest()
+      jest.spyOn(plugin, 'destroy')
+      core.destroy()
+
+      expect(plugin.destroy).toHaveBeenCalled()
+    })
+
+    test('resets _mediaControl internal reference if is destroyed', () => {
+      const { plugin } = setupTest()
+      plugin.destroy()
+
+      expect(plugin._mediaControl).toBeNull()
+    })
+  })
 })

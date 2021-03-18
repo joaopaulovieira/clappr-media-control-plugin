@@ -17,4 +17,9 @@ export default class MediaControlComponentPlugin extends UICorePlugin {
     super(core)
     this.$el[0].addEventListener('click', e => { e.stopPropagation() })
   }
+
+  destroy() {
+    this._mediaControl = null
+    super.destroy()
+  }
 }
