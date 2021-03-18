@@ -118,8 +118,13 @@ export default class MediaControlPlugin extends UICorePlugin {
   buildSections(layerElement, layerConfig, sectionsDirection) {
     for (let index = 1; index <= layerConfig.sectionsQuantity; index++) {
       const section = document.createElement('div')
+      const config = layerConfig.sectionsConfig && layerConfig.sectionsConfig.find(config => config.id === index)
 
       section.classList.add('media-control__sections', `media-control__section-${index}`)
+
+      if (config) {
+        config.separator && section.classList.add(`media-control__sections--push-${sectionsDirection}`)
+      }
 
       layerElement.appendChild(section)
     }

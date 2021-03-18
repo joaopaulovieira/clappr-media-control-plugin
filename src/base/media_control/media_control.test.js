@@ -542,6 +542,17 @@ describe('MediaControl Plugin', () => {
 
       expect(layerExample.outerHTML).toEqual(expectedTemplate)
     })
+
+    test('adds css class on section DOM element to push in the opposite direction if sectionsConfig[n].separator exists', () => {
+      const options = { ...baseOptions }
+      options.mediaControl.layersConfig[0].sectionsConfig[0] = { id: 1, separator: true }
+      const { plugin } = setupTest(options)
+      const layerExample = plugin.el.querySelector('.media-control__layer-1')
+      layerExample.innerHTML = ''
+      plugin.buildSections(layerExample, plugin.layersSettings[0], layerExample.style.flexDirection)
+
+      expect(layerExample.querySelector('.media-control__section-1').classList.contains('media-control__sections--push-column')).toBeTruthy()
+    })
   })
 
   test('cacheElements method saves all layers DOM element locally', () => {
