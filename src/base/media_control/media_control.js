@@ -1,4 +1,5 @@
 import { UICorePlugin, Events, Styler, template, version } from '@clappr/core'
+import MediaControlComponentPlugin from '../media_control_component/media_control_component'
 
 import pluginStyle from './public/media_control.scss'
 import defaultTemplateHtml from './public/default_template.html'
@@ -90,6 +91,8 @@ export default class MediaControlPlugin extends UICorePlugin {
     this.cacheElements()
     this.$el.append(Styler.getStyleFor(pluginStyle))
     this.core.$el[0].append(this.$el[0])
+    this.initMediaControlComponents()
+
     this.isRendered = true
     return this
   }
@@ -137,6 +140,31 @@ export default class MediaControlPlugin extends UICorePlugin {
 
   cacheElements() {
     this.$layers = this.$el[0].querySelectorAll('.media-control__layers')
+  }
+
+  initMediaControlComponents() {
+    const isMediaControlComponent = plugin => plugin instanceof MediaControlComponentPlugin
+    const renderMediaControlComponent = plugin => this.renderMediaControlComponent(plugin)
+    this.core.plugins.filter(isMediaControlComponent).forEach(renderMediaControlComponent)
+  }
+
+  renderMediaControlComponent(plugin) {
+    const { layer, section, position, el } = plugin
+    const parentLayer = this.$el[0].querySelector(`.media-control__layer-${layer}`)
+    const parentSelector = `.media-control__layer-${layer} .media-control__section-${section}`
+    const sectionElement = this.$el[0].querySelector(parentSelector)
+
+    if (sectionElement) {
+      const renderedItems = sectionElement.querySelectorAll('.media-control__elements')
+      renderedItems.length > 0 && position
+        ? this.appendMediaControlComponent(renderedItems, el, sectionElement)
+        : sectionElement.append(el)
+
+      plugin.render()
+    }
+  }
+
+  appendMediaControlComponent(items, item, sectionElement) {
   }
 
   destroy() {
