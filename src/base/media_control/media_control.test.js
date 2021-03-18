@@ -586,6 +586,17 @@ describe('MediaControl Plugin', () => {
 
       expect(layerExample.querySelector('.media-control__section-1').style.alignItems).toEqual('center')
     })
+
+    test('adds justifyContent style on section DOM element sectionsConfig[n].justifyContent exists', () => {
+      const options = { ...baseOptions }
+      options.mediaControl.layersConfig[0].sectionsConfig[0] = { id: 1, justifyContent: 'center' }
+      const { plugin } = setupTest(options)
+      const layerExample = plugin.el.querySelector('.media-control__layer-1')
+      layerExample.innerHTML = ''
+      plugin.buildSections(layerExample, plugin.layersSettings[0], layerExample.style.flexDirection)
+
+      expect(layerExample.querySelector('.media-control__section-1').style.justifyContent).toEqual('center')
+    })
   })
 
   test('cacheElements method saves all layers DOM element locally', () => {
