@@ -1,6 +1,7 @@
 import { createBabelInputPluginFactory } from '@rollup/plugin-babel'
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
+import image from '@rollup/plugin-image'
 import html from 'rollup-plugin-html'
 import postcss from 'rollup-plugin-postcss'
 import livereload from 'rollup-plugin-livereload'
@@ -21,6 +22,7 @@ const babelPluginForESMBundle = createBabelInputPluginFactory()
 const babelPluginOptions = { ...babelConfig, exclude: 'node_modules/**', babelHelpers: 'bundled' }
 
 const plugins = [
+  image({ dom: true }),
   html(),
   postcss(),
   size(),
