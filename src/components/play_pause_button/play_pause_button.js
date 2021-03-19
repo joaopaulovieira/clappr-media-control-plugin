@@ -1,6 +1,9 @@
 import { Events, Playback, Styler } from '@clappr/core'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
 
+import playIcon from './public/play_icon.svg'
+import pauseIcon from './public/pause_icon.svg'
+import stopIcon from './public/stop_icon.svg'
 import pluginStyle from './public/style.scss'
 
 export default class PlayPauseButtonPlugin extends MediaControlComponentPlugin {
@@ -38,6 +41,12 @@ export default class PlayPauseButtonPlugin extends MediaControlComponentPlugin {
   }
 
   changeIcon() {
+    this.$el[0].innerHTML = ''
+    if (this.container && this.container.isPlaying()) {
+      this.shouldStopMedia ? this.$el.append(stopIcon) : this.$el.append(pauseIcon)
+    } else {
+      this.$el.append(playIcon)
+    }
   }
 
   toggle() {

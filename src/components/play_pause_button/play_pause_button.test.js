@@ -2,6 +2,10 @@ import { Events, Core, Container, Playback } from '@clappr/core'
 import PlayPauseButtonPlugin from './play_pause_button'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
 
+import playIcon from './public/play_icon.svg'
+import pauseIcon from './public/pause_icon.svg'
+import stopIcon from './public/stop_icon.svg'
+
 const setupTest = (options = {}, fullSetup = false) => {
   const core = new Core(options)
   const plugin = new PlayPauseButtonPlugin(core)
@@ -131,6 +135,37 @@ describe('PlayPauseButtonPlugin', function() {
       this.plugin.onContainerChanged()
 
       expect(this.plugin.bindContainerEvents).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('changeIcon method', () => {
+    test('appends playIcon on plugin DOM element if container.isPlaying is falsy', () => {
+      jest.spyOn(this.container, 'isPlaying').mockReturnValueOnce(false)
+      this.plugin.changeIcon()
+
+      expect(this.plugin.$el[0].innerHTML.includes(pauseIcon)).toBeFalsy()
+      expect(this.plugin.$el[0].innerHTML.includes(stopIcon)).toBeFalsy()
+      expect(this.plugin.$el[0].innerHTML.includes(playIcon)).toBeTruthy()
+    })
+
+    test('appends pauseIcon on plugin DOM element if container.isPlaying is truthy and shouldStopMedia getter returns false', () => {
+      jest.spyOn(this.container, 'isPlaying').mockReturnValueOnce(true)
+      jest.spyOn(this.plugin, 'shouldStopMedia', 'get').mockReturnValueOnce(false)
+      this.plugin.changeIcon()
+
+      expect(this.plugin.$el[0].innerHTML.includes(playIcon)).toBeFalsy()
+      expect(this.plugin.$el[0].innerHTML.includes(stopIcon)).toBeFalsy()
+      expect(this.plugin.$el[0].innerHTML.includes(pauseIcon)).toBeTruthy()
+    })
+
+    test('appends stopIcon on plugin DOM element if container.isPlaying is truthy and shouldStopMedia getter returns true', () => {
+      jest.spyOn(this.container, 'isPlaying').mockReturnValueOnce(true)
+      jest.spyOn(this.plugin, 'shouldStopMedia', 'get').mockReturnValueOnce(true)
+      this.plugin.changeIcon()
+
+      expect(this.plugin.$el[0].innerHTML.includes(playIcon)).toBeFalsy()
+      expect(this.plugin.$el[0].innerHTML.includes(pauseIcon)).toBeFalsy()
+      expect(this.plugin.$el[0].innerHTML.includes(stopIcon)).toBeTruthy()
     })
   })
 
