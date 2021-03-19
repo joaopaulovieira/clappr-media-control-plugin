@@ -188,6 +188,18 @@ describe('FullscreenButtonPlugin', function() {
       jest.spyOn(this.plugin, 'changeIcon')
     })
 
+    test('avoid unnecessary re-render cycles', () => {
+      this.plugin.render()
+
+      expect(this.plugin.render).toHaveBeenCalledTimes(1)
+      expect(this.plugin.changeIcon).toHaveBeenCalledTimes(1)
+
+      this.plugin.render()
+
+      expect(this.plugin.render).toHaveBeenCalledTimes(2)
+      expect(this.plugin.changeIcon).toHaveBeenCalledTimes(1)
+    })
+
     test('sets isRendered flag to true', () => {
       this.plugin.isRendered = false
       this.plugin.render()
