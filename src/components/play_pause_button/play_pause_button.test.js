@@ -245,6 +245,7 @@ describe('PlayPauseButtonPlugin', function() {
   describe('render method', () => {
     beforeEach(() => {
       jest.spyOn(this.plugin, 'render')
+      jest.spyOn(this.plugin, 'changeIcon')
 
       this.plugin.isRendered = false
       this.plugin.render()
@@ -252,6 +253,10 @@ describe('PlayPauseButtonPlugin', function() {
 
     test('sets isRendered flag to true', () => {
       expect(this.plugin.isRendered).toBeTruthy()
+    })
+
+    test('calls changeIcon method', () => {
+      expect(this.plugin.changeIcon).toHaveBeenCalledTimes(1)
     })
   })
 })
