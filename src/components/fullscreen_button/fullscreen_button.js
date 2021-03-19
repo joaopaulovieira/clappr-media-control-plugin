@@ -42,6 +42,7 @@ export default class FullscreenButtonPlugin extends MediaControlComponentPlugin 
   toggle() {
     this.container.fullscreen()
     this.core.toggleFullscreen()
+    this.changeIcon()
   }
 
   changeIcon() {

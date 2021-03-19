@@ -113,6 +113,11 @@ describe('FullscreenButtonPlugin', function() {
       this.plugin.toggle()
       expect(this.core.toggleFullscreen).toHaveBeenCalledTimes(1)
     })
+
+    test('calls changeIcon method', () => {
+      this.plugin.toggle()
+      expect(this.plugin.changeIcon).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('changeIcon method', () => {
