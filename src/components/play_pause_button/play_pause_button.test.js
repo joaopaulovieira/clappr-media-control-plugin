@@ -260,6 +260,33 @@ describe('PlayPauseButtonPlugin', function() {
     })
   })
 
+  describe('toggle method', () => {
+    test('calls container.play method if container.isPlaying is falsy', () => {
+      jest.spyOn(this.container, 'play')
+      this.plugin.toggle()
+
+      expect(this.container.play).toHaveBeenCalledTimes(1)
+    })
+
+    test('calls container.pause method if container.isPlaying is truthy and shouldStopMedia getter returns false', () => {
+      jest.spyOn(this.container, 'isPlaying').mockReturnValueOnce(true)
+      jest.spyOn(this.plugin, 'shouldStopMedia', 'get').mockReturnValueOnce(false)
+      jest.spyOn(this.container, 'pause')
+      this.plugin.toggle()
+
+      expect(this.container.pause).toHaveBeenCalledTimes(1)
+    })
+
+    test('calls container.stop method if container.isPlaying is truthy and shouldStopMedia getter returns true', () => {
+      jest.spyOn(this.container, 'isPlaying').mockReturnValueOnce(true)
+      jest.spyOn(this.plugin, 'shouldStopMedia', 'get').mockReturnValueOnce(true)
+      jest.spyOn(this.container, 'stop')
+      this.plugin.toggle()
+
+      expect(this.container.stop).toHaveBeenCalledTimes(1)
+    })
+  })
+
   describe('render method', () => {
     beforeEach(() => {
       jest.spyOn(this.plugin, 'render')

@@ -19,6 +19,11 @@ export default class PlayPauseButtonPlugin extends MediaControlComponentPlugin {
 
   get attributes() { return { class: 'play-pause-button media-control__button' } }
 
+  get events() {
+    const events = { click: this.toggle }
+    return events
+  }
+
   get isLiveMedia() { return this.playback.getPlaybackType() === Playback.LIVE }
 
   get shouldStopMedia() { return this.isLiveMedia && !this.container.isDvrEnabled() }
@@ -65,6 +70,9 @@ export default class PlayPauseButtonPlugin extends MediaControlComponentPlugin {
   }
 
   toggle() {
+    this.container.isPlaying()
+      ? this.shouldStopMedia ? this.container.stop() : this.container.pause()
+      : this.container.play()
   }
 
   render() {
