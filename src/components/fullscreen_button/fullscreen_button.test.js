@@ -140,5 +140,12 @@ describe('FullscreenButtonPlugin', function() {
 
       expect(this.plugin.isRendered).toBeTruthy()
     })
+
+    test('calls changeIcon method', () => {
+      this.plugin.isRendered = false
+      this.plugin.render()
+
+      expect(this.plugin.changeIcon).toHaveBeenCalledTimes(1)
+    })
   })
 })

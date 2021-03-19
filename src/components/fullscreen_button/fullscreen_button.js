@@ -48,6 +48,7 @@ export default class FullscreenButtonPlugin extends MediaControlComponentPlugin 
     if (this.isRendered || !Utils.Fullscreen.fullscreenEnabled()) return
     this.$el[0].innerHTML = ''
     this.$el.append(Styler.getStyleFor(pluginStyle))
+    this.changeIcon()
     this.isRendered = true
     return this
   }
