@@ -1,6 +1,8 @@
 import { Events, Styler, Utils } from '@clappr/core'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
 
+import pluginStyle from './public/style.scss'
+
 export default class FullscreenButtonPlugin extends MediaControlComponentPlugin {
   get name() { return 'fullscreen_button' }
 
@@ -39,6 +41,7 @@ export default class FullscreenButtonPlugin extends MediaControlComponentPlugin 
   render() {
     if (this.isRendered || !Utils.Fullscreen.fullscreenEnabled()) return
     this.$el[0].innerHTML = ''
+    this.$el.append(Styler.getStyleFor(pluginStyle))
     this.isRendered = true
     return this
   }
