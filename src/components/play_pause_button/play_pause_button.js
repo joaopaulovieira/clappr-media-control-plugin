@@ -4,6 +4,8 @@ import MediaControlComponentPlugin from '../../base/media_control_component/medi
 export default class PlayPauseButtonPlugin extends MediaControlComponentPlugin {
   get name() { return 'play_pause_button' }
 
+  get layer() { return 1 }
+
   bindEvents() {
     const coreEventListenerData = [{ object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged }]
     coreEventListenerData.forEach(item => this.stopListening(item.object, item.event, item.callback))
