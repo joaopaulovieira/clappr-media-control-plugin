@@ -98,6 +98,18 @@ describe('FullscreenButtonPlugin', function() {
   })
 
   describe('changeIcon method', () => {
+    test('only run internal logic after 600 milliseconds', () => {
+      jest.useFakeTimers()
+      jest.spyOn(Utils.Fullscreen, 'fullscreenElement')
+      this.plugin.changeIcon()
+
+      expect(Utils.Fullscreen.fullscreenElement).not.toHaveBeenCalled()
+
+      jest.advanceTimersByTime(600)
+
+      expect(Utils.Fullscreen.fullscreenElement).toHaveBeenCalledTimes(1)
+    })
+
     test('appends exitFullscreenIcon if Utils.Fullscreen.fullscreenElement is truthy', () => {
       jest.spyOn(Utils.Fullscreen, 'fullscreenElement').mockReturnValueOnce(true)
       this.plugin.changeIcon()

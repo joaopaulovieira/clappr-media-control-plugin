@@ -38,8 +38,10 @@ export default class FullscreenButtonPlugin extends MediaControlComponentPlugin 
   }
 
   changeIcon() {
+    setTimeout(() => {
       this.$el[0].innerHTML = ''
       Utils.Fullscreen.fullscreenElement() ? this.$el.append(exitFullscreenIcon) : this.$el.append(enterFullscreenIcon)
+    }, 600)
   }
 
   render() {
