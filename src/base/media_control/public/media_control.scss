@@ -30,6 +30,17 @@
     cursor: pointer;
   }
 
+  &__button {
+    height: 40px;
+    width: 40px;
+    outline: none;
+
+    img {
+      height: 40px;
+      width: 40px;
+    }
+  }
+
   &__sections, &__elements {
     &--push-column {
       margin-top: auto !important;
