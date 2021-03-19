@@ -176,6 +176,15 @@ describe('PlayPauseButtonPlugin', function() {
 
       expect(cb).toHaveBeenCalledTimes(1)
     })
+
+    test('triggers MEDIACONTROL_PLAYING event after append pauseIcon on plugin DOM element', () => {
+      jest.spyOn(this.container, 'isPlaying').mockReturnValueOnce(true)
+      const cb = jest.fn()
+      this.plugin.listenToOnce(this.core, Events.MEDIACONTROL_PLAYING, cb)
+      this.plugin.changeIcon()
+
+      expect(cb).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('render method', () => {

@@ -47,6 +47,7 @@ export default class PlayPauseButtonPlugin extends MediaControlComponentPlugin {
       this.core.trigger(Events.MEDIACONTROL_PLAYING)
     } else {
       this.$el.append(playIcon)
+      this.core.trigger(Events.MEDIACONTROL_NOTPLAYING)
     }
   }
 
