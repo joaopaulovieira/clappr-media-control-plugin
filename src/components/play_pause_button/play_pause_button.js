@@ -16,6 +16,8 @@ export default class PlayPauseButtonPlugin extends MediaControlComponentPlugin {
 
   get attributes() { return { class: 'play-pause-button media-control__button' } }
 
+  get isLiveMedia() { return this.playback.getPlaybackType() === Playback.LIVE }
+
   bindEvents() {
     const coreEventListenerData = [{ object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged }]
     coreEventListenerData.forEach(item => this.stopListening(item.object, item.event, item.callback))
@@ -25,6 +27,7 @@ export default class PlayPauseButtonPlugin extends MediaControlComponentPlugin {
   onContainerChanged() {
     this.container && this.stopListening(this.container)
     this.container = this.core.activeContainer
+    this.playback = this.core.activePlayback
     if (!this.container) return
     this.bindContainerEvents()
   }
