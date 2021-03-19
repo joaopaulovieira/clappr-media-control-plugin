@@ -191,6 +191,14 @@ describe('PlayPauseButtonPlugin', function() {
 
       expect(this.plugin.changeIcon).toHaveBeenCalledTimes(1)
     })
+
+    test('register onContainerDestroyed method as callback for CONTAINER_DESTROYED event', () => {
+      jest.spyOn(this.plugin, 'onContainerDestroyed')
+      this.core.activeContainer = this.container
+      this.container.trigger(Events.CONTAINER_DESTROYED)
+
+      expect(this.plugin.onContainerDestroyed).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('changeIcon method', () => {
@@ -239,6 +247,16 @@ describe('PlayPauseButtonPlugin', function() {
       this.plugin.changeIcon()
 
       expect(cb).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('onContainerDestroyed method', () => {
+    test('appends playIcon on plugin DOM element', () => {
+      this.plugin.onContainerDestroyed()
+
+      expect(this.plugin.$el[0].innerHTML.includes(pauseIcon)).toBeFalsy()
+      expect(this.plugin.$el[0].innerHTML.includes(stopIcon)).toBeFalsy()
+      expect(this.plugin.$el[0].innerHTML.includes(playIcon)).toBeTruthy()
     })
   })
 

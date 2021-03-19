@@ -43,6 +43,7 @@ export default class PlayPauseButtonPlugin extends MediaControlComponentPlugin {
       { object: this.container, event: Events.CONTAINER_PAUSE, callback: this.changeIcon },
       { object: this.container, event: Events.CONTAINER_STOP, callback: this.changeIcon },
       { object: this.container, event: Events.CONTAINER_ENDED, callback: this.changeIcon },
+      { object: this.container, event: Events.CONTAINER_DESTROYED, callback: this.onContainerDestroyed },
     ]
     this.container && containerEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
   }
@@ -56,6 +57,11 @@ export default class PlayPauseButtonPlugin extends MediaControlComponentPlugin {
       this.$el.append(playIcon)
       this.core.trigger(Events.MEDIACONTROL_NOTPLAYING)
     }
+  }
+
+  onContainerDestroyed() {
+    this.$el[0].innerHTML = ''
+    this.$el.append(playIcon)
   }
 
   toggle() {
