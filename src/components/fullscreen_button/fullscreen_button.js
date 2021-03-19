@@ -37,6 +37,8 @@ export default class FullscreenButtonPlugin extends MediaControlComponentPlugin 
   }
 
   bindContainerEvents() {
+    const containerEventListenerData = [{ object: this.container, event: Events.CONTAINER_DBLCLICK, callback: this.toggle }]
+    this.container && containerEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
   }
 
   toggle() {

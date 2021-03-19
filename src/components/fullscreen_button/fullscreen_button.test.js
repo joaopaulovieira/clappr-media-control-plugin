@@ -97,6 +97,37 @@ describe('FullscreenButtonPlugin', function() {
     })
   })
 
+  describe('bindContainerEvents method', () => {
+    test('only unbind events when is necessary', () => {
+      jest.spyOn(this.plugin, 'stopListening')
+
+      this.plugin.container = null
+      this.core.activeContainer = this.container
+      const oldContainer = { ...this.container }
+
+      expect(this.plugin.stopListening).not.toHaveBeenCalledWith(this.container)
+
+      this.core.activeContainer = this.container
+
+      expect(this.plugin.stopListening).toHaveBeenCalledWith(oldContainer)
+    })
+
+    test('avoid register callback for events on container scope without a valid reference', () => {
+      jest.spyOn(this.plugin, 'toggle')
+      this.container.trigger(Events.CONTAINER_DBLCLICK)
+
+      expect(this.plugin.toggle).not.toHaveBeenCalled()
+    })
+
+    test('register toggle method as callback for CONTAINER_DBLCLICK event', () => {
+      jest.spyOn(this.plugin, 'toggle')
+      this.core.activeContainer = this.container
+      this.container.trigger(Events.CONTAINER_DBLCLICK)
+
+      expect(this.plugin.toggle).toHaveBeenCalledTimes(1)
+    })
+  })
+
   describe('toggle method', () => {
     beforeEach(() => {
       jest.spyOn(this.container, 'fullscreen')
