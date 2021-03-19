@@ -1,6 +1,8 @@
 import { Events, Playback, Styler } from '@clappr/core'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
 
+import pluginStyle from './public/style.scss'
+
 export default class PlayPauseButtonPlugin extends MediaControlComponentPlugin {
   get name() { return 'play_pause_button' }
 
@@ -39,6 +41,7 @@ export default class PlayPauseButtonPlugin extends MediaControlComponentPlugin {
   render() {
     if (this.isRendered) return
     this.$el[0].innerHTML = ''
+    this.$el.append(Styler.getStyleFor(pluginStyle))
     this.isRendered = true
     return this
   }
