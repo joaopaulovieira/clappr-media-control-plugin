@@ -138,6 +138,61 @@ describe('PlayPauseButtonPlugin', function() {
     })
   })
 
+  describe('bindContainerEvents method', () => {
+    test('only unbind events when is necessary', () => {
+      jest.spyOn(this.plugin, 'stopListening')
+
+      this.plugin.container = null
+      this.core.activeContainer = this.container
+      const oldContainer = { ...this.container }
+
+      expect(this.plugin.stopListening).not.toHaveBeenCalledWith(this.container)
+
+      this.core.activeContainer = this.container
+
+      expect(this.plugin.stopListening).toHaveBeenCalledWith(oldContainer)
+    })
+
+    test('avoid register callback for events on container scope without a valid reference', () => {
+      jest.spyOn(this.plugin, 'toggle')
+      this.container.trigger(Events.CONTAINER_DBLCLICK)
+
+      expect(this.plugin.toggle).not.toHaveBeenCalled()
+    })
+
+    test('register changeIcon method as callback for CONTAINER_PLAY event', () => {
+      jest.spyOn(this.plugin, 'changeIcon')
+      this.core.activeContainer = this.container
+      this.container.trigger(Events.CONTAINER_PLAY)
+
+      expect(this.plugin.changeIcon).toHaveBeenCalledTimes(1)
+    })
+
+    test('register changeIcon method as callback for CONTAINER_PAUSE event', () => {
+      jest.spyOn(this.plugin, 'changeIcon')
+      this.core.activeContainer = this.container
+      this.container.trigger(Events.CONTAINER_PAUSE)
+
+      expect(this.plugin.changeIcon).toHaveBeenCalledTimes(1)
+    })
+
+    test('register changeIcon method as callback for CONTAINER_STOP event', () => {
+      jest.spyOn(this.plugin, 'changeIcon')
+      this.core.activeContainer = this.container
+      this.container.trigger(Events.CONTAINER_STOP)
+
+      expect(this.plugin.changeIcon).toHaveBeenCalledTimes(1)
+    })
+
+    test('register changeIcon method as callback for CONTAINER_ENDED event', () => {
+      jest.spyOn(this.plugin, 'changeIcon')
+      this.core.activeContainer = this.container
+      this.container.trigger(Events.CONTAINER_ENDED)
+
+      expect(this.plugin.changeIcon).toHaveBeenCalledTimes(1)
+    })
+  })
+
   describe('changeIcon method', () => {
     test('appends playIcon on plugin DOM element if container.isPlaying is falsy', () => {
       jest.spyOn(this.container, 'isPlaying').mockReturnValueOnce(false)

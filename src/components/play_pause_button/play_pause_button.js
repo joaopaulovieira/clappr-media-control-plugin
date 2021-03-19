@@ -38,6 +38,13 @@ export default class PlayPauseButtonPlugin extends MediaControlComponentPlugin {
   }
 
   bindContainerEvents() {
+    const containerEventListenerData = [
+      { object: this.container, event: Events.CONTAINER_PLAY, callback: this.changeIcon },
+      { object: this.container, event: Events.CONTAINER_PAUSE, callback: this.changeIcon },
+      { object: this.container, event: Events.CONTAINER_STOP, callback: this.changeIcon },
+      { object: this.container, event: Events.CONTAINER_ENDED, callback: this.changeIcon },
+    ]
+    this.container && containerEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
   }
 
   changeIcon() {
