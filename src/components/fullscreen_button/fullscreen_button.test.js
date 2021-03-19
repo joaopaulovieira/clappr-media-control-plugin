@@ -2,6 +2,9 @@ import { Events, Core, Container, Playback, Utils } from '@clappr/core'
 import FullscreenButtonPlugin from './fullscreen_button'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
 
+import enterFullscreenIcon from './public/enter_fullscreen_icon.svg'
+import exitFullscreenIcon from './public/exit_fullscreen_icon.svg'
+
 const setupTest = (options = {}, fullSetup = false) => {
   const core = new Core(options)
   const plugin = new FullscreenButtonPlugin(core)
@@ -91,6 +94,24 @@ describe('FullscreenButtonPlugin', function() {
       this.plugin.onContainerChanged()
 
       expect(this.plugin.bindContainerEvents).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('changeIcon method', () => {
+    test('appends exitFullscreenIcon if Utils.Fullscreen.fullscreenElement is truthy', () => {
+      jest.spyOn(Utils.Fullscreen, 'fullscreenElement').mockReturnValueOnce(true)
+      this.plugin.changeIcon()
+      jest.advanceTimersByTime(600)
+
+      expect(this.plugin.$el[0].innerHTML.includes(exitFullscreenIcon)).toBeTruthy()
+    })
+
+    test('appends enterFullscreenIcon if Utils.Fullscreen.fullscreenElement is falsy', () => {
+      jest.spyOn(Utils.Fullscreen, 'fullscreenElement').mockReturnValueOnce(true)
+      this.plugin.changeIcon()
+      jest.advanceTimersByTime(600)
+
+      expect(this.plugin.$el[0].innerHTML.includes(enterFullscreenIcon)).toBeFalsy()
     })
   })
 

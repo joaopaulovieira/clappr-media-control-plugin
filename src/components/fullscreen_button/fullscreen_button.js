@@ -1,6 +1,8 @@
 import { Events, Styler, Utils } from '@clappr/core'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
 
+import enterFullscreenIcon from './public/enter_fullscreen_icon.svg'
+import exitFullscreenIcon from './public/exit_fullscreen_icon.svg'
 import pluginStyle from './public/style.scss'
 
 export default class FullscreenButtonPlugin extends MediaControlComponentPlugin {
@@ -36,6 +38,8 @@ export default class FullscreenButtonPlugin extends MediaControlComponentPlugin 
   }
 
   changeIcon() {
+      this.$el[0].innerHTML = ''
+      Utils.Fullscreen.fullscreenElement() ? this.$el.append(exitFullscreenIcon) : this.$el.append(enterFullscreenIcon)
   }
 
   render() {
