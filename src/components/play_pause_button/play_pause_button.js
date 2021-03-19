@@ -18,6 +18,8 @@ export default class PlayPauseButtonPlugin extends MediaControlComponentPlugin {
 
   get isLiveMedia() { return this.playback.getPlaybackType() === Playback.LIVE }
 
+  get shouldStopMedia() { return this.isLiveMedia && !this.container.isDvrEnabled() }
+
   bindEvents() {
     const coreEventListenerData = [{ object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged }]
     coreEventListenerData.forEach(item => this.stopListening(item.object, item.event, item.callback))

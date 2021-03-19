@@ -69,6 +69,25 @@ describe('PlayPauseButtonPlugin', function() {
     expect(plugin.isLiveMedia).toBeTruthy()
   })
 
+  test('have a getter called shouldStopMedia', () => {
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'shouldStopMedia').get).toBeTruthy()
+  })
+
+  test('shouldStopMedia getter informs if the media needs to be stopped instead paused', () => {
+    expect(this.plugin.shouldStopMedia).toBeFalsy()
+
+    jest.spyOn(Playback.prototype, 'getPlaybackType').mockReturnValue(Playback.LIVE)
+    const { core, container, plugin } = setupTest({}, true)
+    jest.spyOn(container, 'isDvrEnabled').mockReturnValueOnce(true)
+    core.activeContainer = container
+
+    expect(plugin.shouldStopMedia).toBeFalsy()
+
+    jest.spyOn(container, 'isDvrEnabled').mockReturnValueOnce(false)
+
+    expect(plugin.shouldStopMedia).toBeTruthy()
+  })
+
   describe('bindEvents method', () => {
     test('stops the current listeners before add new ones', () => {
       const { plugin } = setupTest()
