@@ -97,6 +97,24 @@ describe('FullscreenButtonPlugin', function() {
     })
   })
 
+  describe('toggle method', () => {
+    beforeEach(() => {
+      jest.spyOn(this.container, 'fullscreen')
+      jest.spyOn(this.core, 'toggleFullscreen').mockImplementation(() => {})
+      jest.spyOn(this.plugin, 'changeIcon').mockImplementation(() => {})
+    })
+
+    test('calls container.fullscreen method', () => {
+      this.plugin.toggle()
+      expect(this.container.fullscreen).toHaveBeenCalledTimes(1)
+    })
+
+    test('calls core.toggleFullscreen method', () => {
+      this.plugin.toggle()
+      expect(this.core.toggleFullscreen).toHaveBeenCalledTimes(1)
+    })
+  })
+
   describe('changeIcon method', () => {
     test('only run internal logic after 600 milliseconds', () => {
       jest.useFakeTimers()
