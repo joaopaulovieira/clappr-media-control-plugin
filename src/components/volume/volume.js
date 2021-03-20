@@ -38,6 +38,10 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
     this.container = this.core.activeContainer
   }
 
+  setValue(value) {
+    this.container.setVolume(value)
+  }
+
   updateIcon(volume) {
     if (volume === this.currentValue || (volume > 0 && this.currentValue > 0)) return
     this.$iconContainer.innerHTML = ''

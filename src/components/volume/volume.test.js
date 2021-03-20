@@ -112,6 +112,15 @@ describe('TimeIndicatorPlugin', function() {
       expect(this.plugin.container).toEqual(this.core.activeContainer)
     })
 
+  describe('setValue method', () => {
+    test('calls container.setVolume with received value', () => {
+      jest.spyOn(this.container, 'setVolume')
+      this.plugin.setValue(50)
+
+      expect(this.container.setVolume).toHaveBeenCalledWith(50)
+    })
+  })
+
   describe('updateIcon method', () => {
     test('avoids execute internal code if received value is equal currentValue or if received value and currentValue are grater than 0', () => {
       jest.spyOn(this.plugin.$iconContainer, 'append')
