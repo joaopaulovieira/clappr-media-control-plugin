@@ -44,6 +44,7 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
 
   getInitialValue() {
     let initialValue = this.persistConfig && !isNaN(Utils.Config.restore('volume')) ? Utils.Config.restore('volume') : 100
+    this.core.options.mute && (initialValue = 0)
     return initialValue
   }
 

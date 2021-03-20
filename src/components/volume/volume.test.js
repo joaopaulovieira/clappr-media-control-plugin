@@ -140,6 +140,21 @@ describe('TimeIndicatorPlugin', function() {
 
       Utils.Config.persist('volume', null)
     })
+
+    test('returns 0 if options.mute is true', () => {
+      const { plugin } = setupTest({ mute: true })
+      let initialValue = plugin.getInitialValue()
+
+      expect(initialValue).toEqual(0)
+
+      Utils.Config.persist('volume', 50)
+      const { plugin: plugin1 } = setupTest({ persistConfig: true, mute: true })
+      initialValue = plugin1.getInitialValue()
+
+      expect(initialValue).toEqual(0)
+
+      Utils.Config.persist('volume', null)
+    })
   })
 
   describe('setValue method', () => {
