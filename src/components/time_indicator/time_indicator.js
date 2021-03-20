@@ -1,6 +1,8 @@
 import { Events, Styler, Utils, template } from '@clappr/core'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
 
+import templateHTML from './public/template.html'
+
 export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
   get name() { return 'time_indicator' }
 
@@ -23,6 +25,7 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
   render() {
     if (this.isRendered) return
     this.el.innerHTML = ''
+    this.$el.html(this.template({ options: this.options }))
     this.isRendered = true
     return this
   }

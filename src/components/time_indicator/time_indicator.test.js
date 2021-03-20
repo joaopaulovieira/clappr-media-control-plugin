@@ -1,5 +1,6 @@
 import { Events, Core, Container, Playback } from '@clappr/core'
 import TimeIndicatorPlugin from './time_indicator'
+import templateHTML from './public/template.html'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
 
 const setupTest = (options = {}, fullSetup = false) => {
@@ -76,6 +77,10 @@ describe('TimeIndicatorPlugin', function() {
 
     test('sets isRendered flag to true', () => {
       expect(this.plugin.isRendered).toBeTruthy()
+    })
+
+    test('insert template getter response inside plugin DOM element', () => {
+      expect(this.plugin.$el[0].innerHTML.includes(this.plugin.template())).toBeTruthy()
     })
   })
 })
