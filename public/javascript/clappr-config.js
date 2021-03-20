@@ -6,6 +6,11 @@ const player = new Clappr.Player({
   playback: { controls: false },
   includeResetStyle: false,
   plugins: [
+    window.MediaControl.PlayPauseButtonPlugin,
+    window.MediaControl.VolumePlugin,
+    window.MediaControl.FullscreenButtonPlugin,
+    window.MediaControl.SeekBarPlugin,
+    window.MediaControl.TimeIndicatorPlugin,
     window.MediaControl.MainPlugin,
   ],
 })
