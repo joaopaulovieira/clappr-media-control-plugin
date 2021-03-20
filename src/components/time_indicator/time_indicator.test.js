@@ -98,6 +98,13 @@ describe('TimeIndicatorPlugin', function() {
     })
   })
 
+  test('setPosition method inserts received position time text as textContent of position DOM element plugin', () => {
+    const positionTimeText = '00:05'
+    this.plugin.setPosition(positionTimeText)
+
+    expect(this.plugin.$position.textContent).toEqual(positionTimeText)
+  })
+
   describe('render method', () => {
     beforeEach(() => {
       jest.spyOn(this.plugin, 'render')

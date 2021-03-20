@@ -33,6 +33,10 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
   bindContainerEvents() {
   }
 
+  setPosition(position) {
+    this.$position.textContent = position
+  }
+
   render() {
     if (this.isRendered) return
     this.el.innerHTML = ''
