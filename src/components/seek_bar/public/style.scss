@@ -4,6 +4,7 @@ $background-color: linear-gradient(to right, rgba(120, 120, 120, 0.8) var(--buff
 .seek-bar {
   --seek-before-width: 0%;
   --buffered-width: 0%;
+  flex-grow: 1;
 
   &[type=range] {
     background-color: transparent;
@@ -101,4 +102,8 @@ $background-color: linear-gradient(to right, rgba(120, 120, 120, 0.8) var(--buff
       transform: scale(1.2);
     }
   }
+}
+
+.media-control__elements.seek-bar--disable-interaction {
+  pointer-events: none;
 }
