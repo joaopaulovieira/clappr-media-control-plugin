@@ -32,6 +32,18 @@ $background-color: linear-gradient(to right, rgba(120, 120, 120, 0.8) var(--buff
       cursor: pointer;
       background: $background-color;
     }
+    &::-webkit-slider-thumb {
+      background-color: white;
+      border: 0 solid white;
+      border-radius: 50%;
+      box-sizing: content-box;
+      cursor: pointer;
+      margin: -5px 0 0 0;
+      height: 12px;
+      position: relative;
+      width: 12px;
+      -webkit-appearance: none;
+    }
   
     &::-moz-range-track {
       background: $background-color;
@@ -45,6 +57,15 @@ $background-color: linear-gradient(to right, rgba(120, 120, 120, 0.8) var(--buff
     }
     &::-moz-focus-outer {
       border: 0;
+    }
+    &::-moz-range-thumb {
+      background-color: white;
+      border: 0 solid white;
+      border-radius: 50%;
+      box-sizing: content-box;
+      cursor: pointer;
+      height: 12px;
+      width: 12px;
     }
 
     &::-ms-track {
@@ -61,4 +82,14 @@ $background-color: linear-gradient(to right, rgba(120, 120, 120, 0.8) var(--buff
     &::-ms-fill-upper {
       background: $background-color;
     }
+    &::-ms-thumb {
+      background-color: white;
+      border: 0 solid white;
+      border-radius: 50%;
+      box-sizing: content-box;
+      cursor: pointer;
+      height: 12px;
+      width: 12px;
+    }
+  }
 }
