@@ -134,6 +134,13 @@ describe('TimeIndicatorPlugin', function() {
       expect(this.plugin._lastValue).toEqual(50)
     })
 
+    test('calls updateIcon method', () => {
+      jest.spyOn(this.plugin, 'updateIcon')
+      this.plugin.setValue(100)
+
+      expect(this.plugin.updateIcon).toHaveBeenCalledTimes(1)
+    })
+
     test('saves received value on currentValue', () => {
       this.plugin.currentValue = null
       this.plugin.setValue(50)
