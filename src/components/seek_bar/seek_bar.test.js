@@ -195,6 +195,14 @@ describe('SeekBarPlugin', function() {
     })
   })
 
+  describe('updateBufferedBar method', () => {
+    test('adds the ratio of progress.current and progress.total values as --buffered-width style property of DOM element plugin', () => {
+      this.plugin.updateBufferedBar(20, 200)
+
+      expect(getComputedStyle(this.plugin.$el[0]).getPropertyValue('--buffered-width')).toEqual('10%')
+    })
+  })
+
   describe('render method', () => {
     beforeEach(() => {
       jest.spyOn(this.plugin, 'render')

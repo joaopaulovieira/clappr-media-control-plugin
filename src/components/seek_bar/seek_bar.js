@@ -66,6 +66,7 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
   }
 
   updateBufferedBar(buffered, duration) {
+    this.$el[0].style.setProperty('--buffered-width', `${buffered / duration * 100}%`)
   }
 
   render() {
