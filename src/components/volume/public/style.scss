@@ -107,3 +107,8 @@ $shadow: drop-shadow( 2px 2px 1px rgba(0, 0, 0, 0.7));
     -webkit-filter: $shadow;
   }
 }
+
+.media-control__elements .volume__icon-container img {
+  height: 36px;
+  width: 36px;
+}
