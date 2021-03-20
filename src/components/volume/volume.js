@@ -19,6 +19,11 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
 
   get template() { return template(templateHTML) }
 
+  constructor(core) {
+    super(core)
+    this.persistConfig = this.options.persistConfig
+  }
+
   bindEvents() {
     const coreEventListenerData = [{ object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged }]
     coreEventListenerData.forEach(item => this.stopListening(item.object, item.event, item.callback))

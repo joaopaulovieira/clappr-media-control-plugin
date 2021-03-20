@@ -65,6 +65,13 @@ describe('TimeIndicatorPlugin', function() {
     expect(this.plugin.template()).toEqual(templateHTML)
   })
 
+  describe('constructor', () => {
+    test('saves options.persistConfig value on plugin reference', () => {
+      const { plugin } = setupTest({ persistConfig: true })
+      expect(plugin.persistConfig).toEqual(plugin.options.persistConfig)
+    })
+  })
+
   describe('bindEvents method', () => {
     test('stops the current listeners before add new ones', () => {
       jest.spyOn(this.plugin, 'stopListening')
