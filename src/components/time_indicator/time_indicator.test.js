@@ -51,6 +51,14 @@ describe('TimeIndicatorPlugin', function() {
     expect(this.plugin.$el[0].className).toEqual('time-indicator media-control__elements')
   })
 
+  test('have a getter called template', () => {
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'template').get).toBeTruthy()
+  })
+
+  test('template getter returns on template that will be added on the plugin DOM element', () => {
+    expect(this.plugin.template()).toEqual(templateHTML)
+  })
+
   describe('bindEvents method', () => {
     test('stops the current listeners before add new ones', () => {
       jest.spyOn(this.plugin, 'stopListening')
