@@ -17,6 +17,8 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
 
   get template() { return template(templateHTML) }
 
+  get defaultTime() { return '00:00' }
+
   bindEvents() {
     const coreEventListenerData = [{ object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged }]
     coreEventListenerData.forEach(item => this.stopListening(item.object, item.event, item.callback))
@@ -33,6 +35,7 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
   bindContainerEvents() {
     const containerEventListenerData = [
       { object: this.container, event: Events.CONTAINER_TIMEUPDATE, callback: this.onTimeUpdate },
+      { object: this.container, event: Events.CONTAINER_DESTROYED, callback: this.onContainerDestroyed },
     ]
     this.container && containerEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
   }
@@ -53,6 +56,11 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
 
   setDuration(duration) {
     this.$duration.textContent = duration
+  }
+
+  onContainerDestroyed() {
+    this.setPosition(this.defaultTime)
+    this.setDuration(this.defaultTime)
   }
 
   render() {

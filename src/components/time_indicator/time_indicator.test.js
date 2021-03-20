@@ -59,6 +59,14 @@ describe('TimeIndicatorPlugin', function() {
     expect(this.plugin.template()).toEqual(templateHTML)
   })
 
+  test('have a getter called defaultTime', () => {
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'defaultTime').get).toBeTruthy()
+  })
+
+  test('defaultTime getter returns the default string that will be added on the plugin DOM element', () => {
+    expect(this.plugin.template()).toEqual(templateHTML)
+  })
+
   describe('bindEvents method', () => {
     test('stops the current listeners before add new ones', () => {
       jest.spyOn(this.plugin, 'stopListening')
@@ -127,6 +135,14 @@ describe('TimeIndicatorPlugin', function() {
 
       expect(this.plugin.onTimeUpdate).toHaveBeenCalledTimes(1)
     })
+
+    test('register onContainerDestroyed method as callback for CONTAINER_DESTROYED event', () => {
+      jest.spyOn(this.plugin, 'onContainerDestroyed')
+      this.core.activeContainer = this.container
+      this.container.trigger(Events.CONTAINER_DESTROYED)
+
+      expect(this.plugin.onContainerDestroyed).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('onTimeUpdate callback', () => {
@@ -188,6 +204,21 @@ describe('TimeIndicatorPlugin', function() {
     this.plugin.setDuration(durationTimeText)
 
     expect(this.plugin.$duration.textContent).toEqual(durationTimeText)
+  })
+
+  describe('onContainerDestroyed method', () => {
+    test('calls setPosition method with defaultTime getter value', () => {
+      jest.spyOn(this.plugin, 'setPosition')
+      this.plugin.onContainerDestroyed()
+
+      expect(this.plugin.setPosition).toHaveBeenCalledWith(this.plugin.defaultTime)
+    })
+    test('calls setDuration method with defaultTime getter value', () => {
+      jest.spyOn(this.plugin, 'setDuration')
+      this.plugin.onContainerDestroyed()
+
+      expect(this.plugin.setDuration).toHaveBeenCalledWith(this.plugin.defaultTime)
+    })
   })
 
   describe('render method', () => {
