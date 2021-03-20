@@ -120,6 +120,20 @@ describe('TimeIndicatorPlugin', function() {
   })
 
   describe('setValue method', () => {
+    test('saves currentValue on _lastValue', () => {
+      this.plugin.currentValue = 100
+      this.plugin.setValue(50)
+
+      expect(this.plugin._lastValue).toEqual(100)
+    })
+
+    test('saves received value on _lastValue if don\'t exists a valid currentValue', () => {
+      this.plugin.currentValue = null
+      this.plugin.setValue(50)
+
+      expect(this.plugin._lastValue).toEqual(50)
+    })
+
     test('saves received value on currentValue', () => {
       this.plugin.currentValue = null
       this.plugin.setValue(50)
