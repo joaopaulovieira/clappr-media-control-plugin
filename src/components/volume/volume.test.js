@@ -289,6 +289,14 @@ describe('TimeIndicatorPlugin', function() {
     })
   })
 
+  describe('showSlider method', () => {
+    test('removes .volume__slider-container--hide class from slider container DOM element', () => {
+      this.plugin.showSlider()
+
+      expect(this.plugin.$sliderContainer.classList.contains('volume__slider-container--hide')).toBeFalsy()
+    })
+  })
+
   describe('setValueFromInputSlider method', () => {
     test('adds event.target.value as --volume-before-width style property of slider DOM element', () => {
       this.plugin.setValueFromInputSlider({ target: { value: 50 } })

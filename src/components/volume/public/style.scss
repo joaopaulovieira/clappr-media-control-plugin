@@ -13,6 +13,11 @@ $shadow: drop-shadow( 2px 2px 1px rgba(0, 0, 0, 0.7));
     top: -120px;
     width: 100%;
     will-change: opacity;
+
+    &--hide {
+      opacity: 0;
+      visibility: hidden;
+    }
   }
 
   &__slider {

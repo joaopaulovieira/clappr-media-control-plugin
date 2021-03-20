@@ -83,6 +83,7 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
   }
 
   showSlider() {
+    this.$sliderContainer.classList.remove('volume__slider-container--hide')
   }
 
   hideSlider() {
