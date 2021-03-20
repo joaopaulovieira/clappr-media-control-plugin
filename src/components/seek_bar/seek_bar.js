@@ -39,6 +39,7 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
   render() {
     if (this.isRendered) return
     this.el.innerHTML = ''
+    this.$el.append(Styler.getStyleFor(pluginStyle))
     this.isRendered = true
     return this
   }
