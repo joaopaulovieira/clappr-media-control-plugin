@@ -148,6 +148,14 @@ describe('TimeIndicatorPlugin', function() {
       expect(this.plugin.currentValue).toEqual(50)
     })
 
+    test('saves received value on LocalStorage if options.persistConfig is true', () => {
+      const { core, container, plugin } = setupTest({ persistConfig: true }, true)
+      core.activeContainer = container
+      plugin.setValue(50)
+
+      expect(Utils.Config.restore('volume')).toEqual(50)
+    })
+
     test('sets received value as slider.value input DOM element', () => {
       this.plugin.setValue(50)
 

@@ -46,6 +46,7 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
     this._lastValue = this.currentValue || value
     this.updateIcon(value)
     this.currentValue = value
+    this.persistConfig && Utils.Config.persist('volume', value)
     this.$slider.value = value
     this.container.setVolume(value)
   }
