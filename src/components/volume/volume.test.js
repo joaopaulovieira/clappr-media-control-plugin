@@ -2,6 +2,8 @@ import { Browser, Events, Core, Container, Playback, Utils } from '@clappr/core'
 import VolumePlugin from './volume'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
 
+import templateHTML from './public/template.html'
+
 const setupTest = (options = {}, fullSetup = false) => {
   const core = new Core(options)
   const plugin = new VolumePlugin(core)
@@ -55,6 +57,14 @@ describe('TimeIndicatorPlugin', function() {
     expect(this.plugin.$el[0].className).toEqual('volume media-control__button media-control__elements')
   })
 
+  test('have a getter called template', () => {
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'template').get).toBeTruthy()
+  })
+
+  test('template getter returns on template that will be added on the plugin DOM element', () => {
+    expect(this.plugin.template()).toEqual(templateHTML)
+  })
+
   describe('bindEvents method', () => {
     test('stops the current listeners before add new ones', () => {
       jest.spyOn(this.plugin, 'stopListening')
@@ -98,4 +108,9 @@ describe('TimeIndicatorPlugin', function() {
     test('sets isRendered flag to true', () => {
       expect(this.plugin.isRendered).toBeTruthy()
     })
+
+    test('insert template getter response inside plugin DOM element', () => {
+      expect(this.plugin.el.innerHTML.includes(this.plugin.template())).toBeTruthy()
+    })
   })
+})

@@ -1,6 +1,8 @@
 import { Browser, Events, Styler, Utils, template } from '@clappr/core'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
 
+import templateHTML from './public/template.html'
+
 export default class VolumePlugin extends MediaControlComponentPlugin {
   get name() { return 'volume' }
 
@@ -13,6 +15,8 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
   get separator() { return true }
 
   get attributes() { return { class: 'volume media-control__button' } }
+
+  get template() { return template(templateHTML) }
 
   bindEvents() {
     const coreEventListenerData = [{ object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged }]
@@ -28,6 +32,7 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
   render() {
     if (this.isRendered) return
     this.el.innerHTML = ''
+    this.$el.html(this.template({ options: this.options }))
     this.isRendered = true
     return this
   }
