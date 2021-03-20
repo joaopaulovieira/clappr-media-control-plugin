@@ -56,6 +56,7 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
     this.playback = this.core.activePlayback
     if (!this.container) return
     this.bindContainerEvents()
+    this.bindPlaybackEvents()
   }
 
   bindContainerEvents() {
@@ -96,6 +97,17 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
 
   updateBufferedBar(buffered, duration) {
     this.$el[0].style.setProperty('--buffered-width', `${buffered / duration * 100}%`)
+  }
+
+  bindPlaybackEvents() {
+    const playbackEventListenerData = [{ object: this.playback, event: Events.PLAYBACK_PLAY, callback: this.updateStyles }]
+    this.playback && playbackEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
+  }
+
+  updateStyles() {
+    this.shouldDisableInteraction
+      ? this.$el[0].classList.add('seek-bar--disable-interaction')
+      : this.$el[0].classList.remove('seek-bar--disable-interaction')
   }
 
   updateProgressBarViaInteraction(rangeInput) {

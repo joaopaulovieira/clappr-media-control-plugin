@@ -168,6 +168,13 @@ describe('SeekBarPlugin', function() {
 
       expect(this.plugin.bindContainerEvents).toHaveBeenCalledTimes(1)
     })
+
+    test('calls bindPlaybackEvents method', () => {
+      jest.spyOn(this.plugin, 'bindPlaybackEvents')
+      this.plugin.onContainerChanged()
+
+      expect(this.plugin.bindPlaybackEvents).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('bindContainerEvents method', () => {
@@ -298,6 +305,39 @@ describe('SeekBarPlugin', function() {
     })
   })
 
+
+  describe('bindPlaybackEvents method', () => {
+    test('avoid register callback for events on playback scope without a valid reference', () => {
+      jest.spyOn(this.plugin, 'updateStyles')
+      this.playback.trigger(Events.PLAYBACK_PLAY)
+
+      expect(this.plugin.updateStyles).not.toHaveBeenCalled()
+    })
+
+    test('register updateStyles method as callback for PLAYBACK_PLAY event', () => {
+      jest.spyOn(this.plugin, 'updateStyles')
+      this.core.activeContainer = this.container
+      this.playback.trigger(Events.PLAYBACK_PLAY)
+
+      expect(this.plugin.updateStyles).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('updateStyles method', () => {
+    test('adds seek-bar--disable-interaction css class to DOM element plugin if shouldDisableInteraction getter returns true', () => {
+      jest.spyOn(this.plugin, 'shouldDisableInteraction', 'get').mockReturnValueOnce(true)
+      this.plugin.updateStyles()
+
+      expect(this.plugin.$el[0].classList.contains('seek-bar--disable-interaction')).toBeTruthy()
+    })
+
+    test('removes seek-bar--disable-interaction css class to DOM element plugin if shouldDisableInteraction getter returns false', () => {
+      jest.spyOn(this.plugin, 'shouldDisableInteraction', 'get').mockReturnValueOnce(false)
+      this.plugin.updateStyles()
+
+      expect(this.plugin.$el[0].classList.contains('seek-bar--disable-interaction')).toBeFalsy()
+    })
+  })
 
   describe('updateProgressBarViaInteraction method', () => {
     test('avoids execute internal code if shouldDisableInteraction getter returns true', () => {
