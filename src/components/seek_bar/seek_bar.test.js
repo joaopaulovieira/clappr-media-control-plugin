@@ -85,6 +85,20 @@ describe('SeekBarPlugin', function() {
     })
   })
 
+  test('have a getter called isLiveMedia', () => {
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'isLiveMedia').get).toBeTruthy()
+  })
+
+  test('isLiveMedia getter informs if the media is of the LIVE type', () => {
+    expect(this.plugin.isLiveMedia).toBeFalsy()
+
+    jest.spyOn(Playback.prototype, 'getPlaybackType').mockReturnValueOnce(Playback.LIVE)
+    const { core, container, plugin } = setupTest({}, true)
+    core.activeContainer = container
+
+    expect(plugin.isLiveMedia).toBeTruthy()
+  })
+
   describe('constructor', () => {
     test('sets _isDragging internal flag as falsy', () => {
       expect(this.plugin._isDragging).toBeFalsy()
@@ -120,6 +134,12 @@ describe('SeekBarPlugin', function() {
       this.plugin.onContainerChanged()
 
       expect(this.plugin.container).toEqual(this.core.activeContainer)
+    })
+
+    test('saves core.activePlayback reference locally', () => {
+      this.plugin.onContainerChanged()
+
+      expect(this.plugin.playback).toEqual(this.core.activePlayback)
     })
 
     test('calls bindContainerEvents method', () => {

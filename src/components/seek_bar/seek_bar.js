@@ -33,6 +33,8 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
     return Browser.isMobile ? touchOnlyEvents : mouseOnlyEvents
   }
 
+  get isLiveMedia() { return this.playback.getPlaybackType() === Playback.LIVE }
+
   constructor(core) {
     super(core)
     this._isDragging = false
@@ -47,6 +49,7 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
   onContainerChanged() {
     this.container && this.stopListening(this.container)
     this.container = this.core.activeContainer
+    this.playback = this.core.activePlayback
     if (!this.container) return
     this.bindContainerEvents()
   }
