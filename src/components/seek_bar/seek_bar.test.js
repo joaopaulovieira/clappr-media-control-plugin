@@ -85,6 +85,12 @@ describe('SeekBarPlugin', function() {
     })
   })
 
+  describe('constructor', () => {
+    test('sets _isDragging internal flag as falsy', () => {
+      expect(this.plugin._isDragging).toBeFalsy()
+    })
+  })
+
   describe('bindEvents method', () => {
     test('stops the current listeners before add new ones', () => {
       jest.spyOn(this.plugin, 'stopListening')
@@ -168,6 +174,15 @@ describe('SeekBarPlugin', function() {
       jest.spyOn(this.plugin, 'updatePosition')
       jest.spyOn(this.plugin, 'updateDuration')
     })
+
+    test('avoids execute internal code if _isDragging flag is truthy', () => {
+      this.plugin._isDragging = true
+      this.plugin.onTimeUpdate({ current: 1, total: 50 })
+
+      expect(this.plugin.updatePosition).not.toHaveBeenCalled()
+      expect(this.plugin.updateDuration).not.toHaveBeenCalled()
+    })
+
     test('uses Math.floor to only set integer values', () => {
       this.plugin.onTimeUpdate({ current: 1.1111, total: 50.9134234 })
 
@@ -191,6 +206,13 @@ describe('SeekBarPlugin', function() {
   })
 
   describe('updatePosition method', () => {
+    test('avoids execute internal code if _isDragging flag is truthy', () => {
+      this.plugin._isDragging = true
+      this.plugin.updatePosition(1, 50)
+
+      expect(this.plugin.$el[0].value).not.toEqual('1')
+    })
+
     test('adds received position value as value property of DOM element plugin', () => {
       this.plugin.updatePosition(1, 50)
 
@@ -205,6 +227,13 @@ describe('SeekBarPlugin', function() {
   })
 
   describe('updateDuration method', () => {
+    test('avoids execute internal code if _isDragging flag is truthy', () => {
+      this.plugin._isDragging = true
+      this.plugin.updateDuration(50)
+
+      expect(this.plugin.$el[0].max).not.toEqual('50')
+    })
+
     test('adds received duration value as max property of DOM element plugin', () => {
       this.plugin.updateDuration(50)
 
@@ -226,6 +255,16 @@ describe('SeekBarPlugin', function() {
       this.plugin.updateBufferedBar(20, 200)
 
       expect(getComputedStyle(this.plugin.$el[0]).getPropertyValue('--buffered-width')).toEqual('10%')
+    })
+  })
+
+
+  describe('updateProgressBarViaInteraction method', () => {
+    test('sets true value if _isDragging flag is falsy', () => {
+      this.plugin._isDragging = false
+      this.plugin.updateProgressBarViaInteraction({ target: { value: 20, max: 200 } })
+
+      expect(this.plugin._isDragging).toBeTruthy()
     })
   })
 

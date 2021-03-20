@@ -33,6 +33,11 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
     return Browser.isMobile ? touchOnlyEvents : mouseOnlyEvents
   }
 
+  constructor(core) {
+    super(core)
+    this._isDragging = false
+  }
+
   bindEvents() {
     const coreEventListenerData = [{ object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged }]
     coreEventListenerData.forEach(item => this.stopListening(item.object, item.event, item.callback))
@@ -55,6 +60,8 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
   }
 
   onTimeUpdate(time) {
+    if (this._isDragging) return
+
     const position = Math.floor(time.current)
     const duration = Math.floor(time.total)
 
@@ -63,11 +70,13 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
   }
 
   updatePosition(position, duration) {
+    if (this._isDragging) return
     this.$el[0].value = position
     this.$el[0].style.setProperty('--seek-before-width', `${position / duration * 100}%`)
   }
 
   updateDuration(duration) {
+    if (this._isDragging) return
     this.$el[0].max = duration
   }
 
@@ -83,6 +92,7 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
   }
 
   updateProgressBarViaInteraction(rangeInput) {
+    !this._isDragging && (this._isDragging = true)
   }
 
   seek(rangeInput) {
