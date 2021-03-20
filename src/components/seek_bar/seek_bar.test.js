@@ -83,6 +83,14 @@ describe('SeekBarPlugin', function() {
     })
   })
 
+  describe('updateDuration method', () => {
+    test('adds received duration value as max property of DOM element plugin', () => {
+      this.plugin.updateDuration(50)
+
+      expect(this.plugin.$el[0].max).toEqual('50')
+    })
+  })
+
   describe('render method', () => {
     beforeEach(() => {
       jest.spyOn(this.plugin, 'render')

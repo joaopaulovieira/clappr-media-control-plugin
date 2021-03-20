@@ -40,6 +40,10 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
     this.$el[0].value = position
   }
 
+  updateDuration(duration) {
+    this.$el[0].max = duration
+  }
+
   render() {
     if (this.isRendered) return
     this.el.innerHTML = ''
