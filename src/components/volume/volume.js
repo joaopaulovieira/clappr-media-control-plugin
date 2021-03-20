@@ -43,6 +43,7 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
   }
 
   setValue(value) {
+    this.currentValue = value
     this.$slider.value = value
     this.container.setVolume(value)
   }

@@ -120,6 +120,13 @@ describe('TimeIndicatorPlugin', function() {
   })
 
   describe('setValue method', () => {
+    test('saves received value on currentValue', () => {
+      this.plugin.currentValue = null
+      this.plugin.setValue(50)
+
+      expect(this.plugin.currentValue).toEqual(50)
+    })
+
     test('sets received value as slider.value input DOM element', () => {
       this.plugin.setValue(50)
 
