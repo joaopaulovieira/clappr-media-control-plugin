@@ -1,6 +1,8 @@
 import { Browser, Events, Playback, Styler } from '@clappr/core'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
 
+import pluginStyle from './public/style.scss'
+
 export default class SeekBarPlugin extends MediaControlComponentPlugin {
   get name() { return 'seek_bar' }
 
