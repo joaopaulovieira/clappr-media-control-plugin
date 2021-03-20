@@ -33,6 +33,11 @@ describe('SeekBarPlugin', function() {
     expect(this.plugin.layer).toEqual(1)
   })
 
+  test('overrides MediaControlComponentPlugin section getter to return a valid value', () => {
+    expect(this.plugin.section).not.toEqual(MediaControlComponentPlugin.prototype.section)
+    expect(this.plugin.section).toEqual(2)
+  })
+
   describe('bindEvents method', () => {
     test('stops the current listeners before add new ones', () => {
       jest.spyOn(this.plugin, 'stopListening')
