@@ -28,6 +28,11 @@ describe('TimeIndicatorPlugin', function() {
     expect(this.core.getPlugin(this.plugin.name).name).toEqual('time_indicator')
   })
 
+  test('overrides MediaControlComponentPlugin layer getter to return a valid value', () => {
+    expect(this.plugin.layer).not.toEqual(MediaControlComponentPlugin.prototype.layer)
+    expect(this.plugin.layer).toEqual(1)
+  })
+
   describe('bindEvents method', () => {
     test('stops the current listeners before add new ones', () => {
       jest.spyOn(this.plugin, 'stopListening')
