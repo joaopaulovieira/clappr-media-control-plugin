@@ -34,6 +34,18 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
   }
 
   bindContainerEvents() {
+    const containerEventListenerData = [
+      { object: this.container, event: Events.CONTAINER_TIMEUPDATE, callback: this.onTimeUpdate },
+    ]
+    this.container && containerEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
+  }
+
+  onTimeUpdate(time) {
+    const position = Math.floor(time.current)
+    const duration = Math.floor(time.total)
+
+    position !== parseInt(this.$el[0].value, 10) && this.updatePosition(position)
+    duration !== parseInt(this.$el[0].max, 10) && this.updateDuration(duration)
   }
 
   updatePosition(position) {

@@ -58,6 +58,7 @@ describe('SeekBarPlugin', function() {
     expect(this.plugin.$el[0].value).toEqual('0')
     expect(this.plugin.$el[0].max).toEqual('100')
   })
+
   describe('bindEvents method', () => {
     test('stops the current listeners before add new ones', () => {
       jest.spyOn(this.plugin, 'stopListening')
@@ -72,6 +73,86 @@ describe('SeekBarPlugin', function() {
       core.trigger(Events.CORE_ACTIVE_CONTAINER_CHANGED)
 
       expect(plugin.onContainerChanged).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('onContainerChanged method', () => {
+    test('removes all listeners from old container reference', () => {
+      jest.spyOn(this.plugin, 'stopListening')
+      this.plugin.onContainerChanged()
+
+      expect(this.plugin.stopListening).toHaveBeenCalledWith(this.container)
+    })
+
+    test('saves core.activeContainer reference locally', () => {
+      this.plugin.onContainerChanged()
+
+      expect(this.plugin.container).toEqual(this.core.activeContainer)
+    })
+
+    test('calls bindContainerEvents method', () => {
+      jest.spyOn(this.plugin, 'bindContainerEvents')
+      this.plugin.onContainerChanged()
+
+      expect(this.plugin.bindContainerEvents).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('bindContainerEvents method', () => {
+    test('only unbind events when is necessary', () => {
+      jest.spyOn(this.plugin, 'stopListening')
+
+      this.plugin.container = null
+      this.core.activeContainer = this.container
+      const oldContainer = { ...this.container }
+
+      expect(this.plugin.stopListening).not.toHaveBeenCalledWith(this.container)
+
+      this.core.activeContainer = this.container
+
+      expect(this.plugin.stopListening).toHaveBeenCalledWith(oldContainer)
+    })
+
+    test('avoid register callback for events on container scope without a valid reference', () => {
+      jest.spyOn(this.plugin, 'onTimeUpdate')
+      this.container.trigger(Events.CONTAINER_TIMEUPDATE)
+
+      expect(this.plugin.onTimeUpdate).not.toHaveBeenCalled()
+    })
+
+    test('register onTimeUpdate method as callback for CONTAINER_TIMEUPDATE event', () => {
+      jest.spyOn(this.plugin, 'onTimeUpdate')
+      this.core.activeContainer = this.container
+      this.container.trigger(Events.CONTAINER_TIMEUPDATE)
+
+      expect(this.plugin.onTimeUpdate).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('onTimeUpdate callback', () => {
+    beforeEach(() => {
+      jest.spyOn(this.plugin, 'updatePosition')
+      jest.spyOn(this.plugin, 'updateDuration')
+    })
+    test('uses Math.floor to only set integer values', () => {
+      this.plugin.onTimeUpdate({ current: 1.1111, total: 50.9134234 })
+
+      expect(this.plugin.updatePosition).toHaveBeenCalledWith(1, 50)
+      expect(this.plugin.updateDuration).toHaveBeenCalledWith(50)
+    })
+
+    test('only updates position and duration value if differs from current DOM element value', () => {
+      this.plugin.onTimeUpdate({ current: 0, total: 100 })
+
+      expect(this.plugin.updatePosition).not.toHaveBeenCalled()
+      expect(this.plugin.updateDuration).not.toHaveBeenCalled()
+
+      this.plugin.onTimeUpdate({ current: 1, total: 50 })
+
+      expect(this.plugin.updatePosition).toHaveBeenCalledWith(1, 50)
+      expect(this.plugin.updateDuration).toHaveBeenCalledWith(50)
+      expect(this.plugin.updatePosition).toHaveBeenCalledTimes(1)
+      expect(this.plugin.updateDuration).toHaveBeenCalledTimes(1)
     })
   })
 
