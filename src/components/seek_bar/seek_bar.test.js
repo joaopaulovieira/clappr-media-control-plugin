@@ -43,6 +43,11 @@ describe('SeekBarPlugin', function() {
     expect(this.plugin.position).toEqual(1)
   })
 
+  test('overrides MediaControlComponentPlugin tagName getter to define DOM plugin element as a button tag ', () => {
+    expect(this.plugin.tagName).not.toEqual(MediaControlComponentPlugin.prototype.tagName)
+    expect(this.plugin.el.tagName).toEqual('INPUT')
+  })
+
   describe('bindEvents method', () => {
     test('stops the current listeners before add new ones', () => {
       jest.spyOn(this.plugin, 'stopListening')
