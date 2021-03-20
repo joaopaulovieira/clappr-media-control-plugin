@@ -87,14 +87,22 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
   }
 
   hideSlider() {
+    clearTimeout(this._hideTimeoutId)
+    this._hideTimeoutId = setTimeout(() => {
+      this._isDragging
+        ? setTimeout(() => this.hideSlider, 100)
+        : this.$sliderContainer.classList.add('volume__slider-container--hide')
+    }, 100)
   }
 
   setValueFromInputSlider(ev) {
+    this._isDragging = true
     this.$slider.style.setProperty('--volume-before-width', `${ev.target.value}%`)
     this.setValue(ev.target.value)
   }
 
   clearHideTimeout() {
+    this._isDragging = false
   }
 
   toggle() {

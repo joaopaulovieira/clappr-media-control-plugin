@@ -297,7 +297,43 @@ describe('TimeIndicatorPlugin', function() {
     })
   })
 
+  describe('hideSlider method', () => {
+    test('adds .volume__slider-container--hide to sliderContainer DOM element after 100 milliseconds if _isDragging flag is false', () => {
+      jest.useFakeTimers()
+      this.plugin._isDragging = false
+      this.plugin.showSlider()
+      this.plugin.hideSlider()
+
+      expect(this.plugin.$sliderContainer.classList.contains('volume__slider-container--hide')).toBeFalsy()
+
+      jest.advanceTimersByTime(100)
+
+      expect(this.plugin.$sliderContainer.classList.contains('volume__slider-container--hide')).toBeTruthy()
+    })
+
+    test('calls hiderSlider again after 200 milliseconds if _isDragging flag is true', () => {
+      jest.useFakeTimers()
+      jest.spyOn(this.plugin, 'hideSlider')
+      this.plugin.showSlider()
+      this.plugin._isDragging = true
+      this.plugin.hideSlider()
+
+      expect(this.plugin.hideSlider).toHaveBeenCalledTimes(1)
+
+      jest.advanceTimersByTime(200)
+
+      expect(this.plugin.hideSlider).toHaveBeenCalledTimes(1)
+    })
+  })
+
   describe('setValueFromInputSlider method', () => {
+    test('sets _isDragging flag to true', () => {
+      this.plugin._isDragging = false
+      this.plugin.setValueFromInputSlider({ target: { value: 0 } })
+
+      expect(this.plugin._isDragging).toBeTruthy()
+    })
+
     test('adds event.target.value as --volume-before-width style property of slider DOM element', () => {
       this.plugin.setValueFromInputSlider({ target: { value: 50 } })
 
@@ -309,6 +345,15 @@ describe('TimeIndicatorPlugin', function() {
       this.plugin.setValueFromInputSlider({ target: { value: 50 } })
 
       expect(this.plugin.setValue).toHaveBeenCalledWith(50)
+    })
+  })
+
+  describe('clearHideTimeout method', () => {
+    test('sets _isDragging flag to false', () => {
+      this.plugin._isDragging = true
+      this.plugin.clearHideTimeout()
+
+      expect(this.plugin._isDragging).toBeFalsy()
     })
   })
 
