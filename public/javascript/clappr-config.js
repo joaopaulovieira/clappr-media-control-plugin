@@ -13,6 +13,18 @@ const player = new Clappr.Player({
     window.MediaControl.TimeIndicatorPlugin,
     window.MediaControl.MainPlugin,
   ],
+  mediaControl: {
+    disableBeforeVideoStarts: false,
+    layersQuantity: 1,
+    layersConfig: [
+      {
+        id: 1,
+        sectionsQuantity: 2,
+        flexDirection: 'column',
+        sectionsConfig: [{ id: 1, separator: true }],
+      },
+    ],
+  },
 })
 
 player.attachTo(playerElement)
