@@ -214,6 +214,14 @@ describe('SeekBarPlugin', function() {
 
       expect(this.plugin.onContainerProgress).toHaveBeenCalledTimes(1)
     })
+
+    test('register onContainerDestroyed method as callback for CONTAINER_DESTROYED event', () => {
+      jest.spyOn(this.plugin, 'onContainerDestroyed')
+      this.core.activeContainer = this.container
+      this.container.trigger(Events.CONTAINER_DESTROYED)
+
+      expect(this.plugin.onContainerDestroyed).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('onTimeUpdate callback', () => {
@@ -305,6 +313,17 @@ describe('SeekBarPlugin', function() {
     })
   })
 
+  describe('onContainerDestroyed method', () => {
+    test('removes seek-bar--disable-interaction css class to DOM element plugin', () => {
+      jest.spyOn(this.plugin, 'shouldDisableInteraction', 'get').mockReturnValueOnce(true)
+      this.plugin.updateStyles()
+
+      expect(this.plugin.$el[0].classList.contains('seek-bar--disable-interaction')).toBeTruthy()
+
+      this.plugin.onContainerDestroyed()
+      expect(this.plugin.$el[0].classList.contains('seek-bar--disable-interaction')).toBeFalsy()
+    })
+  })
 
   describe('bindPlaybackEvents method', () => {
     test('avoid register callback for events on playback scope without a valid reference', () => {

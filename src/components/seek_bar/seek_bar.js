@@ -63,6 +63,7 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
     const containerEventListenerData = [
       { object: this.container, event: Events.CONTAINER_TIMEUPDATE, callback: this.onTimeUpdate },
       { object: this.container, event: Events.CONTAINER_PROGRESS, callback: this.onContainerProgress },
+      { object: this.container, event: Events.CONTAINER_DESTROYED, callback: this.onContainerDestroyed },
     ]
     this.container && containerEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
   }
@@ -97,6 +98,10 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
 
   updateBufferedBar(buffered, duration) {
     this.$el[0].style.setProperty('--buffered-width', `${buffered / duration * 100}%`)
+  }
+
+  onContainerDestroyed() {
+    this.$el[0].classList.remove('seek-bar--disable-interaction')
   }
 
   bindPlaybackEvents() {
