@@ -70,7 +70,7 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
     this.cacheElements()
     this.$el.append(Styler.getStyleFor(pluginStyle))
     this.isRendered = true
-    return this
+    super.render()
   }
 
   cacheElements() {

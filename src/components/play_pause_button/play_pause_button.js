@@ -81,6 +81,6 @@ export default class PlayPauseButtonPlugin extends MediaControlComponentPlugin {
     this.$el.append(Styler.getStyleFor(pluginStyle))
     this.changeIcon()
     this.isRendered = true
-    return this
+    super.render()
   }
 }

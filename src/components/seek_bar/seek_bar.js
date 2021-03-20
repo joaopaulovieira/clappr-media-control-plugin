@@ -133,6 +133,6 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
     this.el.innerHTML = ''
     this.$el.append(Styler.getStyleFor(pluginStyle))
     this.isRendered = true
-    return this
+    super.render()
   }
 }
