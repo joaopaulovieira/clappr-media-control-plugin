@@ -234,6 +234,16 @@ describe('TimeIndicatorPlugin', function() {
       expect(this.plugin.isRendered).toBeTruthy()
     })
 
+    test('creates cache elements to not have unnecessary re-render cycles', () => {
+      expect(this.plugin.render).toHaveBeenCalledTimes(1)
+      expect(this.plugin.cacheElements).toHaveBeenCalledTimes(1)
+
+      this.plugin.render()
+
+      expect(this.plugin.render).toHaveBeenCalledTimes(2)
+      expect(this.plugin.cacheElements).toHaveBeenCalledTimes(1)
+    })
+
     test('insert template getter response inside plugin DOM element', () => {
       expect(this.plugin.$el[0].innerHTML.includes(this.plugin.template())).toBeTruthy()
     })
