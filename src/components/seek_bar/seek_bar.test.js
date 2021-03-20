@@ -127,6 +127,14 @@ describe('SeekBarPlugin', function() {
 
       expect(this.plugin.onTimeUpdate).toHaveBeenCalledTimes(1)
     })
+
+    test('register onContainerProgress method as callback for CONTAINER_PROGRESS event', () => {
+      jest.spyOn(this.plugin, 'onContainerProgress')
+      this.core.activeContainer = this.container
+      this.container.trigger(Events.CONTAINER_PROGRESS)
+
+      expect(this.plugin.onContainerProgress).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('onTimeUpdate callback', () => {
@@ -175,6 +183,15 @@ describe('SeekBarPlugin', function() {
       this.plugin.updateDuration(50)
 
       expect(this.plugin.$el[0].max).toEqual('50')
+    })
+  })
+
+  describe('onContainerProgress callback', () => {
+    test('uses Math.floor to only set integer values', () => {
+      jest.spyOn(this.plugin, 'updateBufferedBar')
+      this.plugin.onContainerProgress({ current: 1.1111, total: 50.9134234 })
+
+      expect(this.plugin.updateBufferedBar).toHaveBeenCalledWith(1, 50)
     })
   })
 

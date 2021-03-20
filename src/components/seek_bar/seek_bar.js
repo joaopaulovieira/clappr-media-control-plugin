@@ -36,6 +36,7 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
   bindContainerEvents() {
     const containerEventListenerData = [
       { object: this.container, event: Events.CONTAINER_TIMEUPDATE, callback: this.onTimeUpdate },
+      { object: this.container, event: Events.CONTAINER_PROGRESS, callback: this.onContainerProgress },
     ]
     this.container && containerEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
   }
@@ -55,6 +56,16 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
 
   updateDuration(duration) {
     this.$el[0].max = duration
+  }
+
+  onContainerProgress(progress) {
+    const buffered = Math.floor(progress.current)
+    const duration = Math.floor(progress.total)
+
+    this.updateBufferedBar(buffered, duration)
+  }
+
+  updateBufferedBar(buffered, duration) {
   }
 
   render() {
