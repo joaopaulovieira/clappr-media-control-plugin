@@ -118,4 +118,16 @@ describe('MediaControlComponentPlugin', () => {
       expect(plugin._mediaControl).toBeNull()
     })
   })
+
+  describe('render method', () => {
+    test('calls the mediaControl.renderMediaControlComponent method passing its own reference if it has not yet been rendered', () => {
+      const { core, plugin } = setupTest()
+      core.plugins.push(new MediaControlPlugin(core))
+      jest.spyOn(plugin.mediaControl, 'renderMediaControlComponent').mockImplementationOnce(() => {})
+
+      plugin.render()
+
+      expect(plugin.mediaControl.renderMediaControlComponent).toHaveBeenCalledWith(plugin)
+    })
+  })
 })

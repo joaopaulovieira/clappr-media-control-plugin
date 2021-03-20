@@ -23,4 +23,9 @@ export default class MediaControlComponentPlugin extends UICorePlugin {
     this._mediaControl = null
     super.destroy()
   }
+
+  render() {
+    this.mediaControl && !this.$el[0].parentNode && this.mediaControl.renderMediaControlComponent(this)
+    return this
+  }
 }
