@@ -134,6 +134,19 @@ describe('TimeIndicatorPlugin', function() {
       jest.spyOn(this.plugin, 'setPosition')
       jest.spyOn(this.plugin, 'setDuration')
     })
+
+    test('avoids null returned values', () => {
+      this.plugin.onTimeUpdate({ current: null, total: 100 })
+
+      expect(this.plugin.setPosition).not.toHaveBeenCalled()
+      expect(this.plugin.setDuration).not.toHaveBeenCalled()
+
+      this.plugin.onTimeUpdate({ current: 100, total: null })
+
+      expect(this.plugin.setPosition).not.toHaveBeenCalled()
+      expect(this.plugin.setDuration).not.toHaveBeenCalled()
+    })
+
     test('generates time text based on callback response to add on DOM elements', () => {
       this.plugin.onTimeUpdate({ current: 1, total: 100 })
 

@@ -38,6 +38,8 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
   }
 
   onTimeUpdate(time) {
+    if (time.current === null || time.total === null) return
+
     const position = Utils.formatTime(Math.floor(time.current))
     const duration = Utils.formatTime(Math.floor(time.total))
 
