@@ -46,6 +46,18 @@ $shadow: drop-shadow( 2px 2px 1px rgba(0, 0, 0, 0.7));
         cursor: pointer;
         background: rgba(120, 120, 120, 0.8);
       }
+      &::-webkit-slider-thumb {
+        background-color: white;
+        border: 0 solid white;
+        border-radius: 50%;
+        box-sizing: content-box;
+        cursor: pointer;
+        margin: -5px 0 0 0;
+        height: 12px;
+        position: relative;
+        width: 12px;
+        -webkit-appearance: none;
+      }
 
       &::-moz-range-track {
         background: rgba(120, 120, 120, 0.8);
@@ -61,6 +73,15 @@ $shadow: drop-shadow( 2px 2px 1px rgba(0, 0, 0, 0.7));
       }
       &::-moz-focus-outer {
         border: 0;
+      }
+      &::-moz-range-thumb {
+        background-color: white;
+        border: 0 solid white;
+        border-radius: 50%;
+        box-sizing: content-box;
+        cursor: pointer;
+        height: 12px;
+        width: 12px;
       }
     }
   }
