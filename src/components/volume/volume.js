@@ -1,6 +1,7 @@
 import { Browser, Events, Styler, Utils, template } from '@clappr/core'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
 
+import pluginStyle from './public/style.scss'
 import templateHTML from './public/template.html'
 
 export default class VolumePlugin extends MediaControlComponentPlugin {
@@ -33,6 +34,7 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
     if (this.isRendered) return
     this.el.innerHTML = ''
     this.$el.html(this.template({ options: this.options }))
+    this.$el.append(Styler.getStyleFor(pluginStyle))
     this.isRendered = true
     return this
   }

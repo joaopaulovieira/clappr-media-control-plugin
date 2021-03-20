@@ -1,0 +1,42 @@
+$shadow: drop-shadow( 2px 2px 1px rgba(0, 0, 0, 0.7));
+
+.volume {
+  display: flex;
+  position: relative;
+
+  &__slider-container {
+    background-color: rgba(0, 0, 0, 0.8);
+    height: 120px;
+    opacity: 1;
+    position: absolute;
+    transition: visibility .3s ease, opacity .3s ease;
+    top: -120px;
+    width: 100%;
+    will-change: opacity;
+  }
+
+  &__slider {
+    position: absolute;
+    top: 60px;
+    transform: translate(-50%, -50%) rotate(-90deg);
+
+    &[type=range] {
+      background-color: transparent;
+      box-sizing: content-box;
+      height: 30px;
+      outline: none;
+      width: 100px;
+      -webkit-appearance: none;
+    }
+  }
+
+  &__icon-container {
+    align-items: center;
+    display: flex;
+    filter: $shadow;
+    height: 100%;
+    justify-content: center;
+    width: 100%;
+    -webkit-filter: $shadow;
+  }
+}
