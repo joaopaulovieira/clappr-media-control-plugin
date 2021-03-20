@@ -97,6 +97,8 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
   }
 
   seek(rangeInput) {
+    const percentage = rangeInput.target.value / rangeInput.target.max * 100
+    this.container.seekPercentage(percentage)
   }
 
   render() {

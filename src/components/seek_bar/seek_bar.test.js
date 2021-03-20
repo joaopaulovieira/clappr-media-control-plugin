@@ -274,6 +274,15 @@ describe('SeekBarPlugin', function() {
     })
   })
 
+  describe('seek method', () => {
+    test('calls container.seekPercentage with the ratio of event.target.value and event.target.max values', () => {
+      jest.spyOn(this.container, 'seekPercentage')
+      this.plugin.seek({ target: { value: 20, max: 200 } })
+
+      expect(this.container.seekPercentage).toHaveBeenCalledWith(10)
+    })
+  })
+
   describe('render method', () => {
     beforeEach(() => {
       jest.spyOn(this.plugin, 'render')
