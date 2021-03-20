@@ -44,6 +44,9 @@ $background-color: linear-gradient(to right, rgba(120, 120, 120, 0.8) var(--buff
       width: 12px;
       -webkit-appearance: none;
     }
+    &:active::-webkit-slider-thumb {
+      transform: scale(1.2);
+    }
   
     &::-moz-range-track {
       background: $background-color;
@@ -67,7 +70,10 @@ $background-color: linear-gradient(to right, rgba(120, 120, 120, 0.8) var(--buff
       height: 12px;
       width: 12px;
     }
-
+    &:active::-moz-range-thumb {
+      transform: scale(1.2);
+    }
+  
     &::-ms-track {
       background: transparent;
       border: solid transparent;
@@ -90,6 +96,9 @@ $background-color: linear-gradient(to right, rgba(120, 120, 120, 0.8) var(--buff
       cursor: pointer;
       height: 12px;
       width: 12px;
+    }
+    &:active::-ms-thumb {
+      transform: scale(1.2);
     }
   }
 }
