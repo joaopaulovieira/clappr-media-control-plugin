@@ -89,6 +89,7 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
   }
 
   setValueFromInputSlider(ev) {
+    this.setValue(ev.target.value)
   }
 
   clearHideTimeout() {

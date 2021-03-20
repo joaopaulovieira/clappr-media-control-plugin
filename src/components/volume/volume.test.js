@@ -289,6 +289,15 @@ describe('TimeIndicatorPlugin', function() {
     })
   })
 
+  describe('setValueFromInputSlider method', () => {
+    test('calls setValue method with event.target.value', () => {
+      jest.spyOn(this.plugin, 'setValue')
+      this.plugin.setValueFromInputSlider({ target: { value: 50 } })
+
+      expect(this.plugin.setValue).toHaveBeenCalledWith(50)
+    })
+  })
+
   describe('toggle method', () => {
     test('calls setValue method with 0 if currentValue is greater than 0', () => {
       jest.spyOn(this.plugin, 'setValue')
