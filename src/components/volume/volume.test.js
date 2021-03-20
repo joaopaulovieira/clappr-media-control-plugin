@@ -117,7 +117,15 @@ describe('TimeIndicatorPlugin', function() {
       expect(this.plugin.container).toEqual(this.core.activeContainer)
     })
 
+  })
+
   describe('setValue method', () => {
+    test('sets received value as slider.value input DOM element', () => {
+      this.plugin.setValue(50)
+
+      expect(this.plugin.$slider.value).toEqual('50')
+    })
+
     test('calls container.setVolume with received value', () => {
       jest.spyOn(this.container, 'setVolume')
       this.plugin.setValue(50)
