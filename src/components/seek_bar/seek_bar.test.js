@@ -59,6 +59,32 @@ describe('SeekBarPlugin', function() {
     expect(this.plugin.$el[0].max).toEqual('100')
   })
 
+  test('have a getter called events', () => {
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'events').get).toBeTruthy()
+  })
+
+  describe('events getter', () => {
+    test('returns specific events/callbacks dictionary for mobile devices', () => {
+      const oldValue = Browser.isMobile
+      Browser.isMobile = true
+      expect(this.plugin.events).toEqual({
+        touchend: this.plugin.seek,
+        touchmove: this.plugin.updateProgressBarViaInteraction,
+      })
+      Browser.isMobile = oldValue
+    })
+
+    test('returns specific events/callbacks dictionary for desktop devices', () => {
+      const oldValue = Browser.isMobile
+      Browser.isMobile = false
+      expect(this.plugin.events).toEqual({
+        click: this.plugin.seek,
+        input: this.plugin.updateProgressBarViaInteraction,
+      })
+      Browser.isMobile = oldValue
+    })
+  })
+
   describe('bindEvents method', () => {
     test('stops the current listeners before add new ones', () => {
       jest.spyOn(this.plugin, 'stopListening')

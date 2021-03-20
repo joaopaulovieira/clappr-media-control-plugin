@@ -20,6 +20,19 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
       max: 100,
     }
   }
+
+  get events() {
+    const touchOnlyEvents = {
+      touchend: this.seek,
+      touchmove: this.updateProgressBarViaInteraction,
+    }
+    const mouseOnlyEvents = {
+      click: this.seek,
+      input: this.updateProgressBarViaInteraction,
+    }
+    return Browser.isMobile ? touchOnlyEvents : mouseOnlyEvents
+  }
+
   bindEvents() {
     const coreEventListenerData = [{ object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged }]
     coreEventListenerData.forEach(item => this.stopListening(item.object, item.event, item.callback))
@@ -67,6 +80,12 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
 
   updateBufferedBar(buffered, duration) {
     this.$el[0].style.setProperty('--buffered-width', `${buffered / duration * 100}%`)
+  }
+
+  updateProgressBarViaInteraction(rangeInput) {
+  }
+
+  seek(rangeInput) {
   }
 
   render() {
