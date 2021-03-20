@@ -38,6 +38,11 @@ describe('TimeIndicatorPlugin', function() {
     expect(this.plugin.section).toEqual(2)
   })
 
+  test('overrides MediaControlComponentPlugin position getter to return a valid value', () => {
+    expect(this.plugin.position).not.toEqual(MediaControlComponentPlugin.prototype.position)
+    expect(this.plugin.position).toEqual(2)
+  })
+
   describe('bindEvents method', () => {
     test('stops the current listeners before add new ones', () => {
       jest.spyOn(this.plugin, 'stopListening')

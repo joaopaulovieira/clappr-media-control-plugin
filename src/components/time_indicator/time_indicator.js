@@ -11,6 +11,8 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
 
   get section() { return 2 }
 
+  get position() { return 2 }
+
   bindEvents() {
     const coreEventListenerData = [{ object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged }]
     coreEventListenerData.forEach(item => this.stopListening(item.object, item.event, item.callback))
