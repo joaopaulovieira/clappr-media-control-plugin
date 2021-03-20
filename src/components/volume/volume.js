@@ -89,6 +89,7 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
   }
 
   setValueFromInputSlider(ev) {
+    this.$slider.style.setProperty('--volume-before-width', `${ev.target.value}%`)
     this.setValue(ev.target.value)
   }
 

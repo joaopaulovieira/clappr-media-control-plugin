@@ -290,6 +290,12 @@ describe('TimeIndicatorPlugin', function() {
   })
 
   describe('setValueFromInputSlider method', () => {
+    test('adds event.target.value as --volume-before-width style property of slider DOM element', () => {
+      this.plugin.setValueFromInputSlider({ target: { value: 50 } })
+
+      expect(getComputedStyle(this.plugin.$slider).getPropertyValue('--volume-before-width')).toEqual('50%')
+    })
+
     test('calls setValue method with event.target.value', () => {
       jest.spyOn(this.plugin, 'setValue')
       this.plugin.setValueFromInputSlider({ target: { value: 50 } })
