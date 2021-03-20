@@ -633,8 +633,8 @@ describe('MediaControl Plugin', () => {
   describe('initMediaControlComponents method', () => {
     test('calls renderMediaControlComponent method for each loaded MediaControlComponentPlugin', () => {
       const { core, plugin } = setupTest()
-      jest.spyOn(plugin, 'renderMediaControlComponent')
       core.plugins.push(new MediaControlComponentPlugin(core))
+      jest.spyOn(plugin, 'renderMediaControlComponent')
       plugin.initMediaControlComponents()
 
       expect(plugin.renderMediaControlComponent).toHaveBeenCalledTimes(1)
@@ -643,11 +643,11 @@ describe('MediaControl Plugin', () => {
 
   describe('renderMediaControlComponent method', () => {
     test('adds media control component plugin DOM element into the configured section DOM element', () => {
+      const { core, plugin } = setupTest()
+      const mediaControlComponentPlugin = new MediaControlComponentPlugin(core)
       jest.spyOn(MediaControlComponentPlugin.prototype, 'layer', 'get').mockReturnValueOnce(1)
       jest.spyOn(MediaControlComponentPlugin.prototype, 'section', 'get').mockReturnValueOnce(1)
       jest.spyOn(MediaControlComponentPlugin.prototype, 'attributes', 'get').mockReturnValueOnce({ class: 'test' })
-      const { core, plugin } = setupTest()
-      const mediaControlComponentPlugin = new MediaControlComponentPlugin(core)
       jest.spyOn(mediaControlComponentPlugin, 'render')
       plugin.renderMediaControlComponent(mediaControlComponentPlugin)
 
@@ -703,17 +703,23 @@ describe('MediaControl Plugin', () => {
     })
 
     test('calls appendMediaControlComponent method only if already have at least one plugin rendered', () => {
-      jest.spyOn(MediaControlComponentPlugin.prototype, 'layer', 'get').mockReturnValue(1)
-      jest.spyOn(MediaControlComponentPlugin.prototype, 'section', 'get').mockReturnValue(1)
-      jest.spyOn(MediaControlComponentPlugin.prototype, 'position', 'get').mockReturnValue(1)
-      jest.spyOn(MediaControlComponentPlugin.prototype, 'attributes', 'get').mockReturnValue({ class: 'test' })
-      const { core, plugin } = setupTest()
+      jest.spyOn(MediaControlComponentPlugin.prototype, 'layer', 'get').mockReturnValueOnce(1)
+      jest.spyOn(MediaControlComponentPlugin.prototype, 'section', 'get').mockReturnValueOnce(1)
+      jest.spyOn(MediaControlComponentPlugin.prototype, 'position', 'get').mockReturnValueOnce(1)
+      jest.spyOn(MediaControlComponentPlugin.prototype, 'attributes', 'get').mockReturnValueOnce({ class: 'test' })
+      const mediaControlComponentPlugin1 = new MediaControlComponentPlugin(new Core({}))
+      const { plugin } = setupTest()
       jest.spyOn(plugin, 'appendMediaControlComponent')
-      plugin.renderMediaControlComponent(new MediaControlComponentPlugin(core))
+      plugin.renderMediaControlComponent(mediaControlComponentPlugin1)
 
       expect(plugin.appendMediaControlComponent).not.toHaveBeenCalled()
 
-      plugin.renderMediaControlComponent(new MediaControlComponentPlugin(core))
+      jest.spyOn(MediaControlComponentPlugin.prototype, 'layer', 'get').mockReturnValueOnce(1)
+      jest.spyOn(MediaControlComponentPlugin.prototype, 'section', 'get').mockReturnValueOnce(1)
+      jest.spyOn(MediaControlComponentPlugin.prototype, 'position', 'get').mockReturnValueOnce(1)
+      jest.spyOn(MediaControlComponentPlugin.prototype, 'attributes', 'get').mockReturnValueOnce({ class: 'test' })
+      const mediaControlComponentPlugin2 = new MediaControlComponentPlugin(new Core({}))
+      plugin.renderMediaControlComponent(mediaControlComponentPlugin2)
 
       expect(plugin.appendMediaControlComponent).toHaveBeenCalledTimes(1)
     })
