@@ -318,6 +318,12 @@ describe('TimeIndicatorPlugin', function() {
   })
 
   describe('setValueFromClickIcon method', () => {
+    test('adds value as --volume-before-width style property of slider DOM element', () => {
+      this.plugin.setValueFromClickIcon(50)
+
+      expect(getComputedStyle(this.plugin.$slider).getPropertyValue('--volume-before-width')).toEqual('50%')
+    })
+
     test('calls setValue method with value', () => {
       jest.spyOn(this.plugin, 'setValue')
       this.plugin.setValueFromClickIcon(50)

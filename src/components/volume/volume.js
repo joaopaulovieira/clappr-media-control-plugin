@@ -101,6 +101,7 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
   }
 
   setValueFromClickIcon(value) {
+    this.$slider.style.setProperty('--volume-before-width', `${value}%`)
     this.setValue(value)
   }
 
