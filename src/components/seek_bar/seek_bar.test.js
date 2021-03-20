@@ -99,6 +99,26 @@ describe('SeekBarPlugin', function() {
     expect(plugin.isLiveMedia).toBeTruthy()
   })
 
+  test('have a getter called shouldDisableInteraction', () => {
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'shouldDisableInteraction').get).toBeTruthy()
+  })
+
+  test('shouldDisableInteraction getter informs if the media needs to be stopped instead paused', () => {
+    expect(this.plugin.shouldDisableInteraction).toBeFalsy()
+
+    jest.spyOn(Playback.prototype, 'getPlaybackType').mockReturnValueOnce(Playback.LIVE)
+    const { core, container, plugin } = setupTest({}, true)
+    jest.spyOn(container, 'isDvrEnabled').mockReturnValueOnce(true)
+    core.activeContainer = container
+
+    expect(plugin.shouldDisableInteraction).toBeFalsy()
+
+    jest.spyOn(Playback.prototype, 'getPlaybackType').mockReturnValueOnce(Playback.LIVE)
+    jest.spyOn(container, 'isDvrEnabled').mockReturnValueOnce(false)
+
+    expect(plugin.shouldDisableInteraction).toBeTruthy()
+  })
+
   describe('constructor', () => {
     test('sets _isDragging internal flag as falsy', () => {
       expect(this.plugin._isDragging).toBeFalsy()
@@ -280,6 +300,14 @@ describe('SeekBarPlugin', function() {
 
 
   describe('updateProgressBarViaInteraction method', () => {
+    test('avoids execute internal code if shouldDisableInteraction getter returns true', () => {
+      this.plugin._isDragging = false
+      jest.spyOn(this.plugin, 'shouldDisableInteraction', 'get').mockReturnValueOnce(true)
+      this.plugin.updateProgressBarViaInteraction({ target: { value: 20, max: 200 } })
+
+      expect(this.plugin._isDragging).toBeFalsy()
+    })
+
     test('sets true value if _isDragging flag is falsy', () => {
       this.plugin._isDragging = false
       this.plugin.updateProgressBarViaInteraction({ target: { value: 20, max: 200 } })
@@ -295,6 +323,14 @@ describe('SeekBarPlugin', function() {
   })
 
   describe('seek method', () => {
+    test('avoids execute internal code if shouldDisableInteraction getter returns true', () => {
+      jest.spyOn(this.container, 'seekPercentage')
+      jest.spyOn(this.plugin, 'shouldDisableInteraction', 'get').mockReturnValueOnce(true)
+      this.plugin.seek({ target: { value: 20, max: 200 } })
+
+      expect(this.container.seekPercentage).not.toHaveBeenCalled()
+    })
+
     test('calls container.seekPercentage with the ratio of event.target.value and event.target.max values', () => {
       jest.spyOn(this.container, 'seekPercentage')
       this.plugin.seek({ target: { value: 20, max: 200 } })

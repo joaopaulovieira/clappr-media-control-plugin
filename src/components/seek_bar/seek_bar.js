@@ -37,6 +37,8 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
 
   get isLiveMedia() { return this.playback.getPlaybackType() === Playback.LIVE }
 
+  get shouldDisableInteraction() { return this.isLiveMedia && !this.container.isDvrEnabled() }
+
   constructor(core) {
     super(core)
     this._isDragging = false
@@ -97,11 +99,13 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
   }
 
   updateProgressBarViaInteraction(rangeInput) {
+    if (this.shouldDisableInteraction) return
     !this._isDragging && (this._isDragging = true)
     this.$el[0].style.setProperty('--seek-before-width', `${rangeInput.target.value / rangeInput.target.max * 100}%`)
   }
 
   seek(rangeInput) {
+    if (this.shouldDisableInteraction) return
     const percentage = rangeInput.target.value / rangeInput.target.max * 100
     this.container.seekPercentage(percentage)
     this._isDragging = false
