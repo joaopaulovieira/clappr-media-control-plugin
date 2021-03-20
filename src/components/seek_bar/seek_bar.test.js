@@ -48,6 +48,16 @@ describe('SeekBarPlugin', function() {
     expect(this.plugin.el.tagName).toEqual('INPUT')
   })
 
+  test('have a getter called attributes', () => {
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'attributes').get).toBeTruthy()
+  })
+
+  test('attributes getter returns all attributes that will be added on the plugin DOM element', () => {
+    expect(this.plugin.$el[0].className).toEqual('seek-bar media-control__elements')
+    expect(this.plugin.$el[0].type).toEqual('range')
+    expect(this.plugin.$el[0].value).toEqual('0')
+    expect(this.plugin.$el[0].max).toEqual('100')
+  })
   describe('bindEvents method', () => {
     test('stops the current listeners before add new ones', () => {
       jest.spyOn(this.plugin, 'stopListening')

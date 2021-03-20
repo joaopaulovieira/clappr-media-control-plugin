@@ -12,6 +12,14 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
 
   get tagName() { return 'input' }
 
+  get attributes() {
+    return {
+      class: 'seek-bar',
+      type: 'range',
+      value: 0,
+      max: 100,
+    }
+  }
   bindEvents() {
     const coreEventListenerData = [{ object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged }]
     coreEventListenerData.forEach(item => this.stopListening(item.object, item.event, item.callback))
