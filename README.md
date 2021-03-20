@@ -9,7 +9,7 @@
 
 # Clappr Media Control plugin
 
->Image to illustrate the plugin here
+<div align=center><img src="./public/images/ilustration.gif"></div>
 
 <!-- ## Table of Contents
 - [Features](https://github.com/joaopaulovieira/clappr-skeleton-plugin#Features)
