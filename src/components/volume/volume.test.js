@@ -289,6 +289,43 @@ describe('TimeIndicatorPlugin', function() {
     })
   })
 
+  describe('toggle method', () => {
+    test('calls setValue method with 0 if currentValue is greater than 0', () => {
+      jest.spyOn(this.plugin, 'setValue')
+      this.plugin.currentValue = 100
+      this.plugin.toggle()
+
+      expect(this.plugin.setValue).toHaveBeenCalledWith(0)
+    })
+
+    test('calls setValue method with 100 if _lastValue is equal 0 and currentValue is smaller or equal 0', () => {
+      jest.spyOn(this.plugin, 'setValue')
+      this.plugin.currentValue = 0
+      this.plugin._lastValue = 0
+      this.plugin.toggle()
+
+      expect(this.plugin.setValue).toHaveBeenCalledWith(100)
+    })
+
+    test('calls setValue method with _lastValue if _lastValue is not equal 0 and currentValue is smaller or equal 0', () => {
+      jest.spyOn(this.plugin, 'setValue')
+      this.plugin.currentValue = 0
+      this.plugin._lastValue = 50
+      this.plugin.toggle()
+
+      expect(this.plugin.setValue).toHaveBeenCalledWith(50)
+    })
+  })
+
+  describe('setValueFromClickIcon method', () => {
+    test('calls setValue method with value', () => {
+      jest.spyOn(this.plugin, 'setValue')
+      this.plugin.setValueFromClickIcon(50)
+
+      expect(this.plugin.setValue).toHaveBeenCalledWith(50)
+    })
+  })
+
   describe('render method', () => {
     beforeEach(() => {
       jest.spyOn(this.plugin, 'render')

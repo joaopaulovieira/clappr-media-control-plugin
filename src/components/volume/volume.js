@@ -95,6 +95,13 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
   }
 
   toggle() {
+    this.currentValue > 0
+      ? this.setValueFromClickIcon(0)
+      : this._lastValue === 0 ? this.setValueFromClickIcon(100) : this.setValueFromClickIcon(this._lastValue)
+  }
+
+  setValueFromClickIcon(value) {
+    this.setValue(value)
   }
 
   render() {
