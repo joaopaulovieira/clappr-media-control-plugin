@@ -1,6 +1,8 @@
 $shadow: drop-shadow( 2px 2px 1px rgba(0, 0, 0, .8));
 
 .seek-bar {
+  --seek-before-width: 0%;
+
   &[type=range] {
     background-color: transparent;
     filter: $shadow;
@@ -11,5 +13,36 @@ $shadow: drop-shadow( 2px 2px 1px rgba(0, 0, 0, .8));
     width: 100%;
     -webkit-appearance: none;
     -webkit-filter: $shadow;
+
+    &::before {
+      background-color: white;
+      content: "";
+      cursor: pointer;
+      height: 3px;
+      left: 0;
+      top: 18px;
+      position: absolute;
+      width: var(--seek-before-width);
+    }
+  
+    &::-moz-range-progress {
+      background-color: white;
+      height: 3px;
+    }
+    &::-moz-focus-outer {
+      border: 0;
+    }
+
+    &::-ms-track {
+      background: transparent;
+      border: solid transparent;
+      color: transparent;
+      cursor: pointer;
+      height: 3px;
+      width: 100%;
+    }
+    &::-ms-fill-lower {
+      background-color: white;
+    }
   }
 }
