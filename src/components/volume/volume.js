@@ -56,6 +56,7 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
 
   setInitialValue() {
     const value = this.getInitialValue()
+    this.updateSliderPercentage(value)
     this.setValue(value)
   }
 
@@ -63,6 +64,10 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
     let initialValue = this.persistConfig && !isNaN(Utils.Config.restore('volume')) ? Utils.Config.restore('volume') : 100
     this.core.options.mute && (initialValue = 0)
     return initialValue
+  }
+
+  updateSliderPercentage(value) {
+    this.$slider.style.setProperty('--volume-before-width', `${value}%`)
   }
 
   setValue(value) {
@@ -97,7 +102,7 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
 
   setValueFromInputSlider(ev) {
     this._isDragging = true
-    this.$slider.style.setProperty('--volume-before-width', `${ev.target.value}%`)
+    this.updateSliderPercentage(ev.target.value)
     this.setValue(ev.target.value)
   }
 
@@ -112,7 +117,7 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
   }
 
   setValueFromClickIcon(value) {
-    this.$slider.style.setProperty('--volume-before-width', `${value}%`)
+    this.updateSliderPercentage(value)
     this.setValue(value)
   }
 

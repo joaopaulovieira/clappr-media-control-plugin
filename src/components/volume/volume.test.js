@@ -159,6 +159,15 @@ describe('TimeIndicatorPlugin', function() {
       expect(this.plugin.getInitialValue).toHaveBeenCalledTimes(1)
     })
 
+    test('calls updateSliderPercentage method with getInitialValue return value', () => {
+      jest.spyOn(this.plugin, 'getInitialValue')
+      jest.spyOn(this.plugin, 'updateSliderPercentage')
+      this.plugin.setInitialValue()
+
+      expect(this.plugin.getInitialValue).toHaveReturnedWith(100)
+      expect(this.plugin.updateSliderPercentage).toHaveBeenCalledWith(100)
+    })
+
     test('calls setValue method with getInitialValue return value', () => {
       jest.spyOn(this.plugin, 'getInitialValue')
       jest.spyOn(this.plugin, 'setValue')
@@ -204,6 +213,14 @@ describe('TimeIndicatorPlugin', function() {
       expect(initialValue).toEqual(0)
 
       Utils.Config.persist('volume', null)
+    })
+  })
+
+  describe('updateSliderPercentage method', () => {
+    test('adds received value as --volume-before-width style property of slider DOM element', () => {
+      this.plugin.setValueFromClickIcon(50)
+
+      expect(getComputedStyle(this.plugin.$slider).getPropertyValue('--volume-before-width')).toEqual('50%')
     })
   })
 
@@ -334,10 +351,11 @@ describe('TimeIndicatorPlugin', function() {
       expect(this.plugin._isDragging).toBeTruthy()
     })
 
-    test('adds event.target.value as --volume-before-width style property of slider DOM element', () => {
+    test('calls updateSliderPercentage method with event.target.value', () => {
+      jest.spyOn(this.plugin, 'updateSliderPercentage')
       this.plugin.setValueFromInputSlider({ target: { value: 50 } })
 
-      expect(getComputedStyle(this.plugin.$slider).getPropertyValue('--volume-before-width')).toEqual('50%')
+      expect(this.plugin.updateSliderPercentage).toHaveBeenCalledWith(50)
     })
 
     test('calls setValue method with event.target.value', () => {
@@ -386,10 +404,11 @@ describe('TimeIndicatorPlugin', function() {
   })
 
   describe('setValueFromClickIcon method', () => {
-    test('adds value as --volume-before-width style property of slider DOM element', () => {
+    test('calls updateSliderPercentage method with value', () => {
+      jest.spyOn(this.plugin, 'updateSliderPercentage')
       this.plugin.setValueFromClickIcon(50)
 
-      expect(getComputedStyle(this.plugin.$slider).getPropertyValue('--volume-before-width')).toEqual('50%')
+      expect(this.plugin.updateSliderPercentage).toHaveBeenCalledWith(50)
     })
 
     test('calls setValue method with value', () => {
