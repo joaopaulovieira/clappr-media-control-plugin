@@ -16,6 +16,8 @@ $shadow: drop-shadow( 2px 2px 1px rgba(0, 0, 0, 0.7));
   }
 
   &__slider {
+    --volume-before-width: 0%;
+
     position: absolute;
     top: 60px;
     transform: translate(-50%, -50%) rotate(-90deg);
@@ -27,6 +29,39 @@ $shadow: drop-shadow( 2px 2px 1px rgba(0, 0, 0, 0.7));
       outline: none;
       width: 100px;
       -webkit-appearance: none;
+
+      &::before {
+        background-color: white;
+        content: "";
+        cursor: pointer;
+        height: 3px;
+        left: 0;
+        top: 14px;
+        position: absolute;
+        width: var(--volume-before-width);
+      }
+      &::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 3px;
+        cursor: pointer;
+        background: rgba(120, 120, 120, 0.8);
+      }
+
+      &::-moz-range-track {
+        background: rgba(120, 120, 120, 0.8);
+        box-sizing: content-box;
+        cursor: pointer;
+        height: 3px;
+        width: 100%;
+      }
+      &::-moz-range-progress {
+        background-color: white;
+        box-sizing: content-box;
+        height: 3px;
+      }
+      &::-moz-focus-outer {
+        border: 0;
+      }
     }
   }
 
