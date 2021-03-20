@@ -75,6 +75,14 @@ describe('SeekBarPlugin', function() {
     })
   })
 
+  describe('updatePosition method', () => {
+    test('adds received position value as value property of DOM element plugin', () => {
+      this.plugin.updatePosition(1, 50)
+
+      expect(this.plugin.$el[0].value).toEqual('1')
+    })
+  })
+
   describe('render method', () => {
     beforeEach(() => {
       jest.spyOn(this.plugin, 'render')

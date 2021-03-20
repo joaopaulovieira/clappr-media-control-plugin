@@ -36,6 +36,10 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
   bindContainerEvents() {
   }
 
+  updatePosition(position) {
+    this.$el[0].value = position
+  }
+
   render() {
     if (this.isRendered) return
     this.el.innerHTML = ''
