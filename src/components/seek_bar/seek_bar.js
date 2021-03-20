@@ -93,6 +93,7 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
 
   updateProgressBarViaInteraction(rangeInput) {
     !this._isDragging && (this._isDragging = true)
+    this.$el[0].style.setProperty('--seek-before-width', `${rangeInput.target.value / rangeInput.target.max * 100}%`)
   }
 
   seek(rangeInput) {

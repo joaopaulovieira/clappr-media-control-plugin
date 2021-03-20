@@ -266,6 +266,12 @@ describe('SeekBarPlugin', function() {
 
       expect(this.plugin._isDragging).toBeTruthy()
     })
+
+    test('adds the ratio of event.target.value and event.target.max values as --seek-before-width style property of DOM element plugin', () => {
+      this.plugin.updateProgressBarViaInteraction({ target: { value: 20, max: 200 } })
+
+      expect(getComputedStyle(this.plugin.$el[0]).getPropertyValue('--seek-before-width')).toEqual('10%')
+    })
   })
 
   describe('render method', () => {
