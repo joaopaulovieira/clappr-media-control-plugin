@@ -281,6 +281,13 @@ describe('SeekBarPlugin', function() {
 
       expect(this.container.seekPercentage).toHaveBeenCalledWith(10)
     })
+
+    test('sets false value if _isDragging flag', () => {
+      this.plugin._isDragging = true
+      this.plugin.seek({ target: { value: 20, max: 200 } })
+
+      expect(this.plugin._isDragging).toBeFalsy()
+    })
   })
 
   describe('render method', () => {
