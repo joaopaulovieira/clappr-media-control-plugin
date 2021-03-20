@@ -14,3 +14,5 @@ notifications:
     - vieira.joaopaulo.91@gmail.com
 
 before_script: "yarn lint"
+
+after_script: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
