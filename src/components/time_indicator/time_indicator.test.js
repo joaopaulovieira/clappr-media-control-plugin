@@ -70,6 +70,7 @@ describe('TimeIndicatorPlugin', function() {
   describe('render method', () => {
     beforeEach(() => {
       jest.spyOn(this.plugin, 'render')
+      jest.spyOn(this.plugin, 'cacheElements')
 
       this.plugin.isRendered = false
       this.plugin.render()
@@ -82,5 +83,18 @@ describe('TimeIndicatorPlugin', function() {
     test('insert template getter response inside plugin DOM element', () => {
       expect(this.plugin.$el[0].innerHTML.includes(this.plugin.template())).toBeTruthy()
     })
+
+    test('calls cacheElements method', () => {
+      expect(this.plugin.cacheElements).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  test('cacheElements method saves important DOM elements locally', () => {
+    this.plugin.isRendered = false
+    this.plugin.render()
+
+    expect(this.plugin.$position).toEqual(this.plugin.el.querySelector('.time-indicator__position'))
+    expect(this.plugin.$separator).toEqual(this.plugin.el.querySelector('.time-indicator__separator'))
+    expect(this.plugin.$duration).toEqual(this.plugin.el.querySelector('.time-indicator__duration'))
   })
 })

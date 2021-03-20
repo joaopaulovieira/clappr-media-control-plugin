@@ -27,8 +27,15 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
     if (this.isRendered) return
     this.el.innerHTML = ''
     this.$el.html(this.template({ options: this.options }))
+    this.cacheElements()
     this.$el.append(Styler.getStyleFor(pluginStyle))
     this.isRendered = true
     return this
+  }
+
+  cacheElements() {
+    this.$position = this.$el[0].querySelector('.time-indicator__position')
+    this.$separator = this.$el[0].querySelector('.time-indicator__separator')
+    this.$duration = this.$el[0].querySelector('.time-indicator__duration')
   }
 }
