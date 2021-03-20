@@ -79,6 +79,32 @@ describe('TimeIndicatorPlugin', function() {
     expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'currentValue').set).toBeTruthy()
   })
 
+  test('have a getter called events', () => {
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'events').get).toBeTruthy()
+  })
+
+  describe('events getter', () => {
+    test('returns specific events/callbacks dictionary for mobile devices', () => {
+      const oldValue = Browser.isMobile
+      Browser.isMobile = true
+      expect(this.plugin.events).toEqual({ 'click .volume__icon-container': this.plugin.toggle })
+      Browser.isMobile = oldValue
+    })
+
+    test('returns specific events/callbacks dictionary for desktop devices', () => {
+      const oldValue = Browser.isMobile
+      Browser.isMobile = false
+      expect(this.plugin.events).toEqual({
+        'click .volume__icon-container': this.plugin.toggle,
+        mouseenter: this.plugin.showSlider,
+        mouseleave: this.plugin.hideSlider,
+        'input .volume__slider': this.plugin.setValueFromInputSlider,
+        'click .volume__slider': this.plugin.clearHideTimeout,
+      })
+      Browser.isMobile = oldValue
+    })
+  })
+
   describe('constructor', () => {
     test('saves options.persistConfig value on plugin reference', () => {
       const { plugin } = setupTest({ persistConfig: true })

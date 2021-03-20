@@ -26,6 +26,17 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
 
   set currentValue(value) { this._currentValue = value }
 
+  get events() {
+    const touchOnlyEvents = { 'click .volume__icon-container': this.toggle }
+    const events = {
+      mouseenter: this.showSlider,
+      mouseleave: this.hideSlider,
+      'input .volume__slider': this.setValueFromInputSlider,
+      'click .volume__slider': this.clearHideTimeout,
+    }
+    return Browser.isMobile ? touchOnlyEvents : { ...events, ...touchOnlyEvents }
+  }
+
   constructor(core) {
     super(core)
     this.persistConfig = this.options.persistConfig
@@ -69,6 +80,21 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
     volume > 0
       ? this.$iconContainer.append(volumeOnIcon)
       : this.$iconContainer.append(volumeOffIcon)
+  }
+
+  showSlider() {
+  }
+
+  hideSlider() {
+  }
+
+  setValueFromInputSlider(ev) {
+  }
+
+  clearHideTimeout() {
+  }
+
+  toggle() {
   }
 
   render() {
