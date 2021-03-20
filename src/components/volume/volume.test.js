@@ -47,6 +47,14 @@ describe('TimeIndicatorPlugin', function() {
     expect(this.plugin.separator).toBeTruthy()
   })
 
+  test('have a getter called attributes', () => {
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'attributes').get).toBeTruthy()
+  })
+
+  test('attributes getter returns all attributes that will be added on the plugin DOM element', () => {
+    expect(this.plugin.$el[0].className).toEqual('volume media-control__button media-control__elements')
+  })
+
   describe('bindEvents method', () => {
     test('stops the current listeners before add new ones', () => {
       jest.spyOn(this.plugin, 'stopListening')
