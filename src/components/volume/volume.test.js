@@ -2,6 +2,9 @@ import { Browser, Events, Core, Container, Playback, Utils } from '@clappr/core'
 import VolumePlugin from './volume'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
 
+import volumeOnIcon from './public/volume_on_icon.svg'
+import volumeOffIcon from './public/volume_off_icon.svg'
+
 import templateHTML from './public/template.html'
 
 const setupTest = (options = {}, fullSetup = false) => {
@@ -14,6 +17,12 @@ const setupTest = (options = {}, fullSetup = false) => {
 
   return response
 }
+
+const htmlEntities = str => String(str)
+  .replace(/&amp;/g, '&')
+  .replace(/&lt;/g, '<')
+  .replace(/&gt;/g, '>')
+  .replace(/&quot;/g, '"')
 
 describe('TimeIndicatorPlugin', function() {
   beforeEach(() => {
@@ -101,6 +110,23 @@ describe('TimeIndicatorPlugin', function() {
       this.plugin.onContainerChanged()
 
       expect(this.plugin.container).toEqual(this.core.activeContainer)
+    })
+
+  describe('updateIcon method', () => {
+    test('appends volumeOffIcon on iconContainer DOM element if received volume is smaller or equal 0', () => {
+      this.plugin.currentValue = 100
+      this.plugin.updateIcon(0)
+
+      expect(htmlEntities(this.plugin.$iconContainer.innerHTML)).not.toEqual(volumeOnIcon)
+      expect(htmlEntities(this.plugin.$iconContainer.innerHTML)).toEqual(volumeOffIcon)
+    })
+
+    test('appends volumeOnIcon on iconContainer DOM element if received volume is greater than 0', () => {
+      this.plugin.currentValue = 0
+      this.plugin.updateIcon(100)
+
+      expect(htmlEntities(this.plugin.$iconContainer.innerHTML)).not.toEqual(volumeOffIcon)
+      expect(htmlEntities(this.plugin.$iconContainer.innerHTML)).toEqual(volumeOnIcon)
     })
   })
 

@@ -1,6 +1,9 @@
 import { Browser, Events, Styler, Utils, template } from '@clappr/core'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
 
+import volumeOnIcon from './public/volume_on_icon.svg'
+import volumeOffIcon from './public/volume_off_icon.svg'
+
 import pluginStyle from './public/style.scss'
 import templateHTML from './public/template.html'
 
@@ -33,6 +36,13 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
   onContainerChanged() {
     this.container && this.stopListening(this.container)
     this.container = this.core.activeContainer
+  }
+
+  updateIcon(volume) {
+    this.$iconContainer.innerHTML = ''
+    volume > 0
+      ? this.$iconContainer.append(volumeOnIcon)
+      : this.$iconContainer.append(volumeOffIcon)
   }
 
   render() {
