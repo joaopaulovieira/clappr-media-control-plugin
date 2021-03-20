@@ -119,6 +119,29 @@ describe('TimeIndicatorPlugin', function() {
 
   })
 
+  describe('getInitialValue method', () => {
+    test('uses a valid volume value saved on local storage if options.persistConfig is true', () => {
+      const { plugin } = setupTest({ persistConfig: true })
+      let initialValue = plugin.getInitialValue()
+
+      expect(initialValue).toEqual(100)
+
+      Utils.Config.persist('volume', NaN)
+      const { plugin: plugin1 } = setupTest({ persistConfig: true })
+      initialValue = plugin1.getInitialValue()
+
+      expect(initialValue).toEqual(100)
+
+      Utils.Config.persist('volume', 50)
+      const { plugin: plugin2 } = setupTest({ persistConfig: true })
+      initialValue = plugin2.getInitialValue()
+
+      expect(initialValue).toEqual(50)
+
+      Utils.Config.persist('volume', null)
+    })
+  })
+
   describe('setValue method', () => {
     test('saves currentValue on _lastValue', () => {
       this.plugin.currentValue = 100

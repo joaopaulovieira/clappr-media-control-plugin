@@ -42,6 +42,11 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
     this.container = this.core.activeContainer
   }
 
+  getInitialValue() {
+    let initialValue = this.persistConfig && !isNaN(Utils.Config.restore('volume')) ? Utils.Config.restore('volume') : 100
+    return initialValue
+  }
+
   setValue(value) {
     this._lastValue = this.currentValue || value
     this.updateIcon(value)
