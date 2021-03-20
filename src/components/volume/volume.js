@@ -40,6 +40,12 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
   onContainerChanged() {
     this.container && this.stopListening(this.container)
     this.container = this.core.activeContainer
+    this.setInitialValue()
+  }
+
+  setInitialValue() {
+    const value = this.getInitialValue()
+    this.setValue(value)
   }
 
   getInitialValue() {

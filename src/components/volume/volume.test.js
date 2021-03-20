@@ -117,6 +117,30 @@ describe('TimeIndicatorPlugin', function() {
       expect(this.plugin.container).toEqual(this.core.activeContainer)
     })
 
+    test('calls setInitialValue method', () => {
+      jest.spyOn(this.plugin, 'setInitialValue')
+      this.plugin.onContainerChanged()
+
+      expect(this.plugin.setInitialValue).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('setInitialValue method', () => {
+    test('calls getInitialValue method', () => {
+      jest.spyOn(this.plugin, 'getInitialValue')
+      this.plugin.setInitialValue()
+
+      expect(this.plugin.getInitialValue).toHaveBeenCalledTimes(1)
+    })
+
+    test('calls setValue method with getInitialValue return value', () => {
+      jest.spyOn(this.plugin, 'getInitialValue')
+      jest.spyOn(this.plugin, 'setValue')
+      this.plugin.setInitialValue()
+
+      expect(this.plugin.getInitialValue).toHaveReturnedWith(100)
+      expect(this.plugin.setValue).toHaveBeenCalledWith(100)
+    })
   })
 
   describe('getInitialValue method', () => {
