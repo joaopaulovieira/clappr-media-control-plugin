@@ -105,6 +105,13 @@ describe('TimeIndicatorPlugin', function() {
     expect(this.plugin.$position.textContent).toEqual(positionTimeText)
   })
 
+  test('setDuration method inserts received duration time text as textContent of duration DOM element plugin', () => {
+    const durationTimeText = '00:05'
+    this.plugin.setDuration(durationTimeText)
+
+    expect(this.plugin.$duration.textContent).toEqual(durationTimeText)
+  })
+
   describe('render method', () => {
     beforeEach(() => {
       jest.spyOn(this.plugin, 'render')

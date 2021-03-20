@@ -37,6 +37,10 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
     this.$position.textContent = position
   }
 
+  setDuration(duration) {
+    this.$duration.textContent = duration
+  }
+
   render() {
     if (this.isRendered) return
     this.el.innerHTML = ''
