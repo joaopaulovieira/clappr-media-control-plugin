@@ -39,6 +39,7 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
   }
 
   updateIcon(volume) {
+    if (volume === this.currentValue || (volume > 0 && this.currentValue > 0)) return
     this.$iconContainer.innerHTML = ''
     volume > 0
       ? this.$iconContainer.append(volumeOnIcon)

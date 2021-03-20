@@ -113,6 +113,19 @@ describe('TimeIndicatorPlugin', function() {
     })
 
   describe('updateIcon method', () => {
+    test('avoids execute internal code if received value is equal currentValue or if received value and currentValue are grater than 0', () => {
+      jest.spyOn(this.plugin.$iconContainer, 'append')
+      this.plugin.currentValue = 100
+      this.plugin.updateIcon(100)
+
+      expect(this.plugin.$iconContainer.append).not.toHaveBeenCalled()
+
+      this.plugin.currentValue = 100
+      this.plugin.updateIcon(50)
+
+      expect(this.plugin.$iconContainer.append).not.toHaveBeenCalled()
+    })
+
     test('appends volumeOffIcon on iconContainer DOM element if received volume is smaller or equal 0', () => {
       this.plugin.currentValue = 100
       this.plugin.updateIcon(0)
