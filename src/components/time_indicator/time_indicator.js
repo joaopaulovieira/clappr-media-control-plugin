@@ -31,6 +31,18 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
   }
 
   bindContainerEvents() {
+    const containerEventListenerData = [
+      { object: this.container, event: Events.CONTAINER_TIMEUPDATE, callback: this.onTimeUpdate },
+    ]
+    this.container && containerEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
+  }
+
+  onTimeUpdate(time) {
+    const position = Utils.formatTime(Math.floor(time.current))
+    const duration = Utils.formatTime(Math.floor(time.total))
+
+    position !== this.$position.textContent && this.setPosition(position)
+    duration !== this.$duration.textContent && this.setDuration(duration)
   }
 
   setPosition(position) {

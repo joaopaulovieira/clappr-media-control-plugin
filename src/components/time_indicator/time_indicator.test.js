@@ -98,6 +98,71 @@ describe('TimeIndicatorPlugin', function() {
     })
   })
 
+  describe('bindContainerEvents method', () => {
+    test('only unbind events when is necessary', () => {
+      jest.spyOn(this.plugin, 'stopListening')
+
+      this.plugin.container = null
+      this.core.activeContainer = this.container
+      const oldContainer = { ...this.container }
+
+      expect(this.plugin.stopListening).not.toHaveBeenCalledWith(this.container)
+
+      this.core.activeContainer = this.container
+
+      expect(this.plugin.stopListening).toHaveBeenCalledWith(oldContainer)
+    })
+
+    test('avoid register callback for events on container scope without a valid reference', () => {
+      jest.spyOn(this.plugin, 'onTimeUpdate')
+      this.container.trigger(Events.CONTAINER_TIMEUPDATE)
+
+      expect(this.plugin.onTimeUpdate).not.toHaveBeenCalled()
+    })
+
+    test('register onTimeUpdate method as callback for CONTAINER_TIMEUPDATE event', () => {
+      jest.spyOn(this.plugin, 'onTimeUpdate')
+      this.core.activeContainer = this.container
+      this.container.trigger(Events.CONTAINER_TIMEUPDATE)
+
+      expect(this.plugin.onTimeUpdate).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('onTimeUpdate callback', () => {
+    beforeEach(() => {
+      jest.spyOn(this.plugin, 'setPosition')
+      jest.spyOn(this.plugin, 'setDuration')
+    })
+    test('generates time text based on callback response to add on DOM elements', () => {
+      this.plugin.onTimeUpdate({ current: 1, total: 100 })
+
+      expect(this.plugin.setPosition).toHaveBeenCalledWith('00:01')
+      expect(this.plugin.setDuration).toHaveBeenCalledWith('01:40')
+    })
+
+    test('uses Math.floor to only set integer values', () => {
+      this.plugin.onTimeUpdate({ current: 1.1111, total: 100.9134234 })
+
+      expect(this.plugin.setPosition).toHaveBeenCalledWith('00:01')
+      expect(this.plugin.setDuration).toHaveBeenCalledWith('01:40')
+    })
+
+    test('only updates position and duration time text if differs from current DOM element text value', () => {
+      this.plugin.onTimeUpdate({ current: 0, total: 0 })
+
+      expect(this.plugin.setPosition).not.toHaveBeenCalled()
+      expect(this.plugin.setDuration).not.toHaveBeenCalled()
+
+      this.plugin.onTimeUpdate({ current: 1, total: 100 })
+
+      expect(this.plugin.setPosition).toHaveBeenCalledWith('00:01')
+      expect(this.plugin.setDuration).toHaveBeenCalledWith('01:40')
+      expect(this.plugin.setPosition).toHaveBeenCalledTimes(1)
+      expect(this.plugin.setDuration).toHaveBeenCalledTimes(1)
+    })
+  })
+
   test('setPosition method inserts received position time text as textContent of position DOM element plugin', () => {
     const positionTimeText = '00:05'
     this.plugin.setPosition(positionTimeText)
