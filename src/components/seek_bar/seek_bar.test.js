@@ -162,6 +162,12 @@ describe('SeekBarPlugin', function() {
 
       expect(this.plugin.$el[0].value).toEqual('1')
     })
+
+    test('adds the ratio of received position and duration values as --seek-before-width style property of DOM element plugin', () => {
+      this.plugin.updatePosition(20, 200)
+
+      expect(getComputedStyle(this.plugin.$el[0]).getPropertyValue('--seek-before-width')).toEqual('10%')
+    })
   })
 
   describe('updateDuration method', () => {

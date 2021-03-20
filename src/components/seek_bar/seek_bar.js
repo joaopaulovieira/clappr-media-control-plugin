@@ -44,12 +44,13 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
     const position = Math.floor(time.current)
     const duration = Math.floor(time.total)
 
-    position !== parseInt(this.$el[0].value, 10) && this.updatePosition(position)
+    position !== parseInt(this.$el[0].value, 10) && this.updatePosition(position, duration)
     duration !== parseInt(this.$el[0].max, 10) && this.updateDuration(duration)
   }
 
-  updatePosition(position) {
+  updatePosition(position, duration) {
     this.$el[0].value = position
+    this.$el[0].style.setProperty('--seek-before-width', `${position / duration * 100}%`)
   }
 
   updateDuration(duration) {
