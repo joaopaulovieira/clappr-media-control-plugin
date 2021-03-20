@@ -100,6 +100,7 @@ describe('TimeIndicatorPlugin', function() {
   describe('render method', () => {
     beforeEach(() => {
       jest.spyOn(this.plugin, 'render')
+      jest.spyOn(this.plugin, 'cacheElements')
 
       this.plugin.isRendered = false
       this.plugin.render()
@@ -109,8 +110,31 @@ describe('TimeIndicatorPlugin', function() {
       expect(this.plugin.isRendered).toBeTruthy()
     })
 
+    test('creates cache elements to not have unnecessary re-render cycles', () => {
+      expect(this.plugin.render).toHaveBeenCalledTimes(1)
+      expect(this.plugin.cacheElements).toHaveBeenCalledTimes(1)
+
+      this.plugin.render()
+
+      expect(this.plugin.render).toHaveBeenCalledTimes(2)
+      expect(this.plugin.cacheElements).toHaveBeenCalledTimes(1)
+    })
+
     test('insert template getter response inside plugin DOM element', () => {
       expect(this.plugin.el.innerHTML.includes(this.plugin.template())).toBeTruthy()
     })
+
+    test('calls cacheElements method', () => {
+      expect(this.plugin.cacheElements).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  test('cacheElements method saves important DOM elements locally', () => {
+    this.plugin.isRendered = false
+    this.plugin.render()
+
+    expect(this.plugin.$sliderContainer).toEqual(this.plugin.el.querySelector('.volume__slider-container'))
+    expect(this.plugin.$slider).toEqual(this.plugin.el.querySelector('.volume__slider'))
+    expect(this.plugin.$iconContainer).toEqual(this.plugin.el.querySelector('.volume__icon-container'))
   })
 })

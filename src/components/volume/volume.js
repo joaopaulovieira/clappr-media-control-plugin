@@ -34,8 +34,15 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
     if (this.isRendered) return
     this.el.innerHTML = ''
     this.$el.html(this.template({ options: this.options }))
+    this.cacheElements()
     this.$el.append(Styler.getStyleFor(pluginStyle))
     this.isRendered = true
     return this
+  }
+
+  cacheElements() {
+    this.$sliderContainer = this.$el[0].querySelector('.volume__slider-container')
+    this.$slider = this.$el[0].querySelector('.volume__slider')
+    this.$iconContainer = this.$el[0].querySelector('.volume__icon-container')
   }
 }
