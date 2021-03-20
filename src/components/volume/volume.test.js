@@ -74,6 +74,11 @@ describe('TimeIndicatorPlugin', function() {
     expect(this.plugin.template()).toEqual(templateHTML)
   })
 
+  test('have a getter and setter called currentValue', () => {
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'currentValue').get).toBeTruthy()
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'currentValue').set).toBeTruthy()
+  })
+
   describe('constructor', () => {
     test('saves options.persistConfig value on plugin reference', () => {
       const { plugin } = setupTest({ persistConfig: true })

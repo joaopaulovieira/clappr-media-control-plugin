@@ -22,6 +22,10 @@ export default class VolumePlugin extends MediaControlComponentPlugin {
 
   get template() { return template(templateHTML) }
 
+  get currentValue() { return this._currentValue }
+
+  set currentValue(value) { this._currentValue = value }
+
   constructor(core) {
     super(core)
     this.persistConfig = this.options.persistConfig
