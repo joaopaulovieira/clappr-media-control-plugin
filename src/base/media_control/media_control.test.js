@@ -554,6 +554,26 @@ describe('MediaControl Plugin', () => {
       expect(layerExample.outerHTML).toEqual(expectedTemplate)
     })
 
+    test('sets flexDirection with opposite value of layer flexDirection', () => {
+      const options1 = { ...baseOptions }
+      options1.mediaControl.layersConfig[0].flexDirection = 'row'
+      const { plugin: plugin1 } = setupTest(options1)
+      let layerExample = plugin1.el.querySelector('.media-control__layer-1')
+      layerExample.innerHTML = ''
+      plugin1.buildSections(layerExample, plugin1.layersSettings[0], layerExample.style.flexDirection)
+
+      expect(layerExample.querySelector('.media-control__section-1').style.flexDirection).toEqual('column')
+
+      const options2 = { ...baseOptions }
+      options2.mediaControl.layersConfig[0].flexDirection = 'column'
+      const { plugin: plugin2 } = setupTest(options2)
+      layerExample = plugin2.el.querySelector('.media-control__layer-1')
+      layerExample.innerHTML = ''
+      plugin1.buildSections(layerExample, plugin2.layersSettings[0], layerExample.style.flexDirection)
+
+      expect(layerExample.querySelector('.media-control__section-1').style.flexDirection).toEqual('row')
+    })
+
     test('adds css class on section DOM element to push in the opposite direction if sectionsConfig[n].separator exists', () => {
       const options = { ...baseOptions }
       options.mediaControl.layersConfig[0].sectionsConfig[0] = { id: 1, separator: true }

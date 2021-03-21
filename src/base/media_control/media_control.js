@@ -131,6 +131,7 @@ export default class MediaControlPlugin extends UICorePlugin {
       const config = layerConfig.sectionsConfig && layerConfig.sectionsConfig.find(config => config.id === index)
 
       section.classList.add('media-control__sections', `media-control__section-${index}`)
+      section.style.flexDirection = `${sectionsDirection === 'row' ? 'column' : 'row'}`
 
       if (config) {
         config.separator && section.classList.add(`media-control__sections--push-${sectionsDirection}`)
