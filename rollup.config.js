@@ -72,4 +72,48 @@ const esmBundle = {
   ],
 }
 
-export default [mainBundle, esmBundle]
+const lightBundle = {
+  input: 'src/light_bundle.js',
+  external: ['@clappr/core'],
+  output: [
+    {
+      name: 'MediaControl',
+      file: 'dist/light-clappr-media-control-plugin.js',
+      format: 'umd',
+      globals: { '@clappr/core': 'Clappr' },
+    },
+    minimize && {
+      name: 'MediaControl',
+      file: 'dist/light-clappr-media-control-plugin.min.js',
+      format: 'umd',
+      globals: { '@clappr/core': 'Clappr' },
+      plugins: terser(),
+    },
+  ],
+  plugins: [babelPluginForUMDBundle(babelPluginOptions), resolve(), commonjs(), ...plugins],
+}
+
+const lightEsmBundle = {
+  input: 'src/light_bundle.js',
+  external: ['@clappr/core', /@babel\/runtime/],
+  output: {
+    name: 'MediaControl',
+    file: 'dist/light-clappr-media-control-plugin.esm.js',
+    format: 'esm',
+    globals: { '@clappr/core': 'Clappr' },
+  },
+  plugins: [
+    babelPluginForESMBundle({
+      ...babelPluginOptions,
+      plugins: ['@babel/plugin-transform-runtime'],
+      babelHelpers: 'runtime',
+    }),
+    ...plugins,
+  ],
+}
+
+const mainBundles = [mainBundle, esmBundle]
+const lightBundles = [lightBundle, lightEsmBundle]
+const bundles = minimize ? [...mainBundles, ...lightBundles] : [...mainBundles]
+
+export default bundles
