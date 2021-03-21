@@ -16,11 +16,13 @@
 
 <details>
   <summary>Example 1:</summary>
+  <ul>
+    <br>
     <details style= 'margin-left: 20px;'>
       <summary>Configs:</summary>
       <br>
-      <img src="./public/images/examples/example_1_components.png" height="300">
-      <img src="./public/images/examples/example_1_config.png" height="300" width=520">
+      <img src="./public/images/examples/example_1_components.png">
+      <img src="./public/images/examples/example_1_config.png">
     </details>
     <details style= 'margin-left: 20px;'>
       <summary>DOM tree:</summary>
@@ -32,15 +34,18 @@
       <br>
       <img src="./public/images/examples/example_1_UI.png">
     </details>
+  </ul>
 </details>
 <br>
 <details>
   <summary>Example 2:</summary>
+  <ul>
+    <br>
     <details style= 'margin-left: 20px;'>
       <summary>Configs:</summary>
       <br>
-      <img src="./public/images/examples/example_2_components.png" height="300">
-      <img src="./public/images/examples/example_2_config.png" height="300" width=520">
+      <img src="./public/images/examples/example_2_components.png">
+      <img src="./public/images/examples/example_2_config.png">
     </details>
     <details style= 'margin-left: 20px;'>
       <summary>DOM tree:</summary>
@@ -52,15 +57,18 @@
       <br>
       <img src="./public/images/examples/example_2_UI.png">
     </details>
+  </ul>
 </details>
 <br>
 <details>
   <summary>Example 3:</summary>
+  <ul>
+    <br>
     <details style= 'margin-left: 20px;'>
       <summary>Configs:</summary>
       <br>
-      <img src="./public/images/examples/example_3_components.png" height="300">
-      <img src="./public/images/examples/example_3_config.png" height="300" width=520">
+      <img src="./public/images/examples/example_3_components.png">
+      <img src="./public/images/examples/example_3_config.png">
     </details>
     <details style= 'margin-left: 20px;'>
       <summary>DOM tree:</summary>
@@ -72,15 +80,18 @@
       <br>
       <img src="./public/images/examples/example_3_UI.png">
     </details>
+  </ul>
 </details>
 <br>
 <details>
   <summary>Example 4:</summary>
+  <ul>
+    <br>
     <details style= 'margin-left: 20px;'>
       <summary>Configs:</summary>
       <br>
-      <img src="./public/images/examples/example_4_components.png" height="300">
-      <img src="./public/images/examples/example_4_config.png" height="300" width=520">
+      <img src="./public/images/examples/example_4_components.png">
+      <img src="./public/images/examples/example_4_config.png">
     </details>
     <details style= 'margin-left: 20px;'>
       <summary>DOM tree:</summary>
@@ -92,6 +103,7 @@
       <br>
       <img src="./public/images/examples/example_4_UI.png">
     </details>
+  </ul>
 </details>
 <br>
 
