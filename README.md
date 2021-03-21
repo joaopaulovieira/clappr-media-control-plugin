@@ -10,6 +10,90 @@
 # Clappr Media Control plugin
 
 <div align=center><img src="./public/images/ilustration.gif"></div>
+<br>
+
+# Examples
+
+<details>
+  <summary>Example 1:</summary>
+    <details style= 'margin-left: 20px;'>
+      <summary>Configs:</summary>
+      <br>
+      <img src="./public/images/examples/example_1_components.png" height="300">
+      <img src="./public/images/examples/example_1_config.png" height="300" width=520">
+    </details>
+    <details style= 'margin-left: 20px;'>
+      <summary>DOM tree:</summary>
+      <br>
+      <img src="./public/images/examples/example_1_DOM.png">
+    </details>
+    <details open style= 'margin-left: 20px;'>
+      <summary>UI:</summary>
+      <br>
+      <img src="./public/images/examples/example_1_UI.png">
+    </details>
+</details>
+<br>
+<details>
+  <summary>Example 2:</summary>
+    <details style= 'margin-left: 20px;'>
+      <summary>Configs:</summary>
+      <br>
+      <img src="./public/images/examples/example_2_components.png" height="300">
+      <img src="./public/images/examples/example_2_config.png" height="300" width=520">
+    </details>
+    <details style= 'margin-left: 20px;'>
+      <summary>DOM tree:</summary>
+      <br>
+      <img src="./public/images/examples/example_2_DOM.png">
+    </details>
+    <details open style= 'margin-left: 20px;'>
+      <summary>UI:</summary>
+      <br>
+      <img src="./public/images/examples/example_2_UI.png">
+    </details>
+</details>
+<br>
+<details>
+  <summary>Example 3:</summary>
+    <details style= 'margin-left: 20px;'>
+      <summary>Configs:</summary>
+      <br>
+      <img src="./public/images/examples/example_3_components.png" height="300">
+      <img src="./public/images/examples/example_3_config.png" height="300" width=520">
+    </details>
+    <details style= 'margin-left: 20px;'>
+      <summary>DOM tree:</summary>
+      <br>
+      <img src="./public/images/examples/example_3_DOM.png">
+    </details>
+    <details open style= 'margin-left: 20px;'>
+      <summary>UI:</summary>
+      <br>
+      <img src="./public/images/examples/example_3_UI.png">
+    </details>
+</details>
+<br>
+<details>
+  <summary>Example 4:</summary>
+    <details style= 'margin-left: 20px;'>
+      <summary>Configs:</summary>
+      <br>
+      <img src="./public/images/examples/example_4_components.png" height="300">
+      <img src="./public/images/examples/example_4_config.png" height="300" width=520">
+    </details>
+    <details style= 'margin-left: 20px;'>
+      <summary>DOM tree:</summary>
+      <br>
+      <img src="./public/images/examples/example_4_DOM.png">
+    </details>
+    <details open style= 'margin-left: 20px;'>
+      <summary>UI:</summary>
+      <br>
+      <img src="./public/images/examples/example_4_UI.png">
+    </details>
+</details>
+<br>
 
 <!-- ## Table of Contents
 - [Features](https://github.com/joaopaulovieira/clappr-skeleton-plugin#Features)
