@@ -1,7 +1,7 @@
-<!-- [![](https://data.jsdelivr.com/v1/package/npm/clappr-context-menu-plugin/badge)](https://www.jsdelivr.com/package/npm/clappr-context-menu-plugin) -->
-<!-- [![](https://img.shields.io/npm/v/clappr-context-menu-plugin.svg?style=flat-square)](https://npmjs.org/package/clappr-context-menu-plugin) -->
-<!-- [![](https://img.shields.io/npm/dt/clappr-context-menu-plugin.svg?style=flat-square)](https://npmjs.org/package/clappr-context-menu-plugin) -->
-<!-- [![npm bundle size](https://img.shields.io/bundlephobia/min/clappr-context-menu-plugin?style=flat-square)](https://bundlephobia.com/result?p=clappr-context-menu-plugin) -->
+[![](https://data.jsdelivr.com/v1/package/npm/@joaopaulo.vieira/clappr-media-control-plugin/badge)](https://npmjs.org/package/@joaopaulo.vieira/clappr-media-control-plugin)
+[![](https://img.shields.io/npm/v/@joaopaulo.vieira/clappr-media-control-plugin.svg?style=flat-square)](https://npmjs.org/package/@joaopaulo.vieira/clappr-media-control-plugin)
+[![](https://img.shields.io/npm/dt/@joaopaulo.vieira/clappr-media-control-plugin.svg?style=flat-square)](https://npmjs.org/package/@joaopaulo.vieira/clappr-media-control-plugin)
+[![npm bundle size](https://img.shields.io/bundlephobia/min/@joaopaulo.vieira/clappr-media-control-plugin?style=flat-square)](https://bundlephobia.com/result?p=@joaopaulo.vieira/clappr-media-control-plugin)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 ![Travis (.com)](https://img.shields.io/travis/com/joaopaulovieira/clappr-media-control-plugin?style=flat-square)
 ![Coveralls github](https://img.shields.io/coveralls/github/joaopaulovieira/clappr-media-control-plugin?style=flat-square)
