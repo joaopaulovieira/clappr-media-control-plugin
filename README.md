@@ -14,9 +14,10 @@
 </div>
 <br>
 
-# Examples
+<!-- ## Demo -->
 
-<details>
+## Examples
+<details open>
   <summary>Example 1:</summary>
   <ul>
     <br>
