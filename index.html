@@ -1,0 +1,67 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="stylesheets/bootstrap.min.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="stylesheets/bootstrap-theme.min.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="stylesheets/style.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="shortcut icon" type="image/png" href="images/favico.png">
+    <script type="text/javascript" charset="utf-8" src="https://cdn.jsdelivr.net/npm/@clappr/core@latest/dist/clappr-core.min.js"></script>
+  </head>
+  <body>
+    <section class="container">
+      <div class="main">
+        <div id="output">
+          <div id="player-wrapper" class="player"></div>
+        </div>
+      </div>
+      <div class="sidebar">
+        <div id="editor">var playerElement = document.getElementById("player-wrapper");
+
+var player = new Clappr.Player({
+  source: 'http://clappr.io/highline.mp4',
+  poster: 'http://clappr.io/poster.png',
+  playback: { controls: false },
+  includeResetStyle: false,
+  plugins: [
+    window.MediaControl.PlayPauseButtonPlugin,
+    window.MediaControl.VolumePlugin,
+    window.MediaControl.FullscreenButtonPlugin,
+    window.MediaControl.SeekBarPlugin,
+    window.MediaControl.TimeIndicatorPlugin,
+    window.MediaControl.MainPlugin,
+  ],
+  mediaControl: {
+    disableBeforeVideoStarts: false,
+    layersQuantity: 1,
+    layersConfig: [
+      {
+        id: 1,
+        sectionsQuantity: 2,
+        flexDirection: 'column',
+        sectionsConfig: [{ id: 1, separator: true }],
+      },
+    ],
+  },
+})
+
+player.attachTo(playerElement);
+        </div>
+        <button class="run btn btn-primary">Run</button>
+        <div id="console"> </div>
+      </div>
+    </section>
+    <footer class="footer"></footer>
+    <script type="text/javascript" charset="utf-8" src="javascript/main.js" async></script>
+    <script type="text/javascript" charset="utf-8" src="javascript/editor/ace.js" async></script>
+    <script type="text/javascript" charset="utf-8" src="https://cdn.jsdelivr.net/npm/@joaopaulo.vieira/clappr-media-control-plugin@latest/dist/clappr-media-control-plugin.min.js">
+      // For using on demo page.
+    </script>
+    <!-- <script type="text/javascript" charset="utf-8" src="clappr-media-control-plugin.js">
+      // For test with the local build.
+    </script> -->
+    <!-- <script type="module" src="clappr-media-control-plugin.esm.js">
+      // For use ESM build.
+    </script> -->
+    <script type="text/javascript" charset="utf-8" src="javascript/clappr-config.js" async></script>
+  </body>
+</html>

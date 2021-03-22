@@ -1,0 +1,61 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.run {
+  display: block;
+  float: right;
+  margin: 20px 0;
+}
+
+.container {
+  text-align: center;
+}
+
+.main {
+  display: inline-block;
+  margin: 0;
+  padding: 0px 20px 0 20px;
+  border: 0;
+}
+
+#player-wrapper {
+  min-width: 320px;
+  min-height: 180px;
+}
+
+.sidebar {
+  display: inline-block;
+  text-align: left;
+  width: 680px;
+  margin: 0;
+  padding: 40px 20px 0 20px;
+  border: 0;
+}
+
+#editor {
+  border: 1px solid #c0c0EE;
+  min-height: 360px;
+}
+
+#console {
+  position: relative;
+  color: red;
+  left: 2%;
+  top: 65px;
+}
+
+.btn:focus { outline: none; }
+
+.player {
+  display: inline-block;
+  margin: 0 auto;
+  height: auto;
+  width: auto;
+}
