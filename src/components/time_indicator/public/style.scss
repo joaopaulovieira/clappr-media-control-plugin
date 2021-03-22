@@ -4,14 +4,17 @@ $shadow: drop-shadow( 2px 2px 1px rgba(0, 0, 0, 0.7));
   align-items: center;
   color: white;
   filter: $shadow;
-  font-size: 15px;
   justify-content: center;
-  margin-right: 5px;
-  pointer-events: none !important;
   text-align: center;
   -webkit-filter: $shadow;
 
   &__separator {
     white-space: pre;
   }
+}
+
+.media-control__elements.time-indicator {
+  font-size: 15px;
+  margin-right: 5px;
+  pointer-events: none;
 }

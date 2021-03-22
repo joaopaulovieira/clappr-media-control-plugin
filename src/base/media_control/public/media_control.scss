@@ -17,11 +17,6 @@
     position: inherit;
     height: inherit;
     width: inherit;
-    display: flex !important;
-  }
-
-  &__sections {
-    display: flex !important;
   }
 
   &__elements {
@@ -40,14 +35,30 @@
       width: 40px;
     }
   }
+}
 
-  &__sections, &__elements {
-    &--push-column {
-      margin-top: auto !important;
-    }
-    
-    &--push-row {
-      margin-left: auto !important;
-    }
+.media-control .media-control__layers {
+  display: flex;
+}
+
+.media-control .media-control__sections {
+  display: flex;
+
+  &--push-column {
+    margin-top: auto;
+  }
+
+  &--push-row {
+    margin-left: auto;
+  }
+}
+
+.media-control .media-control__elements {
+  &--push-column {
+    margin-top: auto;
+  }
+
+  &--push-row {
+    margin-left: auto;
   }
 }
