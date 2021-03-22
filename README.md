@@ -20,11 +20,11 @@ https://joaopaulovieira.github.io/clappr-media-control-plugin/
 ## Table of Contents
 - [Features](https://github.com/joaopaulovieira/clappr-media-control-plugin#Features)
 - [Structure](https://github.com/joaopaulovieira/clappr-media-control-plugin#Structure)
-- [Media Control Components](https://github.com/joaopaulovieira/clappr-media-control-plugin#MediaControlComponents)
+- [Media Control Components](https://github.com/joaopaulovieira/clappr-media-control-plugin#media-control-components)
 - [Usage](https://github.com/joaopaulovieira/clappr-media-control-plugin#Usage)
 - [Configuration](https://github.com/joaopaulovieira/clappr-media-control-plugin#Configuration)
 - [Examples](https://github.com/joaopaulovieira/clappr-media-control-plugin#Examples)
-- [Advanced Usage](https://github.com/joaopaulovieira/clappr-media-control-plugin#Usage)
+- [Advanced Usage](https://github.com/joaopaulovieira/clappr-media-control-plugin#advanced-usage)
 - [Development](https://github.com/joaopaulovieira/clappr-media-control-plugin#Development)
 
 ## Features
@@ -35,7 +35,7 @@ With a structure with few abstractions (layers, sections, and elements), underst
 Using `flexbox`, all components are positioned to ensure the best use in a wide range of video consumption environments.
 
 ### :electric_plug: Add more components using Clappr plugin architecture
-The architecture of the media control was built to facilitate the addition of new elements in the interface via plugins of the category `MediaControlComponents`, following the extensibility mindset of Clappr. (More info about `MediaControlComponents` [here](https://github.com/joaopaulovieira/clappr-media-control-plugin#MediaControlComponents).)
+The architecture of the media control was built to facilitate the addition of new elements in the interface via plugins of the category `MediaControlComponents`, following the extensibility mindset of Clappr. (More info about `MediaControlComponents` [here](https://github.com/joaopaulovieira/clappr-media-control-plugin#media-control-components).)
 
 ### :toolbox: Highly customizable
 It's possible to configure from the number of layers/sections, to how the sections within a specific layer (or an element within a specific section) should be positioned! With this level of customization, it is possible to create an infinite range of interfaces. See examples of interfaces [here](https://github.com/joaopaulovieira/clappr-media-control-plugin#Examples).
