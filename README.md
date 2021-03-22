@@ -14,7 +14,8 @@
 </div>
 <br>
 
-<!-- ## Demo -->
+## Demo
+https://joaopaulovieira.github.io/clappr-media-control-plugin/
 
 ## Table of Contents
 - [Features](https://github.com/joaopaulovieira/clappr-media-control-plugin#Features)
