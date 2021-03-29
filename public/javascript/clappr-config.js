@@ -1,8 +1,8 @@
 const playerElement = document.getElementById('player-wrapper')
 
 const player = new Clappr.Player({
-  source: '../medias/highline.mp4',
-  poster: '../images/poster.png',
+  source: 'https://clappr.io/highline.mp4',
+  poster: 'https://clappr.io/poster.png',
   playback: { controls: false },
   includeResetStyle: false,
   plugins: [
