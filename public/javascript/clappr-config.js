@@ -1,8 +1,7 @@
 const playerElement = document.getElementById('player-wrapper')
 
 const player = new Clappr.Player({
-  source: 'https://clappr.io/highline.mp4',
-  poster: 'https://clappr.io/poster.png',
+  source: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
   playback: { controls: false },
   includeResetStyle: false,
   plugins: [

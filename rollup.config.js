@@ -4,7 +4,6 @@ import commonjs from '@rollup/plugin-commonjs'
 import image from '@rollup/plugin-image'
 import html from 'rollup-plugin-html'
 import postcss from 'rollup-plugin-postcss'
-import livereload from 'rollup-plugin-livereload'
 import serve from 'rollup-plugin-serve'
 import filesize from 'rollup-plugin-filesize'
 import size from 'rollup-plugin-sizes'
@@ -13,8 +12,6 @@ import { terser } from 'rollup-plugin-terser'
 import pkg from './package.json'
 import babelConfig from './babel.config.json'
 
-const dev = !!process.env.DEV
-const analyzeBundle = !!process.env.ANALYZE_BUNDLE
 const minimize = !!process.env.MINIMIZE
 
 const babelPluginForUMDBundle = createBabelInputPluginFactory()
@@ -27,9 +24,8 @@ const plugins = [
   postcss(),
   size(),
   filesize(),
-  dev && serve({ contentBase: ['dist', 'public'], host: '0.0.0.0', port: '8080' }),
-  dev && livereload({ watch: ['dist', 'public'] }),
-  analyzeBundle && visualize({ open: true }),
+  !!process.env.DEV && serve({ contentBase: ['dist', 'public'], host: '0.0.0.0', port: '8080' }),
+  !!process.env.ANALYZE_BUNDLE && visualize({ open: true }),
 ]
 
 const mainBundle = {

@@ -2,29 +2,21 @@
 
 if [[ $(git status -s) ]]
 then
-    echo "The working directory is dirty. Please commit any pending changes."
+    echo "The working directory is dirty. Please, commit any pending changes."
     exit 1;
 fi
 
 echo "Checkout to demo page branch"
 git co gh-pages
+rm -rf javascript images
+mkdir javascript images
 
 echo "Updating files"
 git show main:public/index.html > index.html
 git show main:public/images/favico.png > ./images/favico.png
-git show main:public/images/poster.png > ./images/poster.png
 git show main:public/javascript/main.js > ./javascript/main.js
 git show main:public/javascript/clappr-config.js > ./javascript/clappr-config.js
-git show main:public/javascript/editor/ace.js > ./javascript/editor/ace.js
-git show main:public/javascript/editor/mode-javascript.js > ./javascript/editor/mode-javascript.js
-git show main:public/javascript/editor/theme-katzenmilch.js > ./javascript/editor/theme-katzenmilch.js
-git show main:public/javascript/editor/worker-javascript.js > ./javascript/editor/worker-javascript.js
-git show main:public/medias/highline.mp4 > ./medias/highline.mp4
-git show main:public/stylesheets/bootstrap-theme.min.css > ./stylesheets/bootstrap-theme.min.css
-git show main:public/stylesheets/bootstrap.min.css > ./stylesheets/bootstrap.min.css
-git show main:public/stylesheets/bootstrap.min.css > ./stylesheets/bootstrap.min.css
-git show main:public/stylesheets/style.css > ./stylesheets/style.css
-rm -rf node_modules
+rm -rf node_modules dist coverage
 
 echo "Publishing"
 git add . && git commit -m "Update demo page" && git push origin gh-pages && git co main
