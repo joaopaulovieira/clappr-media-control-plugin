@@ -1,6 +1,6 @@
 language: node_js
 node_js: "12"
-cache: yarn
+cache: npm
 os: linux
 dist: bionic
 
@@ -12,6 +12,6 @@ notifications:
   email:
     - vieira.joaopaulo.91@gmail.com
 
-before_script: "yarn lint"
+before_script: "npm run lint"
 
 after_script: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"

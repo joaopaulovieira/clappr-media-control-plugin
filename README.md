@@ -299,14 +299,14 @@ import { MainPlugin, BaseComponentPlugin } from '@joaopaulo.vieira/clappr-media-
 ```
 
 ## Development
-Install dependencies: `yarn install`
+Install dependencies: `npm install`
 
-Run: `yarn start`
+Run: `npm start`
 
-Test: `yarn test`
+Test: `npm test`
 
-Lint: `yarn lint`
+Lint: `npm run lint`
 
-Build: `yarn build`
+Build: `npm run build`
 
-Minified version: `yarn release`
+Minified version: `npm run release`
