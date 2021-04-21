@@ -3,6 +3,9 @@ import TimeIndicatorPlugin from './time_indicator'
 import templateHTML from './public/template.html'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
 
+Events.register('MEDIA_CONTROL_SEEK_BAR_START_DRAGGING')
+Events.register('MEDIA_CONTROL_SEEK_BAR_STOP_DRAGGING')
+
 const setupTest = (options = {}, fullSetup = false) => {
   const core = new Core(options)
   const plugin = new TimeIndicatorPlugin(core)
@@ -81,6 +84,22 @@ describe('TimeIndicatorPlugin', function() {
       core.trigger(Events.CORE_ACTIVE_CONTAINER_CHANGED)
 
       expect(plugin.onContainerChanged).toHaveBeenCalledTimes(1)
+    })
+
+    test('register onStartDraggingSeekBar method as callback for MEDIA_CONTROL_SEEK_BAR_START_DRAGGING custom event', () => {
+      jest.spyOn(TimeIndicatorPlugin.prototype, 'onStartDraggingSeekBar')
+      const { core, plugin } = setupTest()
+      core.trigger(Events.Custom.MEDIA_CONTROL_SEEK_BAR_START_DRAGGING)
+
+      expect(plugin.onStartDraggingSeekBar).toHaveBeenCalledTimes(1)
+    })
+
+    test('register onStopDraggingSeekBar method as callback for MEDIA_CONTROL_SEEK_BAR_STOP_DRAGGING custom event', () => {
+      jest.spyOn(TimeIndicatorPlugin.prototype, 'onStopDraggingSeekBar')
+      const { core, plugin } = setupTest()
+      core.trigger(Events.Custom.MEDIA_CONTROL_SEEK_BAR_STOP_DRAGGING)
+
+      expect(plugin.onStopDraggingSeekBar).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -163,6 +182,16 @@ describe('TimeIndicatorPlugin', function() {
       expect(this.plugin.setDuration).not.toHaveBeenCalled()
     })
 
+    test('avoids update any data if _isDragging flag is truthy', () => {
+      this.plugin._isDragging = true
+      this.plugin.onTimeUpdate({ current: null, total: 100 })
+
+      expect(this.plugin.setPosition).not.toHaveBeenCalled()
+      expect(this.plugin.setDuration).not.toHaveBeenCalled()
+
+      this.plugin._isDragging = false
+    })
+
     test('generates time text based on callback response to add on DOM elements', () => {
       this.plugin.onTimeUpdate({ current: 1, total: 100 })
 
@@ -218,6 +247,53 @@ describe('TimeIndicatorPlugin', function() {
       this.plugin.onContainerDestroyed()
 
       expect(this.plugin.setDuration).toHaveBeenCalledWith(this.plugin.defaultTime)
+    })
+  })
+
+  describe('onStartDraggingSeekBar method', () => {
+    beforeEach(() => jest.spyOn(this.plugin, 'setPosition'))
+
+    test('sets _isDragging flag to true', () => {
+      expect(this.plugin._isDragging).toBeFalsy()
+
+      this.plugin.onStartDraggingSeekBar({ event: { target: { value: 0 } } })
+
+      expect(this.plugin._isDragging).toBeTruthy()
+    })
+
+    test('generates time text based on callback response to add on DOM elements', () => {
+      this.plugin.onStartDraggingSeekBar({ event: { target: { value: 10 } } })
+
+      expect(this.plugin.setPosition).toHaveBeenCalledWith('00:10')
+    })
+
+    test('uses Math.floor to only set integer values', () => {
+      this.plugin.onStartDraggingSeekBar({ event: { target: { value: 10.234234235 } } })
+
+      expect(this.plugin.setPosition).toHaveBeenCalledWith('00:10')
+    })
+
+    test('only updates position time text if differs from current DOM element text value', () => {
+      this.plugin.onStartDraggingSeekBar({ event: { target: { value: 0 } } })
+
+      expect(this.plugin.setPosition).not.toHaveBeenCalled()
+
+      this.plugin.onStartDraggingSeekBar({ event: { target: { value: 10 } } })
+
+      expect(this.plugin.setPosition).toHaveBeenCalledWith('00:10')
+      expect(this.plugin.setPosition).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('onStopDraggingSeekBar method', () => {
+    test('sets _isDragging flag to false', () => {
+      this.plugin.onStartDraggingSeekBar({ event: { target: { value: 0 } } })
+
+      expect(this.plugin._isDragging).toBeTruthy()
+
+      this.plugin.onStopDraggingSeekBar()
+
+      expect(this.plugin._isDragging).toBeFalsy()
     })
   })
 

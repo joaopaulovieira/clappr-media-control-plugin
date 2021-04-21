@@ -20,7 +20,11 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
   get defaultTime() { return '00:00' }
 
   bindEvents() {
-    const coreEventListenerData = [{ object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged }]
+    const coreEventListenerData = [
+      { object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged },
+      { object: this.core, event: Events.Custom.MEDIA_CONTROL_SEEK_BAR_START_DRAGGING, callback: this.onStartDraggingSeekBar },
+      { object: this.core, event: Events.Custom.MEDIA_CONTROL_SEEK_BAR_STOP_DRAGGING, callback: this.onStopDraggingSeekBar },
+    ]
     coreEventListenerData.forEach(item => this.stopListening(item.object, item.event, item.callback))
     coreEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
   }
@@ -41,7 +45,7 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
   }
 
   onTimeUpdate(time) {
-    if (time.current === null || time.total === null) return
+    if (time.current === null || time.total === null || this._isDragging) return
 
     const position = Utils.formatTime(Math.floor(time.current))
     const duration = Utils.formatTime(Math.floor(time.total))
@@ -61,6 +65,16 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
   onContainerDestroyed() {
     this.setPosition(this.defaultTime)
     this.setDuration(this.defaultTime)
+  }
+
+  onStartDraggingSeekBar(data) {
+    this._isDragging = true
+    const position = Utils.formatTime(Math.floor(data.event.target.value))
+    position !== this.$position.textContent && this.setPosition(position)
+  }
+
+  onStopDraggingSeekBar() {
+    this._isDragging = false
   }
 
   render() {
