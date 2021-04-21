@@ -120,6 +120,14 @@ describe('SeekBarPlugin', function() {
   })
 
   describe('constructor', () => {
+    test('register MEDIA_CONTROL_SEEK_BAR_START_DRAGGING custom event to trigger on core scope', () => {
+      expect(Events.Custom.MEDIA_CONTROL_SEEK_BAR_START_DRAGGING).toBeDefined()
+    })
+
+    test('register MEDIA_CONTROL_SEEK_BAR_STOP_DRAGGING custom event to trigger on core scope', () => {
+      expect(Events.Custom.MEDIA_CONTROL_SEEK_BAR_STOP_DRAGGING).toBeDefined()
+    })
+
     test('sets _isDragging internal flag as falsy', () => {
       expect(this.plugin._isDragging).toBeFalsy()
     })
@@ -379,6 +387,14 @@ describe('SeekBarPlugin', function() {
 
       expect(getComputedStyle(this.plugin.$el[0]).getPropertyValue('--seek-before-width')).toEqual('10%')
     })
+
+    test('triggers MEDIA_CONTROL_SEEK_BAR_START_DRAGGING custom event', () => {
+      const cb = jest.fn()
+      this.plugin.listenToOnce(this.core, Events.Custom.MEDIA_CONTROL_SEEK_BAR_START_DRAGGING, cb)
+      this.plugin.updateProgressBarViaInteraction({ target: { value: 20, max: 200 } })
+
+      expect(cb).toHaveBeenCalledWith({ event: { target: { value: 20, max: 200 } } })
+    })
   })
 
   describe('seek method', () => {
@@ -402,6 +418,14 @@ describe('SeekBarPlugin', function() {
       this.plugin.seek({ target: { value: 20, max: 200 } })
 
       expect(this.plugin._isDragging).toBeFalsy()
+    })
+
+    test('triggers MEDIA_CONTROL_SEEK_BAR_STOP_DRAGGING custom event', () => {
+      const cb = jest.fn()
+      this.plugin.listenToOnce(this.core, Events.Custom.MEDIA_CONTROL_SEEK_BAR_STOP_DRAGGING, cb)
+      this.plugin.seek({ target: { value: 20, max: 200 } })
+
+      expect(cb).toHaveBeenCalledWith({ event: { target: { value: 20, max: 200 } } })
     })
   })
 

@@ -40,6 +40,8 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
   get shouldDisableInteraction() { return this.isLiveMedia && !this.container.isDvrEnabled() }
 
   constructor(core) {
+    Events.register('MEDIA_CONTROL_SEEK_BAR_START_DRAGGING')
+    Events.register('MEDIA_CONTROL_SEEK_BAR_STOP_DRAGGING')
     super(core)
     this._isDragging = false
   }
@@ -119,6 +121,7 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
     if (this.shouldDisableInteraction) return
     !this._isDragging && (this._isDragging = true)
     this.$el[0].style.setProperty('--seek-before-width', `${rangeInput.target.value / rangeInput.target.max * 100}%`)
+    this.core.trigger(Events.Custom.MEDIA_CONTROL_SEEK_BAR_START_DRAGGING, { event: rangeInput })
   }
 
   seek(rangeInput) {
@@ -126,6 +129,7 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
     const percentage = rangeInput.target.value / rangeInput.target.max * 100
     this.container.seekPercentage(percentage)
     this._isDragging = false
+    this.core.trigger(Events.Custom.MEDIA_CONTROL_SEEK_BAR_STOP_DRAGGING, { event: rangeInput })
   }
 
   render() {
