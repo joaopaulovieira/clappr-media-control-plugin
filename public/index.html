@@ -44,6 +44,11 @@ var player = new Clappr.Player({
         sectionsConfig: [{ id: 1, separator: true }],
       },
     ],
+    playPauseComponent: { layer: 1, section: 1, position: 1, separator: false },
+    volumeComponent: { layer: 1, section: 1, position: 2, separator: true },
+    fullscreenComponent: { layer: 1, section: 1, position: 3, separator: false },
+    seekBarComponent: { layer: 1, section: 2, position: 1, separator: false },
+    TimeIndicatorComponent: { layer: 1, section: 2, position: 2, separator: false },
   },
 })
 
@@ -57,12 +62,13 @@ player.attachTo(playerElement);
     <script type="text/javascript" charset="utf-8" src="https://cdn.jsdelivr.net/npm/@clappr/core@latest/dist/clappr-core.min.js" defer></script>
     <script type="text/javascript" charset="utf-8" src="https://pagecdn.io/lib/ace/1.4.12/ace.js" defer></script>
     <script type="text/javascript" charset="utf-8" src="javascript/main.js" defer></script>
-    <script type="text/javascript" charset="utf-8" src="https://cdn.jsdelivr.net/npm/@joaopaulo.vieira/clappr-media-control-plugin@latest/dist/clappr-media-control-plugin.min.js" defer>
+    <!-- <script type="text/javascript" charset="utf-8" src="https://cdn.jsdelivr.net/npm/@joaopaulo.vieira/clappr-media-control-plugin@latest/dist/clappr-media-control-plugin.min.js" defer>
       // For using on demo page.
-    </script>
-    <!-- <script type="text/javascript" charset="utf-8" src="clappr-media-control-plugin.js" defer>
-      // For test with the local build.
     </script> -->
+    <script type="text/javascript" charset="utf-8" src="clappr-media-control-plugin.js" defer>
+      // For test with the local build.
+    </script>
     <script type="text/javascript" charset="utf-8" src="javascript/clappr-config.js" defer></script>
   </body>
 </html>
+
