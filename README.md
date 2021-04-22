@@ -110,6 +110,9 @@ var player = new Clappr.Player({
 ***In this project, the order of loading plugins in Clappr does not matter as both `MediaControlPlugin` and` MediaControlComponentPlugin` have mechanisms to guarantee the rendering of all elements.***
 
 ## Configuration
+
+***For specific component configs, check [this table](https://github.com/joaopaulovieira/clappr-media-control-plugin/tree/main/src/components).***
+
 The options for the plugin go in the `mediaControl` property as shown below:
 ```javascript
 var player = new Clappr.Player({
