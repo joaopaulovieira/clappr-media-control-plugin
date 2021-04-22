@@ -131,6 +131,7 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
   seek(rangeInput) {
     if (this.shouldDisableInteraction) return
     const percentage = rangeInput.target.value / rangeInput.target.max * 100
+    this.$el[0].style.setProperty('--seek-before-width', `${percentage}%`)
     this.container.seekPercentage(percentage)
     this._isDragging = false
     this.core.trigger(Events.Custom.MEDIA_CONTROL_SEEK_BAR_STOP_DRAGGING, { event: rangeInput })

@@ -442,6 +442,12 @@ describe('SeekBarPlugin', function() {
       expect(this.container.seekPercentage).not.toHaveBeenCalled()
     })
 
+    test('adds the ratio of event.target.value and event.target.max values as --seek-before-width style property of DOM element plugin', () => {
+      this.plugin.seek({ target: { value: 20, max: 200 } })
+
+      expect(getComputedStyle(this.plugin.$el[0]).getPropertyValue('--seek-before-width')).toEqual('10%')
+    })
+
     test('calls container.seekPercentage with the ratio of event.target.value and event.target.max values', () => {
       jest.spyOn(this.container, 'seekPercentage')
       this.plugin.seek({ target: { value: 20, max: 200 } })
