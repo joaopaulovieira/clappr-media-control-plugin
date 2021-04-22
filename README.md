@@ -72,7 +72,7 @@ It should return the id of the position that the plugin has to be rendered withi
 There are getters that can be overwritten but are not mandatory. It's them:
 
 ### MediaControlComponentPlugin.separator
-Returns `false` by default. If it's overwritten to return the value `true`, it will cause the plugin to be rendered at the opposite point from the starting position and causing all renderer plugins after it to follow the same rendering order.
+Returns `false` by default. If it's overwritten to return the value `true`, it will cause the plugin to be rendered at the opposite point from the starting position and causing all rendered plugins after it to follow the same rendering order.
 
 You can see all `MediaControlComponentPlugin` code [here](https://github.com/joaopaulovieira/clappr-media-control-plugin/blob/main/src/base/media_control_component/media_control_component.js).
 
