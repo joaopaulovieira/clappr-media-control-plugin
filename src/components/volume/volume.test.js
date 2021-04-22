@@ -38,24 +38,60 @@ describe('TimeIndicatorPlugin', function() {
     expect(this.core.getPlugin(this.plugin.name).name).toEqual('volume')
   })
 
-  test('overrides MediaControlComponentPlugin layer getter to return a valid value', () => {
-    expect(this.plugin.layer).not.toEqual(MediaControlComponentPlugin.prototype.layer)
-    expect(this.plugin.layer).toEqual(1)
+  describe('layer getter', () => {
+    test('overrides MediaControlComponentPlugin layer getter to return a valid value', () => {
+      expect(this.plugin.layer).not.toEqual(MediaControlComponentPlugin.prototype.layer)
+      expect(this.plugin.layer).toEqual(1)
+    })
+
+    test('is configurable via mediaControl.volumeComponent.layer config', () => {
+      const { plugin } = setupTest({ mediaControl: { volumeComponent: { layer: 2 } } })
+
+      expect(plugin.layer).not.toEqual(MediaControlComponentPlugin.prototype.layer)
+      expect(plugin.layer).toEqual(2)
+    })
   })
 
-  test('overrides MediaControlComponentPlugin section getter to return a valid value', () => {
-    expect(this.plugin.section).not.toEqual(MediaControlComponentPlugin.prototype.section)
-    expect(this.plugin.section).toEqual(1)
+  describe('section getter', () => {
+    test('overrides MediaControlComponentPlugin section getter to return a valid value', () => {
+      expect(this.plugin.section).not.toEqual(MediaControlComponentPlugin.prototype.section)
+      expect(this.plugin.section).toEqual(1)
+    })
+
+    test('is configurable via mediaControl.volumeComponent.section config', () => {
+      const { plugin } = setupTest({ mediaControl: { volumeComponent: { section: 2 } } })
+
+      expect(plugin.section).not.toEqual(MediaControlComponentPlugin.prototype.section)
+      expect(plugin.section).toEqual(2)
+    })
   })
 
-  test('overrides MediaControlComponentPlugin position getter to return a valid value', () => {
-    expect(this.plugin.position).not.toEqual(MediaControlComponentPlugin.prototype.position)
-    expect(this.plugin.position).toEqual(2)
+  describe('position getter', () => {
+    test('overrides MediaControlComponentPlugin position getter to return a valid value', () => {
+      expect(this.plugin.position).not.toEqual(MediaControlComponentPlugin.prototype.position)
+      expect(this.plugin.position).toEqual(2)
+    })
+
+    test('is configurable via mediaControl.volumeComponent.position config', () => {
+      const { plugin } = setupTest({ mediaControl: { volumeComponent: { position: 3 } } })
+
+      expect(plugin.position).not.toEqual(MediaControlComponentPlugin.prototype.position)
+      expect(plugin.position).toEqual(3)
+    })
   })
 
-  test('overrides MediaControlComponentPlugin separator getter to return a truthy value', () => {
-    expect(this.plugin.separator).not.toEqual(MediaControlComponentPlugin.prototype.separator)
-    expect(this.plugin.separator).toBeTruthy()
+  describe('separator getter', () => {
+    test('is configurable via mediaControl.volumeComponent.separator config', () => {
+      const { plugin } = setupTest({ mediaControl: { volumeComponent: { separator: true } } })
+
+      expect(plugin.separator).not.toEqual(MediaControlComponentPlugin.prototype.separator)
+      expect(plugin.separator).toBeTruthy()
+    })
+
+    test('returns true value if is not configured with a valid value', () => {
+      expect(this.plugin.separator).not.toEqual(MediaControlComponentPlugin.prototype.separator)
+      expect(this.plugin.separator).toBeTruthy()
+    })
   })
 
   test('have a getter called attributes', () => {

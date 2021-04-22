@@ -6,11 +6,15 @@ import pluginStyle from './public/style.scss'
 export default class SeekBarPlugin extends MediaControlComponentPlugin {
   get name() { return 'seek_bar' }
 
-  get layer() { return 1 }
+  get config() { return this.options.mediaControl && this.options.mediaControl.seekBarComponent }
 
-  get section() { return 2 }
+  get layer() { return this.config && this.config.layer || 1 }
 
-  get position() { return 1 }
+  get section() { return this.config && this.config.section || 2 }
+
+  get position() { return this.config && this.config.position || 1 }
+
+  get separator() { return this.config && typeof this.config.separator !== 'undefined' ? this.config.separator : null }
 
   get tagName() { return 'input' }
 

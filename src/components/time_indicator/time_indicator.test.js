@@ -31,19 +31,60 @@ describe('TimeIndicatorPlugin', function() {
     expect(this.core.getPlugin(this.plugin.name).name).toEqual('time_indicator')
   })
 
-  test('overrides MediaControlComponentPlugin layer getter to return a valid value', () => {
-    expect(this.plugin.layer).not.toEqual(MediaControlComponentPlugin.prototype.layer)
-    expect(this.plugin.layer).toEqual(1)
+  describe('layer getter', () => {
+    test('overrides MediaControlComponentPlugin layer getter to return a valid value', () => {
+      expect(this.plugin.layer).not.toEqual(MediaControlComponentPlugin.prototype.layer)
+      expect(this.plugin.layer).toEqual(1)
+    })
+
+    test('is configurable via mediaControl.timeIndicatorComponent.layer config', () => {
+      const { plugin } = setupTest({ mediaControl: { timeIndicatorComponent: { layer: 2 } } })
+
+      expect(plugin.layer).not.toEqual(MediaControlComponentPlugin.prototype.layer)
+      expect(plugin.layer).toEqual(2)
+    })
   })
 
-  test('overrides MediaControlComponentPlugin section getter to return a valid value', () => {
-    expect(this.plugin.section).not.toEqual(MediaControlComponentPlugin.prototype.section)
-    expect(this.plugin.section).toEqual(2)
+  describe('section getter', () => {
+    test('overrides MediaControlComponentPlugin section getter to return a valid value', () => {
+      expect(this.plugin.section).not.toEqual(MediaControlComponentPlugin.prototype.section)
+      expect(this.plugin.section).toEqual(2)
+    })
+
+    test('is configurable via mediaControl.timeIndicatorComponent.section config', () => {
+      const { plugin } = setupTest({ mediaControl: { timeIndicatorComponent: { section: 1 } } })
+
+      expect(plugin.section).not.toEqual(MediaControlComponentPlugin.prototype.section)
+      expect(plugin.section).toEqual(1)
+    })
   })
 
-  test('overrides MediaControlComponentPlugin position getter to return a valid value', () => {
-    expect(this.plugin.position).not.toEqual(MediaControlComponentPlugin.prototype.position)
-    expect(this.plugin.position).toEqual(2)
+  describe('position getter', () => {
+    test('overrides MediaControlComponentPlugin position getter to return a valid value', () => {
+      expect(this.plugin.position).not.toEqual(MediaControlComponentPlugin.prototype.position)
+      expect(this.plugin.position).toEqual(2)
+    })
+
+    test('is configurable via mediaControl.timeIndicatorComponent.position config', () => {
+      const { plugin } = setupTest({ mediaControl: { timeIndicatorComponent: { position: 3 } } })
+
+      expect(plugin.position).not.toEqual(MediaControlComponentPlugin.prototype.position)
+      expect(plugin.position).toEqual(3)
+    })
+  })
+
+  describe('separator getter', () => {
+    test('is configurable via mediaControl.timeIndicatorComponent.separator config', () => {
+      const { plugin } = setupTest({ mediaControl: { timeIndicatorComponent: { separator: true } } })
+
+      expect(plugin.separator).not.toEqual(MediaControlComponentPlugin.prototype.separator)
+      expect(plugin.separator).toBeTruthy()
+    })
+
+    test('returns null value if is not configured with a valid value', () => {
+      expect(this.plugin.separator).not.toEqual(MediaControlComponentPlugin.prototype.separator)
+      expect(this.plugin.separator).toBeNull()
+    })
   })
 
   test('have a getter called attributes', () => {

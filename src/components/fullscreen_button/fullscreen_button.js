@@ -8,11 +8,15 @@ import pluginStyle from './public/style.scss'
 export default class FullscreenButtonPlugin extends MediaControlComponentPlugin {
   get name() { return 'fullscreen_button' }
 
-  get layer() { return 1 }
+  get config() { return this.options.mediaControl && this.options.mediaControl.fullscreenComponent }
 
-  get section() { return 1 }
+  get layer() { return this.config && this.config.layer || 1 }
 
-  get position() { return 3 }
+  get section() { return this.config && this.config.section || 1 }
+
+  get position() { return this.config && this.config.position || 3 }
+
+  get separator() { return this.config && typeof this.config.separator !== 'undefined' ? this.config.separator : null }
 
   get tagName() { return 'button' }
 

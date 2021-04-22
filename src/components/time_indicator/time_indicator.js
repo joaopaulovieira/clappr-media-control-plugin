@@ -7,11 +7,15 @@ import templateHTML from './public/template.html'
 export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
   get name() { return 'time_indicator' }
 
-  get layer() { return 1 }
+  get config() { return this.options.mediaControl && this.options.mediaControl.timeIndicatorComponent }
 
-  get section() { return 2 }
+  get layer() { return this.config && this.config.layer || 1 }
 
-  get position() { return 2 }
+  get section() { return this.config && this.config.section || 2 }
+
+  get position() { return this.config && this.config.position || 2 }
+
+  get separator() { return this.config && typeof this.config.separator !== 'undefined' ? this.config.separator : null }
 
   get attributes() { return { class: 'time-indicator' } }
 

@@ -10,13 +10,15 @@ import templateHTML from './public/template.html'
 export default class VolumePlugin extends MediaControlComponentPlugin {
   get name() { return 'volume' }
 
-  get layer() { return 1 }
+  get config() { return this.options.mediaControl && this.options.mediaControl.volumeComponent }
 
-  get section() { return 1 }
+  get layer() { return this.config && this.config.layer || 1 }
 
-  get position() { return 2 }
+  get section() { return this.config && this.config.section || 1 }
 
-  get separator() { return true }
+  get position() { return this.config && this.config.position || 2 }
+
+  get separator() { return this.config && typeof this.config.separator !== 'undefined' ? this.config.separator : true }
 
   get attributes() { return { class: 'volume media-control__button' } }
 
