@@ -2,6 +2,7 @@
 [![](https://img.shields.io/npm/v/@joaopaulo.vieira/clappr-media-control-plugin.svg?style=flat-square)](https://npmjs.org/package/@joaopaulo.vieira/clappr-media-control-plugin)
 [![](https://img.shields.io/npm/dt/@joaopaulo.vieira/clappr-media-control-plugin.svg?style=flat-square)](https://npmjs.org/package/@joaopaulo.vieira/clappr-media-control-plugin)
 [![npm bundle size](https://img.shields.io/bundlephobia/min/@joaopaulo.vieira/clappr-media-control-plugin?style=flat-square)](https://bundlephobia.com/result?p=@joaopaulo.vieira/clappr-media-control-plugin)
+[![](https://img.shields.io/badge/Maintained%3F-yes-green.svg?style=flat-square)](https://github.com/joaopaulovieira/clappr-media-control-plugin/commits/main)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 ![Travis (.com)](https://img.shields.io/travis/com/joaopaulovieira/clappr-media-control-plugin?style=flat-square)
 ![Coveralls github](https://img.shields.io/coveralls/github/joaopaulovieira/clappr-media-control-plugin?style=flat-square)
