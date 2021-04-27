@@ -39,6 +39,8 @@ export default class LevelSelectorPlugin extends MediaControlComponentPlugin {
     const coreEventListenerData = [{ object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged }]
     coreEventListenerData.forEach(item => this.stopListening(item.object, item.event, item.callback))
     coreEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
+
+    this.bindCustomEvents()
   }
 
   onContainerChanged() {
@@ -63,6 +65,12 @@ export default class LevelSelectorPlugin extends MediaControlComponentPlugin {
 
     this._currentLevel = Object.values(this.$levelsList.children).find(listItem => parseInt(listItem.id, 10) === this.playback.currentLevel)
     this._currentLevel && this._currentLevel.classList && this._currentLevel.classList.add('level-selector__list-item--current')
+  }
+
+  bindCustomEvents() {
+    this.hideList = this.hideList.bind(this)
+    document.removeEventListener('click', this.hideList)
+    document.addEventListener('click', this.hideList)
   }
 
   showList() {
@@ -97,5 +105,10 @@ export default class LevelSelectorPlugin extends MediaControlComponentPlugin {
   cacheElements() {
     this.$menu = this.$el[0].querySelector('.level-selector__container')
     this.$levelsList = this.$el[0].querySelector('.level-selector__list')
+  }
+
+  destroy() {
+    document.removeEventListener('click', this.hideList)
+    super.destroy()
   }
 }

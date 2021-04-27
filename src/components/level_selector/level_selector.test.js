@@ -143,6 +143,13 @@ describe('LevelSelectorPlugin', function() {
 
       expect(plugin.onContainerChanged).toHaveBeenCalledTimes(1)
     })
+
+    test('calls bindCustomEvents method', () => {
+      jest.spyOn(this.plugin, 'bindCustomEvents')
+      this.plugin.bindEvents()
+
+      expect(this.plugin.bindCustomEvents).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('onContainerChanged method', () => {
@@ -337,3 +344,16 @@ describe('LevelSelectorPlugin', function() {
       expect(this.plugin.$levelsList).toEqual(this.plugin.el.querySelector('.level-selector__list'))
     })
   })
+
+  describe('destroy method', () => {
+    test('removes click listener on document', () => {
+      const { plugin } = setupTest()
+      const cb = jest.fn()
+      jest.spyOn(plugin, 'hideList').mockImplementation(() => cb)
+      plugin.destroy()
+      document.dispatchEvent(new Event('click'))
+
+      expect(cb).not.toHaveBeenCalled()
+    })
+  })
+})
