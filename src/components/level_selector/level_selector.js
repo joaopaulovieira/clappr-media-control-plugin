@@ -22,6 +22,8 @@ export default class LevelSelectorPlugin extends MediaControlComponentPlugin {
 
   get template() { return template(templateHTML) }
 
+  get hasMP4Levels() { return this.config && this.config.mp4Levels && this.config.mp4Levels.length > 0 }
+
   get events() {
     const touchOnlyEvents = { click: this.showList }
     const containerEvents = { 'click .level-selector__list-item': this.onLevelSelect }
@@ -47,7 +49,7 @@ export default class LevelSelectorPlugin extends MediaControlComponentPlugin {
     this.playback && this.stopListening(this.playback)
     this.playback = this.core.activePlayback
 
-    this.bindPlaybackEvents()
+    this.hasMP4Levels ? this.fillLevels(this.config.mp4Levels) : this.bindPlaybackEvents()
   }
 
   bindPlaybackEvents() {
@@ -69,12 +71,20 @@ export default class LevelSelectorPlugin extends MediaControlComponentPlugin {
     this.setCustomLabels(this.levels)
     this.render()
 
-    this._currentLevel = Object.values(this.$levelsList.children).find(listItem => parseInt(listItem.id, 10) === this.playback.currentLevel)
+    this._currentLevel = this.hasMP4Levels
+      ? this.updateMP4CurrentLevel()
+      : Object.values(this.$levelsList.children).find(listItem => parseInt(listItem.id, 10) === this.playback.currentLevel)
+
     this._currentLevel && this._currentLevel.classList && this._currentLevel.classList.add('level-selector__list-item--current')
   }
 
   setCustomLabels(levels) {
     this.config && this.config.labels && levels.map(level => this.config.labels[level.id] && (level.label = this.config.labels[level.id]))
+  }
+
+  updateMP4CurrentLevel() {
+    const selectedMP4Level = this.config.mp4Levels.find(level => level.default === true)
+    return Object.values(this.$levelsList.children).find(listItem => parseInt(listItem.id, 10) === selectedMP4Level.id)
   }
 
   bindCustomEvents() {
@@ -99,8 +109,18 @@ export default class LevelSelectorPlugin extends MediaControlComponentPlugin {
     this.playback.currentLevel = parseInt(event.target.id, 10)
     this._currentLevel.classList.add('level-selector__list-item--current')
 
+    this.hasMP4Levels && this.updateMP4Source()
+
     event.stopPropagation()
     setTimeout(this.hideList)
+  }
+
+  updateMP4Source() {
+    this.listenToOnce(this.playback, Events.PLAYBACK_LOADEDMETADATA, () => {
+      this.playback._setupSrc(this.config.mp4Levels[this._currentLevel.id].source)
+      this.playback.play()
+    })
+    this.playback.$el[0].load(this.config.mp4Levels[this._currentLevel.id].source)
   }
 
   render() {

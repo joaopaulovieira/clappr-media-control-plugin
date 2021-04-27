@@ -15,6 +15,12 @@ const setupTest = (options = {}, fullSetup = false) => {
 
 const levelsMock = [{ id: 0, label: 'low' }, { id: 1, label: 'medium' }, { id: 2, label: 'high' }]
 
+const mp4Levels = [
+  { id: 0, label: 'low', source: 'http://xpto.com/videos/low/media.mp4' },
+  { id: 1, label: 'medium', source: 'http://xpto.com/videos/medium/media.mp4' },
+  { id: 2, label: 'high', source: 'http://xpto.com/videos/high/media.mp4', default: true },
+]
+
 describe('LevelSelectorPlugin', function() {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -98,6 +104,15 @@ describe('LevelSelectorPlugin', function() {
     expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'template').get).toBeTruthy()
   })
 
+  test('have a getter called hasMP4Levels', () => {
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'hasMP4Levels').get).toBeTruthy()
+  })
+
+  test('hasMP4Levels getter checks if a valid mediaControl.levelSelectorComponent.mp4Levels config exists', () => {
+    const { plugin } = setupTest({ mediaControl: { levelSelectorComponent: { mp4Levels: [{ id: 0, source: 'http://xpto.com/videos/media.mp4' }] } } })
+    expect(plugin.hasMP4Levels).toBeTruthy()
+  })
+
   test('have a getter called events', () => {
     expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'events').get).toBeTruthy()
   })
@@ -165,6 +180,16 @@ describe('LevelSelectorPlugin', function() {
 
       expect(this.plugin.playback).toEqual(this.core.activePlayback)
     })
+
+    test('calls fillLevels with mediaControl.levelSelectorComponent.mp4Levels if hasMP4Levels getter returns true', () => {
+      const { plugin } = setupTest({ mediaControl: { levelSelectorComponent: { mp4Levels: [{ id: 0, source: 'http://xpto.com/videos/media.mp4' }] } } })
+      jest.spyOn(plugin, 'fillLevels').mockImplementationOnce(() => {})
+      plugin.onContainerChanged()
+
+      expect(plugin.fillLevels).toHaveBeenCalledTimes(1)
+      expect(plugin.fillLevels).toHaveBeenCalledWith(plugin.config.mp4Levels)
+    })
+
     test('calls bindPlaybackEvents with plugin.playback.levels if hasMP4Levels getter returns false', () => {
       jest.spyOn(this.plugin, 'bindPlaybackEvents').mockImplementationOnce(() => {})
       this.plugin.onContainerChanged()
@@ -237,6 +262,14 @@ describe('LevelSelectorPlugin', function() {
       expect(this.plugin.render).toHaveBeenCalledTimes(1)
     })
 
+    test('stores updateMP4CurrentLevel method response on _currentLevel if hasMP4Levels returns true', () => {
+      const { plugin } = setupTest({ mediaControl: { levelSelectorComponent: { mp4Levels: [{ id: 0, source: 'http://xpto.com/videos/media.mp4' }] } } })
+      jest.spyOn(plugin, 'updateMP4CurrentLevel').mockReturnValueOnce([])
+      plugin.fillLevels(levelsMock)
+
+      expect(plugin._currentLevel).toEqual([])
+    })
+
     test('stores on _currentLevel the list item with id property equals to plugin.playback.currentLevel if hasMP4Levels returns false', () => {
       const expectTemplate = '<li id="1" class="level-selector__list-item level-selector__list-item--current">medium</li>'
       this.plugin.playback.currentLevel = 1
@@ -260,6 +293,16 @@ describe('LevelSelectorPlugin', function() {
       plugin.setCustomLabels(levelsWithCustomizedLabels)
 
       expect(levelsWithCustomizedLabels).toEqual([{ id: 0, label: '120kbps' }, { id: 1, label: '240kbps' }, { id: 2, label: '500kbps' }])
+    })
+  })
+
+  describe('updateMP4CurrentLevel method', () => {
+    test('returns the list item with id equals to level configured on mp4Levels config with the default property', () => {
+      const { plugin } = setupTest({ mediaControl: { levelSelectorComponent: { mp4Levels } } })
+      const expectTemplate = '<li id="2" class="level-selector__list-item level-selector__list-item--current">high</li>'
+      plugin.fillLevels(mp4Levels)
+
+      expect(plugin._currentLevel.outerHTML).toEqual(expectTemplate)
     })
   })
 
@@ -328,6 +371,15 @@ describe('LevelSelectorPlugin', function() {
       expect(this.plugin.playback.currentLevel).toEqual(2)
     })
 
+    test('calls updateMP4Source method if hasMP4Levels getter returns true', () => {
+      const { plugin, core, container } = setupTest({ mediaControl: { levelSelectorComponent: { mp4Levels } } }, true)
+      jest.spyOn(plugin, 'updateMP4Source').mockImplementation(() => {})
+      core.activeContainer = container
+      plugin.onLevelSelect({ target: plugin.$levelsList.childNodes[3], stopPropagation: () => {} })
+
+      expect(plugin.updateMP4Source).toHaveBeenCalledTimes(1)
+    })
+
     test('returns a delayed call of hideList method', () => {
       jest.useFakeTimers()
       const { plugin, core, container } = setupTest({}, true)
@@ -345,7 +397,49 @@ describe('LevelSelectorPlugin', function() {
     })
   })
 
+  describe('updateMP4Source method', () => {
+    test('updates video source with selected level', () => {
+      const { plugin, core, container } = setupTest({ source: 'http://xpto.com/videos/high/media.mp4', mediaControl: { levelSelectorComponent: { mp4Levels } } }, true)
+      core.activeContainer = container
+      plugin.playback.$el[0].load = source => { plugin.playback.$el[0].src = source }
+      plugin.onLevelSelect({ target: plugin.$levelsList.childNodes[3], stopPropagation: () => {} })
+
+      expect(plugin.playback.$el[0].src).toEqual('http://xpto.com/videos/medium/media.mp4')
+    })
+
+    test('plays the media after the PLAYBACK_LOADEDMETADATA event is triggered', () => {
+      const { plugin, core, container } = setupTest({ source: 'http://xpto.com/videos/high/media.mp4', mediaControl: { levelSelectorComponent: { mp4Levels } } }, true)
+      core.activeContainer = container
+      plugin.playback.$el[0].load = source => { plugin.playback.$el[0].src = source }
+      jest.spyOn(plugin.playback, 'play')
+      plugin.playback._setupSrc = () => {} // mock HTML5Playback implementation
+      plugin.onLevelSelect({ target: plugin.$levelsList.childNodes[3], stopPropagation: () => {} })
+
+      plugin.playback.trigger(Events.PLAYBACK_LOADEDMETADATA)
+
+      expect(plugin.playback.play).toHaveBeenCalledTimes(1)
+    })
+  })
+
   describe('render method', () => {
+    test('insert template getter response inside plugin DOM element', () => {
+      this.plugin.render()
+      expect(this.plugin.$el[0].firstElementChild.outerHTML).toEqual(this.plugin.template({ levels: [], hasMP4Levels: false }))
+
+      const { plugin, core, container } = setupTest({ source: 'http://xpto.com/videos/high/media.mp4', mediaControl: { levelSelectorComponent: { mp4Levels } } }, true)
+      core.activeContainer = container
+      plugin.render()
+
+      expect(plugin.$el[0].firstElementChild.outerHTML).toEqual(plugin.template({ levels: mp4Levels, hasMP4Levels: true }))
+
+      const { plugin: plugin1, core: core1, container: container1 } = setupTest({}, true)
+
+      core1.activeContainer = container1
+      plugin1.fillLevels(levelsMock)
+
+      expect(plugin1.$el[0].firstElementChild.outerHTML).toEqual(plugin1.template({ levels: levelsMock, hasMP4Levels: false }))
+    })
+
     test('calls cacheElements method', () => {
       jest.spyOn(this.plugin, 'cacheElements')
       this.plugin.render()
