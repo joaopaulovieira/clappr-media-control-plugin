@@ -20,14 +20,14 @@ var player = new Clappr.Player({
 });
 ```
 
-### `mediaControl.fullscreenComponent.layer {Integer}`
+### `layer {Integer}`
 Defines the layer to which the section that the plugin has to be rendered.
 
-### `mediaControl.fullscreenComponent.section {Integer}`
+### `section {Integer}`
 Defines the section that the plugin has to be rendered.
 
-### `mediaControl.fullscreenComponent.position {Integer}`
+### `position {Integer}`
 Defines the position that the plugin has to be rendered within the wanted section. In horizontal sections, the order of position will be from left to right and in vertical sections, the order will be from top to bottom.
 
-### `mediaControl.fullscreenComponent.separator {Integer}`
+### `separator {Integer}`
 If it's configured with the value `true`, it will cause the plugin to be rendered at the opposite point from the starting position and causing all rendered plugins after it to follow the same rendering order.
