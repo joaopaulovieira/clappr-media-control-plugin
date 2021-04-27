@@ -96,6 +96,16 @@ describe('LevelSelectorPlugin', function() {
     expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'template').get).toBeTruthy()
   })
 
+  describe('showList method', () => {
+    test('removes level-selector__container--hidden CSS class from list element', () => {
+      expect(this.plugin.$menu.classList.contains('level-selector__container--hidden')).toBeTruthy()
+
+      this.plugin.showList()
+
+      expect(this.plugin.$menu.classList.contains('level-selector__container--hidden')).toBeFalsy()
+    })
+  })
+
   describe('render method', () => {
     test('calls cacheElements method', () => {
       jest.spyOn(this.plugin, 'cacheElements')

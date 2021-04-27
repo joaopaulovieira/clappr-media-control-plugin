@@ -22,6 +22,10 @@ export default class LevelSelectorPlugin extends MediaControlComponentPlugin {
 
   get template() { return template(templateHTML) }
 
+  showList() {
+    this.$menu.classList.remove('level-selector__container--hidden')
+  }
+
   render() {
     this.el.innerHTML = ''
     this.$el.html(this.template({ levels: this.levels || [], hasMP4Levels: this.hasMP4Levels }))
