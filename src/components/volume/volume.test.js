@@ -24,7 +24,7 @@ const htmlEntities = str => String(str)
   .replace(/&gt;/g, '>')
   .replace(/&quot;/g, '"')
 
-describe('TimeIndicatorPlugin', function() {
+describe('VolumePlugin', function() {
   beforeEach(() => {
     jest.clearAllMocks()
     const response = setupTest({}, true)
