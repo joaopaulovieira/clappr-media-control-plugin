@@ -22,6 +22,19 @@ export default class LevelSelectorPlugin extends MediaControlComponentPlugin {
 
   get template() { return template(templateHTML) }
 
+  get events() {
+    const touchOnlyEvents = { click: this.showList }
+    const containerEvents = { 'click .level-selector__list-item': this.onLevelSelect }
+    const hoverTriggerEvents = {
+      mouseenter: this.showList,
+      mouseleave: this.hideList,
+    }
+
+    return Browser.isMobile || this.config && this.config.onlyShowWithClick
+      ? { ...containerEvents, ...touchOnlyEvents }
+      : { ...containerEvents, ...hoverTriggerEvents }
+  }
+
   showList() {
     this.$menu.classList.remove('level-selector__container--hidden')
   }

@@ -96,6 +96,36 @@ describe('LevelSelectorPlugin', function() {
     expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'template').get).toBeTruthy()
   })
 
+  test('have a getter called events', () => {
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'events').get).toBeTruthy()
+  })
+
+  describe('events getter', () => {
+    test('returns specific events/callbacks dictionary for mobile devices', () => {
+      const oldValue = Browser.isMobile
+      Browser.isMobile = true
+      expect(this.plugin.events).toEqual({ 'click .level-selector__list-item': this.plugin.onLevelSelect, click: this.plugin.showList })
+      Browser.isMobile = oldValue
+    })
+
+    test('returns specific events/callbacks dictionary for desktop devices', () => {
+      const oldValue = Browser.isMobile
+      Browser.isMobile = false
+      expect(this.plugin.events).toEqual({
+        'click .level-selector__list-item': this.plugin.onLevelSelect,
+        mouseenter: this.plugin.showList,
+        mouseleave: this.plugin.hideList,
+      })
+      Browser.isMobile = oldValue
+    })
+
+    test('returns specific events/callbacks dictionary if mediaControl.levelSelectorComponent.onlyShowWithClick config is true', () => {
+      const { plugin } = setupTest({ mediaControl: { levelSelectorComponent: { onlyShowWithClick: true } } })
+
+      expect(plugin.events).toEqual({ 'click .level-selector__list-item': plugin.onLevelSelect, click: plugin.showList })
+    })
+  })
+
   describe('showList method', () => {
     test('removes level-selector__container--hidden CSS class from list element', () => {
       expect(this.plugin.$menu.classList.contains('level-selector__container--hidden')).toBeTruthy()
