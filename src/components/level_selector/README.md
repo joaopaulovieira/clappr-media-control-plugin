@@ -51,7 +51,7 @@ A dictionary to which the key represents the level id to be customized and the v
 A callback that receives the levels as soon as they are available. This function should return the levels that will be used to render the menu.
 
 -----
-### For MP4 medias, it's necessary specific configs. See belows:
+### For MP4 medias, it's necessary specific configs. See below:
 
 ```javascript
 var player = new Clappr.Player({
@@ -76,16 +76,16 @@ var player = new Clappr.Player({
 ```
 
 ### `mp4Levels {Array}`
-A list of objects that represent a level. This object must have the following properties: `id`,` label`, `source` and` default`.
+  A list of objects that represent a level. This object must have the following properties: `id`, `label`, `source` and `default`.
 
 * #### `id {Integer}`
-The level identifier. This value must be unique.
+  The level identifier. This value must be unique.
 
 * #### `label {String}`
-Value used to describe the level rendered in the level menu.
+  Value used to describe the level rendered in the level menu.
 
 * #### `source {String}`
-The URL of the level that will be configured in playback when a level is selected.
+  The URL of the level that will be configured in playback when a level is selected.
 
 * #### `default {Boolean}`
-Indicates which level will be displayed as the current one when the level menu is rendered for the first time.
+  Indicates which level will be displayed as the current one when the level menu is rendered for the first time.
