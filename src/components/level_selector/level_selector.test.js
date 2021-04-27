@@ -222,6 +222,14 @@ describe('LevelSelectorPlugin', function() {
       expect(plugin.levels).toEqual(levelsMock.reverse())
     })
 
+    test('calls setCustomLabels with plugin.levels', () => {
+      jest.spyOn(this.plugin, 'setCustomLabels').mockImplementationOnce(() => {})
+      this.plugin.fillLevels(levelsMock)
+
+      expect(this.plugin.setCustomLabels).toHaveBeenCalledTimes(1)
+      expect(this.plugin.setCustomLabels).toHaveBeenCalledWith(this.plugin.levels)
+    })
+
     test('calls render method', () => {
       jest.spyOn(this.plugin, 'render').mockImplementationOnce(() => {})
       this.plugin.fillLevels(levelsMock)
@@ -242,6 +250,16 @@ describe('LevelSelectorPlugin', function() {
       this.plugin.fillLevels(levelsMock)
 
       expect(this.plugin._currentLevel.classList.contains('level-selector__list-item--current')).toBeTruthy()
+    })
+  })
+
+  describe('setCustomLabels method', () => {
+    test('customizes level label if mediaControl.levelSelectorComponent.labels is configured', () => {
+      const { plugin } = setupTest({ mediaControl: { levelSelectorComponent: { labels: { 0: '120kbps', 1: '240kbps', 2: '500kbps' } } } })
+      const levelsWithCustomizedLabels = [...levelsMock]
+      plugin.setCustomLabels(levelsWithCustomizedLabels)
+
+      expect(levelsWithCustomizedLabels).toEqual([{ id: 0, label: '120kbps' }, { id: 1, label: '240kbps' }, { id: 2, label: '500kbps' }])
     })
   })
 

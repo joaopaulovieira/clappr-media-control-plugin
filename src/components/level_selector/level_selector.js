@@ -66,10 +66,15 @@ export default class LevelSelectorPlugin extends MediaControlComponentPlugin {
       && typeof this.config.onLevelsAvailable === 'function'
       && (this.levels = this.config.onLevelsAvailable(this.levels))
 
+    this.setCustomLabels(this.levels)
     this.render()
 
     this._currentLevel = Object.values(this.$levelsList.children).find(listItem => parseInt(listItem.id, 10) === this.playback.currentLevel)
     this._currentLevel && this._currentLevel.classList && this._currentLevel.classList.add('level-selector__list-item--current')
+  }
+
+  setCustomLabels(levels) {
+    this.config && this.config.labels && levels.map(level => this.config.labels[level.id] && (level.label = this.config.labels[level.id]))
   }
 
   bindCustomEvents() {
