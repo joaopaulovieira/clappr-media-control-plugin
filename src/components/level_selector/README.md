@@ -1,5 +1,10 @@
 # Level Selector Component plugin
 
+<div align=center>
+  <img src="https://raw.githubusercontent.com/joaopaulovieira/clappr-media-control-plugin/main/public/images/examples/level_selector_example.png">
+</div>
+<br>
+
 ## Configuration
 The options for the component go in the `mediaControl.levelSelectorComponent` property as shown below:
 ```javascript
