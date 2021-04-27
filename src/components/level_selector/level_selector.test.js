@@ -106,6 +106,18 @@ describe('LevelSelectorPlugin', function() {
     })
   })
 
+  describe('hideList method', () => {
+    test('adds level-selector__container--hidden CSS class from list element', () => {
+      this.plugin.showList()
+
+      expect(this.plugin.$menu.classList.contains('level-selector__container--hidden')).toBeFalsy()
+
+      this.plugin.hideList()
+
+      expect(this.plugin.$menu.classList.contains('level-selector__container--hidden')).toBeTruthy()
+    })
+  })
+
   describe('render method', () => {
     test('calls cacheElements method', () => {
       jest.spyOn(this.plugin, 'cacheElements')
