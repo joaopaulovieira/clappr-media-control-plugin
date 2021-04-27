@@ -73,6 +73,18 @@ export default class LevelSelectorPlugin extends MediaControlComponentPlugin {
     this.$menu.classList.add('level-selector__container--hidden')
   }
 
+  onLevelSelect(event) {
+    if (event.target.id === this._currentLevel.id) return setTimeout(this.hideList)
+
+    this._currentLevel.classList.remove('level-selector__list-item--current')
+    this._currentLevel = event.target
+    this.playback.currentLevel = parseInt(event.target.id, 10)
+    this._currentLevel.classList.add('level-selector__list-item--current')
+
+    event.stopPropagation()
+    setTimeout(this.hideList)
+  }
+
   render() {
     this.el.innerHTML = ''
     this.$el.html(this.template({ levels: this.levels || [], hasMP4Levels: this.hasMP4Levels }))

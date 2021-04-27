@@ -260,6 +260,66 @@ describe('LevelSelectorPlugin', function() {
     })
   })
 
+  describe('onLevelSelect callback', () => {
+    beforeEach(() => {
+      this.plugin.playback.currentLevel = 1
+      this.plugin.fillLevels(levelsMock)
+    })
+
+    test('returns a delayed call of hideList method if the target of the click event has the same id as the current level', () => {
+      jest.useFakeTimers()
+      const { plugin, core, container } = setupTest({}, true)
+      core.activeContainer = container
+      jest.spyOn(plugin, 'hideList')
+      plugin.playback.currentLevel = 1
+      plugin.fillLevels(levelsMock)
+      plugin.onLevelSelect({ target: { id: '1' } })
+      jest.advanceTimersByTime(1)
+
+      expect(plugin.hideList).toHaveBeenCalledTimes(1)
+    })
+
+    test('updates _currentLevel reference', () => {
+      expect(this.plugin._currentLevel.id).toEqual('1')
+
+      this.plugin.onLevelSelect({ target: this.plugin.$levelsList.childNodes[7], stopPropagation: () => {} })
+
+      expect(this.plugin._currentLevel.id).toEqual('2')
+    })
+
+    test('updates style for current level element', () => {
+      expect(this.plugin._currentLevel.classList.contains('level-selector__list-item--current')).toBeTruthy()
+      expect(this.plugin._currentLevel.id).toEqual('1')
+
+      this.plugin.onLevelSelect({ target: this.plugin.$levelsList.childNodes[7], stopPropagation: () => {} })
+
+      expect(this.plugin._currentLevel.classList.contains('level-selector__list-item--current')).toBeTruthy()
+      expect(this.plugin._currentLevel.id).toEqual('2')
+    })
+
+    test('updates plugin.playback.currentLevel value', () => {
+      this.plugin.onLevelSelect({ target: this.plugin.$levelsList.childNodes[7], stopPropagation: () => {} })
+
+      expect(this.plugin.playback.currentLevel).toEqual(2)
+    })
+
+    test('returns a delayed call of hideList method', () => {
+      jest.useFakeTimers()
+      const { plugin, core, container } = setupTest({}, true)
+      core.activeContainer = container
+      jest.spyOn(plugin, 'hideList')
+      plugin.playback.currentLevel = 1
+      plugin.fillLevels(levelsMock)
+      plugin.onLevelSelect({ target: plugin.$levelsList.childNodes[7], stopPropagation: () => {} })
+
+      expect(plugin.hideList).not.toHaveBeenCalled()
+
+      jest.advanceTimersByTime(1)
+
+      expect(plugin.hideList).toHaveBeenCalledTimes(1)
+    })
+  })
+
   describe('render method', () => {
     test('calls cacheElements method', () => {
       jest.spyOn(this.plugin, 'cacheElements')
