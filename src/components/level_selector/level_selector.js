@@ -61,6 +61,11 @@ export default class LevelSelectorPlugin extends MediaControlComponentPlugin {
   fillLevels(levels) {
     this.levels = levels
 
+    this.config
+      && this.config.onLevelsAvailable
+      && typeof this.config.onLevelsAvailable === 'function'
+      && (this.levels = this.config.onLevelsAvailable(this.levels))
+
     this.render()
 
     this._currentLevel = Object.values(this.$levelsList.children).find(listItem => parseInt(listItem.id, 10) === this.playback.currentLevel)
