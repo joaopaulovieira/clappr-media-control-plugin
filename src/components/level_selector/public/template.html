@@ -1,0 +1,12 @@
+<div class="level-selector__container level-selector__container--hidden">
+  <ul class="level-selector__list">
+    <% if (levels.length <= 0) { %>
+      <li class="level-selector__list-item--placeholder">Levels not available.</li>  
+    <% } else if (!hasMP4Levels) { %>
+    <li id="-1" class="level-selector__list-item">AUTO</li>
+    <% }; %>
+    <% for (var i = 0; i < levels.length; i++) { %>
+      <li id="<%= levels[i].id %>" class="level-selector__list-item"><%= levels[i].label %></li>
+    <% }; %>
+  </ul>
+</div>

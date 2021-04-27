@@ -1,0 +1,52 @@
+$shadow: drop-shadow( 2px 2px 1px rgba(0, 0, 0, .7));
+
+.level-selector {
+  background-color: transparent;
+  border: transparent;
+  filter: $shadow;
+  padding: 0;
+  -webkit-filter: $shadow;
+
+  &__container {
+    background-color: rgba(0, 0, 0, 0.8);
+    bottom: 40px;
+    color: white;
+    opacity: 1;
+    max-height: 200px;
+    min-width: 100px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: absolute;
+    right: 0;
+    transition: visibility .3s ease, opacity .3s ease;
+    visibility: visible;
+    will-change: opacity;
+
+    &--hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  &__list {
+    list-style-type: none;
+    display:flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+
+    &-item {
+      color: rgba(255, 255, 255, .3);
+      padding: 10px;
+
+      &--placeholder {
+        color: white;
+        pointer-events: none !important;
+      }
+
+      &--current {
+        color: white;
+      }
+    }
+  }
+}
