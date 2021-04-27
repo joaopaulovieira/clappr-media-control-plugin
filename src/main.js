@@ -4,6 +4,7 @@ import VolumePlugin from './components/volume/volume'
 import FullscreenButtonPlugin from './components/fullscreen_button/fullscreen_button'
 import SeekBarPlugin from './components/seek_bar/seek_bar'
 import TimeIndicatorPlugin from './components/time_indicator/time_indicator'
+import LevelSelectorPlugin from './components/level_selector/level_selector'
 
 export {
   MainPlugin,
@@ -13,4 +14,5 @@ export {
   FullscreenButtonPlugin,
   SeekBarPlugin,
   TimeIndicatorPlugin,
+  LevelSelectorPlugin,
 }
