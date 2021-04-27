@@ -13,6 +13,8 @@ const setupTest = (options = {}, fullSetup = false) => {
   return response
 }
 
+const levelsMock = [{ id: 0, label: 'low' }, { id: 1, label: 'medium' }, { id: 2, label: 'high' }]
+
 describe('LevelSelectorPlugin', function() {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -123,6 +125,116 @@ describe('LevelSelectorPlugin', function() {
       const { plugin } = setupTest({ mediaControl: { levelSelectorComponent: { onlyShowWithClick: true } } })
 
       expect(plugin.events).toEqual({ 'click .level-selector__list-item': plugin.onLevelSelect, click: plugin.showList })
+    })
+  })
+
+  describe('bindEvents method', () => {
+    test('stops the current listeners before add new ones', () => {
+      jest.spyOn(this.plugin, 'stopListening')
+      this.plugin.bindEvents()
+
+      expect(this.plugin.stopListening).toHaveBeenCalled()
+    })
+
+    test('register onContainerChanged method as callback for CORE_ACTIVE_CONTAINER_CHANGED event', () => {
+      jest.spyOn(LevelSelectorPlugin.prototype, 'onContainerChanged')
+      const { core, plugin } = setupTest()
+      core.trigger(Events.CORE_ACTIVE_CONTAINER_CHANGED)
+
+      expect(plugin.onContainerChanged).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('onContainerChanged method', () => {
+    test('removes all listeners from old playback reference', () => {
+      jest.spyOn(this.plugin, 'stopListening')
+      this.plugin.onContainerChanged()
+
+      expect(this.plugin.stopListening).toHaveBeenCalledWith(this.playback)
+    })
+
+    test('saves core.activePlayback reference locally', () => {
+      this.plugin.onContainerChanged()
+
+      expect(this.plugin.playback).toEqual(this.core.activePlayback)
+    })
+    test('calls bindPlaybackEvents with plugin.playback.levels if hasMP4Levels getter returns false', () => {
+      jest.spyOn(this.plugin, 'bindPlaybackEvents').mockImplementationOnce(() => {})
+      this.plugin.onContainerChanged()
+
+      expect(this.plugin.bindPlaybackEvents).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('bindPlaybackEvents method', () => {
+    test('avoid register callback for events on playback scope without a valid reference', () => {
+      jest.spyOn(this.plugin, 'fillLevels')
+      this.playback.trigger(Events.PLAYBACK_LEVELS_AVAILABLE)
+
+      expect(this.plugin.fillLevels).not.toHaveBeenCalled()
+    })
+
+    test('register fillLevels method as callback for PLAYBACK_LEVELS_AVAILABLE event', () => {
+      jest.spyOn(this.plugin, 'fillLevels').mockImplementationOnce(() => {})
+      this.core.activeContainer = this.container
+      this.playback.trigger(Events.PLAYBACK_LEVELS_AVAILABLE)
+
+      expect(this.plugin.fillLevels).toHaveBeenCalledTimes(1)
+    })
+
+    test('calls fillLevels with plugin.playback.levels if plugin.playback.levels array length is greater than 0', () => {
+      const { plugin, core, container } = setupTest({}, true)
+      core.activeContainer = container
+      core.activePlayback.levels = [{ id: 0, label: 'low' }]
+      jest.spyOn(plugin, 'fillLevels').mockImplementationOnce(() => {})
+      plugin.onContainerChanged()
+
+      expect(plugin.fillLevels).toHaveBeenCalledTimes(1)
+      expect(plugin.fillLevels).toHaveBeenCalledWith([{ id: 0, label: 'low' }])
+    })
+  })
+
+  describe('fillLevels function', () => {
+    test('stores received levels on internal reference', () => {
+      this.plugin.fillLevels(levelsMock)
+
+      expect(this.plugin.levels).toEqual(levelsMock)
+    })
+
+    test('calls mediaControl.levelSelectorComponent.onLevelsAvailable method with plugin.levels if is configured', () => {
+      const {
+        plugin,
+        core,
+        container,
+      } = setupTest({ mediaControl: { levelSelectorComponent: { onLevelsAvailable: levels => levels.reverse() } } }, true)
+      core.activeContainer = container
+      core.activePlayback.levels = levelsMock
+
+      plugin.fillLevels(levelsMock)
+
+      expect(plugin.levels).toEqual(levelsMock.reverse())
+    })
+
+    test('calls render method', () => {
+      jest.spyOn(this.plugin, 'render').mockImplementationOnce(() => {})
+      this.plugin.fillLevels(levelsMock)
+
+      expect(this.plugin.render).toHaveBeenCalledTimes(1)
+    })
+
+    test('stores on _currentLevel the list item with id property equals to plugin.playback.currentLevel if hasMP4Levels returns false', () => {
+      const expectTemplate = '<li id="1" class="level-selector__list-item level-selector__list-item--current">medium</li>'
+      this.plugin.playback.currentLevel = 1
+      this.plugin.fillLevels(levelsMock)
+
+      expect(this.plugin._currentLevel.outerHTML).toEqual(expectTemplate)
+    })
+
+    test('adds CSS class thats apply style for current level on _currentLevel element if exits', () => {
+      this.plugin.playback.currentLevel = 2
+      this.plugin.fillLevels(levelsMock)
+
+      expect(this.plugin._currentLevel.classList.contains('level-selector__list-item--current')).toBeTruthy()
     })
   })
 

@@ -35,6 +35,36 @@ export default class LevelSelectorPlugin extends MediaControlComponentPlugin {
       : { ...containerEvents, ...hoverTriggerEvents }
   }
 
+  bindEvents() {
+    const coreEventListenerData = [{ object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged }]
+    coreEventListenerData.forEach(item => this.stopListening(item.object, item.event, item.callback))
+    coreEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
+  }
+
+  onContainerChanged() {
+    this.playback && this.stopListening(this.playback)
+    this.playback = this.core.activePlayback
+
+    this.bindPlaybackEvents()
+  }
+
+  bindPlaybackEvents() {
+    const playbackEventListenerData = [{ object: this.playback, event: Events.PLAYBACK_LEVELS_AVAILABLE, callback: this.fillLevels }]
+    playbackEventListenerData.forEach(item => this.stopListening(item.object, item.event, item.callback))
+    playbackEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
+
+    this.playback.levels && this.playback.levels.length > 0 && this.fillLevels(this.playback.levels)
+  }
+
+  fillLevels(levels) {
+    this.levels = levels
+
+    this.render()
+
+    this._currentLevel = Object.values(this.$levelsList.children).find(listItem => parseInt(listItem.id, 10) === this.playback.currentLevel)
+    this._currentLevel && this._currentLevel.classList && this._currentLevel.classList.add('level-selector__list-item--current')
+  }
+
   showList() {
     this.$menu.classList.remove('level-selector__container--hidden')
   }
