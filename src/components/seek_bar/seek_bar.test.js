@@ -1,5 +1,5 @@
 import { Browser, Events, Core, Container, Playback } from '@clappr/core'
-import SeekBarPlugin from './seek_bar'
+import SeekBarPlugin, { INITIAL_POSITION, INITIAL_DURATION } from './seek_bar'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
 
 const setupTest = (options = {}, fullSetup = false) => {
@@ -89,10 +89,10 @@ describe('SeekBarPlugin', function() {
   })
 
   test('attributes getter returns all attributes that will be added on the plugin DOM element', () => {
-    expect(this.plugin.$el[0].className).toEqual('seek-bar media-control__elements')
+    expect(this.plugin.$el[0].className).toEqual('seek-bar seek-bar--disable-interaction media-control__elements')
     expect(this.plugin.$el[0].type).toEqual('range')
-    expect(this.plugin.$el[0].value).toEqual('0')
-    expect(this.plugin.$el[0].max).toEqual('100')
+    expect(this.plugin.$el[0].value).toEqual(`${INITIAL_POSITION}`)
+    expect(this.plugin.$el[0].max).toEqual(`${INITIAL_DURATION}`)
   })
 
   test('have a getter called events', () => {
@@ -139,7 +139,7 @@ describe('SeekBarPlugin', function() {
     expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'shouldDisableInteraction').get).toBeTruthy()
   })
 
-  test('shouldDisableInteraction getter informs if the media needs to be stopped instead paused', () => {
+  test('shouldDisableInteraction getter informs if the plugin needs to be static', () => {
     expect(this.plugin.shouldDisableInteraction).toBeFalsy()
 
     jest.spyOn(Playback.prototype, 'getPlaybackType').mockReturnValueOnce(Playback.LIVE)
@@ -187,11 +187,25 @@ describe('SeekBarPlugin', function() {
   })
 
   describe('onContainerChanged method', () => {
+    test('calls setDefaultProperties method', () => {
+      jest.spyOn(this.plugin, 'setDefaultProperties')
+      this.plugin.onContainerChanged()
+
+      expect(this.plugin.setDefaultProperties).toHaveBeenCalledTimes(1)
+    })
+
     test('removes all listeners from old container reference', () => {
       jest.spyOn(this.plugin, 'stopListening')
       this.plugin.onContainerChanged()
 
       expect(this.plugin.stopListening).toHaveBeenCalledWith(this.container)
+    })
+
+    test('removes all listeners from old playback reference', () => {
+      jest.spyOn(this.plugin, 'stopListening')
+      this.plugin.onContainerChanged()
+
+      expect(this.plugin.stopListening).toHaveBeenCalledWith(this.plugin.playback)
     })
 
     test('saves core.activeContainer reference locally', () => {
@@ -237,18 +251,10 @@ describe('SeekBarPlugin', function() {
     })
 
     test('avoid register callback for events on container scope without a valid reference', () => {
-      jest.spyOn(this.plugin, 'onTimeUpdate')
-      this.container.trigger(Events.CONTAINER_TIMEUPDATE)
+      jest.spyOn(this.plugin, 'onContainerProgress')
+      this.container.trigger(Events.CONTAINER_PROGRESS)
 
-      expect(this.plugin.onTimeUpdate).not.toHaveBeenCalled()
-    })
-
-    test('register onTimeUpdate method as callback for CONTAINER_TIMEUPDATE event', () => {
-      jest.spyOn(this.plugin, 'onTimeUpdate')
-      this.core.activeContainer = this.container
-      this.container.trigger(Events.CONTAINER_TIMEUPDATE)
-
-      expect(this.plugin.onTimeUpdate).toHaveBeenCalledTimes(1)
+      expect(this.plugin.onContainerProgress).not.toHaveBeenCalled()
     })
 
     test('register onContainerProgress method as callback for CONTAINER_PROGRESS event', () => {
@@ -257,14 +263,6 @@ describe('SeekBarPlugin', function() {
       this.container.trigger(Events.CONTAINER_PROGRESS)
 
       expect(this.plugin.onContainerProgress).toHaveBeenCalledTimes(1)
-    })
-
-    test('register onContainerDestroyed method as callback for CONTAINER_DESTROYED event', () => {
-      jest.spyOn(this.plugin, 'onContainerDestroyed')
-      this.core.activeContainer = this.container
-      this.container.trigger(Events.CONTAINER_DESTROYED)
-
-      expect(this.plugin.onContainerDestroyed).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -357,48 +355,48 @@ describe('SeekBarPlugin', function() {
     })
   })
 
-  describe('onContainerDestroyed method', () => {
-    test('removes seek-bar--disable-interaction css class to DOM element plugin', () => {
-      jest.spyOn(this.plugin, 'shouldDisableInteraction', 'get').mockReturnValueOnce(true)
-      this.plugin.updateStyles()
-
-      expect(this.plugin.$el[0].classList.contains('seek-bar--disable-interaction')).toBeTruthy()
-
-      this.plugin.onContainerDestroyed()
-      expect(this.plugin.$el[0].classList.contains('seek-bar--disable-interaction')).toBeFalsy()
-    })
-  })
-
   describe('bindPlaybackEvents method', () => {
     test('avoid register callback for events on playback scope without a valid reference', () => {
-      jest.spyOn(this.plugin, 'updateStyles')
+      jest.spyOn(this.plugin, 'onFirstPlay')
       this.playback.trigger(Events.PLAYBACK_PLAY)
 
-      expect(this.plugin.updateStyles).not.toHaveBeenCalled()
+      expect(this.plugin.onFirstPlay).not.toHaveBeenCalled()
     })
 
-    test('register updateStyles method as callback for PLAYBACK_PLAY event', () => {
-      jest.spyOn(this.plugin, 'updateStyles')
+    test('register onFirstPlay method as callback for PLAYBACK_PLAY event', () => {
+      jest.spyOn(this.plugin, 'onFirstPlay')
       this.core.activeContainer = this.container
       this.playback.trigger(Events.PLAYBACK_PLAY)
 
-      expect(this.plugin.updateStyles).toHaveBeenCalledTimes(1)
+      expect(this.plugin.onFirstPlay).toHaveBeenCalledTimes(1)
     })
   })
 
-  describe('updateStyles method', () => {
-    test('adds seek-bar--disable-interaction css class to DOM element plugin if shouldDisableInteraction getter returns true', () => {
+  describe('onFirstPlay callback', () => {
+    test('removes seek-bar--disable-interaction css class to DOM element plugin if shouldDisableInteraction getter returns false', () => {
       jest.spyOn(this.plugin, 'shouldDisableInteraction', 'get').mockReturnValueOnce(true)
-      this.plugin.updateStyles()
+      this.plugin.onFirstPlay()
 
       expect(this.plugin.$el[0].classList.contains('seek-bar--disable-interaction')).toBeTruthy()
     })
 
-    test('removes seek-bar--disable-interaction css class to DOM element plugin if shouldDisableInteraction getter returns false', () => {
+    test('register onFirstPlay method as callback for CONTAINER_TIMEUPDATE event if shouldDisableInteraction getter returns false', () => {
       jest.spyOn(this.plugin, 'shouldDisableInteraction', 'get').mockReturnValueOnce(false)
-      this.plugin.updateStyles()
+      jest.spyOn(this.plugin, 'onTimeUpdate')
+      this.core.activeContainer = this.container
 
-      expect(this.plugin.$el[0].classList.contains('seek-bar--disable-interaction')).toBeFalsy()
+      this.plugin.onFirstPlay()
+      this.container.trigger(Events.CONTAINER_TIMEUPDATE)
+
+      expect(this.plugin.onTimeUpdate).toHaveBeenCalledTimes(1)
+    })
+
+    test('sets full filled seek bar if shouldDisableInteraction getter returns true', () => {
+      jest.spyOn(this.plugin, 'shouldDisableInteraction', 'get').mockReturnValueOnce(true)
+      this.core.activeContainer = this.container
+      this.plugin.onFirstPlay()
+
+      expect(this.plugin.$el[0].value).toEqual(this.plugin.$el[0].max)
     })
   })
 
@@ -492,6 +490,26 @@ describe('SeekBarPlugin', function() {
 
     test('sets isRendered flag to true', () => {
       expect(this.plugin.isRendered).toBeTruthy()
+    })
+  })
+
+  describe('setDefaultProperties method', () => {
+    test('sets INITIAL_POSITION as seek bar current position', () => {
+      this.plugin.setDefaultProperties()
+
+      expect(this.plugin.$el[0].value).toEqual(`${INITIAL_POSITION}`)
+    })
+
+    test('sets INITIAL_DURATION as seek bar max value', () => {
+      this.plugin.setDefaultProperties()
+
+      expect(this.plugin.$el[0].max).toEqual(`${INITIAL_DURATION}`)
+    })
+
+    test('adds seek-bar--disable-interaction css class to DOM element plugin', () => {
+      this.plugin.setDefaultProperties()
+
+      expect(this.plugin.$el[0].classList.contains('seek-bar--disable-interaction')).toBeTruthy()
     })
   })
 })

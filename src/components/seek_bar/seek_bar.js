@@ -3,6 +3,9 @@ import MediaControlComponentPlugin from '../../base/media_control_component/medi
 
 import pluginStyle from './public/style.scss'
 
+export const INITIAL_POSITION = 0
+export const INITIAL_DURATION = 100
+
 export default class SeekBarPlugin extends MediaControlComponentPlugin {
   get name() { return 'seek_bar' }
 
@@ -20,10 +23,10 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
 
   get attributes() {
     return {
-      class: 'seek-bar',
+      class: 'seek-bar seek-bar--disable-interaction',
       type: 'range',
-      value: 0,
-      max: 100,
+      value: INITIAL_POSITION,
+      max: INITIAL_DURATION,
     }
   }
 
@@ -57,7 +60,9 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
   }
 
   onContainerChanged() {
+    this.setDefaultProperties()
     this.container && this.stopListening(this.container)
+    this.playback && this.stopListening(this.playback)
     this.container = this.core.activeContainer
     this.playback = this.core.activePlayback
     if (!this.container) return
@@ -66,12 +71,7 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
   }
 
   bindContainerEvents() {
-    const containerEventListenerData = [
-      { object: this.container, event: Events.CONTAINER_TIMEUPDATE, callback: this.onTimeUpdate },
-      { object: this.container, event: Events.CONTAINER_PROGRESS, callback: this.onContainerProgress },
-      { object: this.container, event: Events.CONTAINER_DESTROYED, callback: this.onContainerDestroyed },
-    ]
-    this.container && containerEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
+    this.listenTo(this.container, Events.CONTAINER_PROGRESS, this.onContainerProgress)
   }
 
   onTimeUpdate(time) {
@@ -106,19 +106,16 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
     this.$el[0].style.setProperty('--buffered-width', `${buffered / duration * 100}%`)
   }
 
-  onContainerDestroyed() {
-    this.$el[0].classList.remove('seek-bar--disable-interaction')
-  }
-
   bindPlaybackEvents() {
-    const playbackEventListenerData = [{ object: this.playback, event: Events.PLAYBACK_PLAY, callback: this.updateStyles }]
-    this.playback && playbackEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
+    this.listenToOnce(this.playback, Events.PLAYBACK_PLAY, this.onFirstPlay)
   }
 
-  updateStyles() {
-    this.shouldDisableInteraction
-      ? this.$el[0].classList.add('seek-bar--disable-interaction')
-      : this.$el[0].classList.remove('seek-bar--disable-interaction')
+  onFirstPlay() {
+    if (!this.shouldDisableInteraction) {
+      this.$el[0].classList.remove('seek-bar--disable-interaction')
+      return this.listenTo(this.container, Events.CONTAINER_TIMEUPDATE, this.onTimeUpdate)
+    }
+    this.$el[0].value = this.$el[0].max // Fix bar at end for Live medias without DVR
   }
 
   updateProgressBarViaInteraction(rangeInput) {
@@ -143,5 +140,11 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
     this.$el.append(Styler.getStyleFor(pluginStyle))
     this.isRendered = true
     super.render()
+  }
+
+  setDefaultProperties() {
+    this.$el[0].value = INITIAL_POSITION
+    this.$el[0].max = INITIAL_DURATION
+    this.$el[0].classList.add('seek-bar--disable-interaction')
   }
 }
