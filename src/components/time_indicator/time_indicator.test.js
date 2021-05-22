@@ -1,4 +1,4 @@
-import { Events, Core, Container, Playback } from '@clappr/core'
+import { Events, Core, Container, Playback, template } from '@clappr/core'
 import TimeIndicatorPlugin, { DEFAULT_TIME } from './time_indicator'
 import templateHTML from './public/template.html'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
@@ -100,7 +100,41 @@ describe('TimeIndicatorPlugin', function() {
   })
 
   test('template getter returns on template that will be added on the plugin DOM element', () => {
-    expect(this.plugin.template()).toEqual(templateHTML)
+    expect(this.plugin.template({ defaultValue: DEFAULT_TIME })).toEqual(template(templateHTML)({ defaultValue: DEFAULT_TIME }))
+  })
+
+  test('have a getter called isLiveMedia', () => {
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'isLiveMedia').get).toBeTruthy()
+  })
+
+  test('isLiveMedia getter informs if the media is of the LIVE type', () => {
+    expect(this.plugin.isLiveMedia).toBeFalsy()
+
+    jest.spyOn(Playback.prototype, 'getPlaybackType').mockReturnValueOnce(Playback.LIVE)
+    const { core, container, plugin } = setupTest({}, true)
+    core.activeContainer = container
+
+    expect(plugin.isLiveMedia).toBeTruthy()
+  })
+
+  test('have a getter called shouldDisableInteraction', () => {
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'shouldDisableInteraction').get).toBeTruthy()
+  })
+
+  test('shouldDisableInteraction getter informs if the plugin needs to be hide', () => {
+    expect(this.plugin.shouldDisableInteraction).toBeFalsy()
+
+    jest.spyOn(Playback.prototype, 'getPlaybackType').mockReturnValueOnce(Playback.LIVE)
+    const { core, container, plugin } = setupTest({}, true)
+    jest.spyOn(container, 'isDvrEnabled').mockReturnValueOnce(true)
+    core.activeContainer = container
+
+    expect(plugin.shouldDisableInteraction).toBeFalsy()
+
+    jest.spyOn(Playback.prototype, 'getPlaybackType').mockReturnValueOnce(Playback.LIVE)
+    jest.spyOn(container, 'isDvrEnabled').mockReturnValueOnce(false)
+
+    expect(plugin.shouldDisableInteraction).toBeTruthy()
   })
 
   describe('bindEvents method', () => {
@@ -137,11 +171,25 @@ describe('TimeIndicatorPlugin', function() {
   })
 
   describe('onContainerChanged method', () => {
+    test('calls setInitialState method', () => {
+      jest.spyOn(this.plugin, 'setInitialState')
+      this.plugin.onContainerChanged()
+
+      expect(this.plugin.setInitialState).toHaveBeenCalledTimes(1)
+    })
+
     test('removes all listeners from old container reference', () => {
       jest.spyOn(this.plugin, 'stopListening')
       this.plugin.onContainerChanged()
 
       expect(this.plugin.stopListening).toHaveBeenCalledWith(this.container)
+    })
+
+    test('removes all listeners from old playback reference', () => {
+      jest.spyOn(this.plugin, 'stopListening')
+      this.plugin.onContainerChanged()
+
+      expect(this.plugin.stopListening).toHaveBeenCalledWith(this.plugin.playback)
     })
 
     test('saves core.activeContainer reference locally', () => {
@@ -150,50 +198,54 @@ describe('TimeIndicatorPlugin', function() {
       expect(this.plugin.container).toEqual(this.core.activeContainer)
     })
 
-    test('calls bindContainerEvents method', () => {
-      jest.spyOn(this.plugin, 'bindContainerEvents')
+    test('saves core.activePlayback reference locally', () => {
       this.plugin.onContainerChanged()
 
-      expect(this.plugin.bindContainerEvents).toHaveBeenCalledTimes(1)
+      expect(this.plugin.playback).toEqual(this.core.activePlayback)
+    })
+
+    test('calls bindPlaybackEvents method', () => {
+      jest.spyOn(this.plugin, 'bindPlaybackEvents')
+      this.plugin.onContainerChanged()
+
+      expect(this.plugin.bindPlaybackEvents).toHaveBeenCalledTimes(1)
     })
   })
 
-  describe('bindContainerEvents method', () => {
-    test('only unbind events when is necessary', () => {
-      jest.spyOn(this.plugin, 'stopListening')
+  describe('bindPlaybackEvents method', () => {
+    test('avoid register callback for events on playback scope without a valid reference', () => {
+      jest.spyOn(this.plugin, 'onFirstPlay')
+      this.plugin.playback.trigger(Events.PLAYBACK_PLAY)
 
-      this.plugin.container = null
-      this.core.activeContainer = this.container
-      const oldContainer = { ...this.container }
-
-      expect(this.plugin.stopListening).not.toHaveBeenCalledWith(this.container)
-
-      this.core.activeContainer = this.container
-
-      expect(this.plugin.stopListening).toHaveBeenCalledWith(oldContainer)
+      expect(this.plugin.onFirstPlay).not.toHaveBeenCalled()
     })
 
-    test('avoid register callback for events on container scope without a valid reference', () => {
-      jest.spyOn(this.plugin, 'onTimeUpdate')
-      this.container.trigger(Events.CONTAINER_TIMEUPDATE)
+    test('register onFirstPlay method as callback for PLAYBACK_PLAY event', () => {
+      jest.spyOn(this.plugin, 'onFirstPlay')
+      this.core.activeContainer = this.container
+      this.plugin.playback.trigger(Events.PLAYBACK_PLAY)
 
-      expect(this.plugin.onTimeUpdate).not.toHaveBeenCalled()
+      expect(this.plugin.onFirstPlay).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('onFirstPlay callback', () => {
+    test('adds time-indicator--disabled css class to DOM element plugin if shouldDisableInteraction getter returns true', () => {
+      jest.spyOn(this.plugin, 'shouldDisableInteraction', 'get').mockReturnValueOnce(true)
+      this.plugin.onFirstPlay()
+
+      expect(this.plugin.$el[0].classList.contains('time-indicator--disabled')).toBeTruthy()
     })
 
-    test('register onTimeUpdate method as callback for CONTAINER_TIMEUPDATE event', () => {
+    test('register onFirstPlay method as callback for CONTAINER_TIMEUPDATE event if shouldDisableInteraction getter returns false', () => {
+      jest.spyOn(this.plugin, 'shouldDisableInteraction', 'get').mockReturnValueOnce(false)
       jest.spyOn(this.plugin, 'onTimeUpdate')
       this.core.activeContainer = this.container
+
+      this.plugin.onFirstPlay()
       this.container.trigger(Events.CONTAINER_TIMEUPDATE)
 
       expect(this.plugin.onTimeUpdate).toHaveBeenCalledTimes(1)
-    })
-
-    test('register onContainerDestroyed method as callback for CONTAINER_DESTROYED event', () => {
-      jest.spyOn(this.plugin, 'onContainerDestroyed')
-      this.core.activeContainer = this.container
-      this.container.trigger(Events.CONTAINER_DESTROYED)
-
-      expect(this.plugin.onContainerDestroyed).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -268,18 +320,25 @@ describe('TimeIndicatorPlugin', function() {
     expect(this.plugin.$duration.textContent).toEqual(durationTimeText)
   })
 
-  describe('onContainerDestroyed method', () => {
+  describe('setInitialState method', () => {
     test('calls setPosition method with default time value', () => {
       jest.spyOn(this.plugin, 'setPosition')
-      this.plugin.onContainerDestroyed()
+      this.plugin.setInitialState()
 
       expect(this.plugin.setPosition).toHaveBeenCalledWith(DEFAULT_TIME)
     })
+
     test('calls setDuration method with default time value', () => {
       jest.spyOn(this.plugin, 'setDuration')
-      this.plugin.onContainerDestroyed()
+      this.plugin.setInitialState()
 
       expect(this.plugin.setDuration).toHaveBeenCalledWith(DEFAULT_TIME)
+    })
+
+    test('removes time-indicator--disabled css class to DOM element plugin', () => {
+      this.plugin.setInitialState()
+
+      expect(this.plugin.$el[0].classList.contains('time-indicator--disabled')).toBeFalsy()
     })
   })
 
@@ -354,7 +413,7 @@ describe('TimeIndicatorPlugin', function() {
     })
 
     test('insert template getter response inside plugin DOM element', () => {
-      expect(this.plugin.$el[0].innerHTML.includes(this.plugin.template())).toBeTruthy()
+      expect(this.plugin.$el[0].innerHTML.includes(this.plugin.template({ defaultValue: DEFAULT_TIME }))).toBeTruthy()
     })
 
     test('calls cacheElements method', () => {

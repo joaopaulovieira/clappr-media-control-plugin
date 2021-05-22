@@ -1,4 +1,4 @@
-import { Events, Styler, Utils, template } from '@clappr/core'
+import { Events, Playback, Styler, Utils, template } from '@clappr/core'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
 
 import pluginStyle from './public/style.scss'
@@ -23,6 +23,10 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
 
   get template() { return template(templateHTML) }
 
+  get isLiveMedia() { return this.playback.getPlaybackType() === Playback.LIVE }
+
+  get shouldDisableInteraction() { return this.isLiveMedia && !this.container.isDvrEnabled() }
+
   bindEvents() {
     const coreEventListenerData = [
       { object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged },
@@ -33,19 +37,33 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
     coreEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
   }
 
-  onContainerChanged() {
-    this.container && this.stopListening(this.container)
-    this.container = this.core.activeContainer
-    if (!this.container) return
-    this.bindContainerEvents()
+  setInitialState() {
+    this.setPosition(DEFAULT_TIME)
+    this.setDuration(DEFAULT_TIME)
+    this.$el[0].classList.remove('time-indicator--disabled')
   }
 
-  bindContainerEvents() {
-    const containerEventListenerData = [
-      { object: this.container, event: Events.CONTAINER_TIMEUPDATE, callback: this.onTimeUpdate },
-      { object: this.container, event: Events.CONTAINER_DESTROYED, callback: this.onContainerDestroyed },
-    ]
-    this.container && containerEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
+  onContainerChanged() {
+    this.setInitialState()
+
+    this.container && this.stopListening(this.container)
+    this.playback && this.stopListening(this.playback)
+
+    this.container = this.core.activeContainer
+    this.playback = this.core.activePlayback
+
+    if (!this.container) return
+    this.bindPlaybackEvents()
+  }
+
+  bindPlaybackEvents() {
+    this.listenToOnce(this.playback, Events.PLAYBACK_PLAY, this.onFirstPlay)
+  }
+
+  onFirstPlay() {
+    this.shouldDisableInteraction
+      ? this.$el[0].classList.add('time-indicator--disabled')
+      : this.listenTo(this.container, Events.CONTAINER_TIMEUPDATE, this.onTimeUpdate)
   }
 
   onTimeUpdate(time) {
@@ -66,11 +84,6 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
     this.$duration.textContent = duration
   }
 
-  onContainerDestroyed() {
-    this.setPosition(DEFAULT_TIME)
-    this.setDuration(DEFAULT_TIME)
-  }
-
   onStartDraggingSeekBar(data) {
     this._isDragging = true
     const position = Utils.formatTime(Math.floor(data.event.target.value))
@@ -84,7 +97,7 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
   render() {
     if (this.isRendered) return
     this.el.innerHTML = ''
-    this.$el.html(this.template({ options: this.options }))
+    this.$el.html(this.template({ defaultValue: DEFAULT_TIME }))
     this.cacheElements()
     this.$el.append(Styler.getStyleFor(pluginStyle))
     this.isRendered = true
