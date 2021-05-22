@@ -4,6 +4,8 @@ import MediaControlComponentPlugin from '../../base/media_control_component/medi
 import pluginStyle from './public/style.scss'
 import templateHTML from './public/template.html'
 
+export const DEFAULT_TIME = '00:00'
+
 export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
   get name() { return 'time_indicator' }
 
@@ -20,8 +22,6 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
   get attributes() { return { class: 'time-indicator' } }
 
   get template() { return template(templateHTML) }
-
-  get defaultTime() { return '00:00' }
 
   bindEvents() {
     const coreEventListenerData = [
@@ -67,8 +67,8 @@ export default class TimeIndicatorPlugin extends MediaControlComponentPlugin {
   }
 
   onContainerDestroyed() {
-    this.setPosition(this.defaultTime)
-    this.setDuration(this.defaultTime)
+    this.setPosition(DEFAULT_TIME)
+    this.setDuration(DEFAULT_TIME)
   }
 
   onStartDraggingSeekBar(data) {

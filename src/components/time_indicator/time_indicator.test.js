@@ -1,5 +1,5 @@
 import { Events, Core, Container, Playback } from '@clappr/core'
-import TimeIndicatorPlugin from './time_indicator'
+import TimeIndicatorPlugin, { DEFAULT_TIME } from './time_indicator'
 import templateHTML from './public/template.html'
 import MediaControlComponentPlugin from '../../base/media_control_component/media_control_component'
 
@@ -100,14 +100,6 @@ describe('TimeIndicatorPlugin', function() {
   })
 
   test('template getter returns on template that will be added on the plugin DOM element', () => {
-    expect(this.plugin.template()).toEqual(templateHTML)
-  })
-
-  test('have a getter called defaultTime', () => {
-    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this.plugin), 'defaultTime').get).toBeTruthy()
-  })
-
-  test('defaultTime getter returns the default string that will be added on the plugin DOM element', () => {
     expect(this.plugin.template()).toEqual(templateHTML)
   })
 
@@ -277,17 +269,17 @@ describe('TimeIndicatorPlugin', function() {
   })
 
   describe('onContainerDestroyed method', () => {
-    test('calls setPosition method with defaultTime getter value', () => {
+    test('calls setPosition method with default time value', () => {
       jest.spyOn(this.plugin, 'setPosition')
       this.plugin.onContainerDestroyed()
 
-      expect(this.plugin.setPosition).toHaveBeenCalledWith(this.plugin.defaultTime)
+      expect(this.plugin.setPosition).toHaveBeenCalledWith(DEFAULT_TIME)
     })
-    test('calls setDuration method with defaultTime getter value', () => {
+    test('calls setDuration method with default time value', () => {
       jest.spyOn(this.plugin, 'setDuration')
       this.plugin.onContainerDestroyed()
 
-      expect(this.plugin.setDuration).toHaveBeenCalledWith(this.plugin.defaultTime)
+      expect(this.plugin.setDuration).toHaveBeenCalledWith(DEFAULT_TIME)
     })
   })
 
