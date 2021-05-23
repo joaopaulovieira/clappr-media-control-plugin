@@ -116,6 +116,7 @@ export default class SeekBarPlugin extends MediaControlComponentPlugin {
       return this.listenTo(this.container, Events.CONTAINER_TIMEUPDATE, this.onTimeUpdate)
     }
     this.$el[0].value = this.$el[0].max // Fix bar at end for Live medias without DVR
+    this.$el[0].style.setProperty('--seek-before-width', `${this.$el[0].value}%`)
   }
 
   updateProgressBarViaInteraction(rangeInput) {

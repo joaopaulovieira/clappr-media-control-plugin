@@ -397,6 +397,7 @@ describe('SeekBarPlugin', function() {
       this.plugin.onFirstPlay()
 
       expect(this.plugin.$el[0].value).toEqual(this.plugin.$el[0].max)
+      expect(getComputedStyle(this.plugin.$el[0]).getPropertyValue('--seek-before-width')).toEqual(`${this.plugin.$el[0].value}%`)
     })
   })
 
