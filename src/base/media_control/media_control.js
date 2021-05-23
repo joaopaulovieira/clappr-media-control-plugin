@@ -30,7 +30,7 @@ export default class MediaControlPlugin extends UICorePlugin {
       'mouseleave .media-control__elements': 'removeKeepVisible',
     }
     const touchOnlyEvents = {
-      'touchstart .media-control__elements': 'setKeepVisible',
+      'touchstart .media-control__elements': 'onTouchStart',
       'touchend .media-control__elements': 'removeKeepVisible',
     }
 
@@ -81,6 +81,12 @@ export default class MediaControlPlugin extends UICorePlugin {
   bindPlaybackEvents() {
     const playbackEventListenerData = [{ object: this.playback, event: Events.PLAYBACK_PLAY_INTENT, callback: this.setVideoStartedStatus }]
     this.playback && playbackEventListenerData.forEach(item => this.listenToOnce(item.object, item.event, item.callback))
+  }
+
+  onTouchStart() {
+    // Avoids to hide if the user taps into one media control element
+    clearTimeout(this._hideId)
+    this.setKeepVisible()
   }
 
   setKeepVisible() {

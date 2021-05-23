@@ -288,6 +288,16 @@ describe('MediaControl Plugin', () => {
     })
   })
 
+  describe('onTouchStart callback', () => {
+    test('calls setKeepVisible method', () => {
+      const { plugin } = setupTest()
+      jest.spyOn(plugin, 'setKeepVisible')
+      plugin.onTouchStart()
+
+      expect(plugin.setKeepVisible).toHaveBeenCalledTimes(1)
+    })
+  })
+
   describe('setKeepVisible method', () => {
     test('ignores the invocation if _isVisible internal flag is false', () => {
       const { plugin } = setupTest()
