@@ -68,22 +68,41 @@ export default class MediaControlPlugin extends UICorePlugin {
   }
 
   show() {
-    if (!this.isVideoStarted) return
-    clearTimeout(this._hideId)
-    this._hideId = setTimeout(() => this.hide(), 2000)
+    this.checkMouseActivity()
+
+    if (!this.isVideoStarted || this._isVisible) return
+
+    this._isVisible = true
     this.$el[0].classList.remove('media-control--hide')
     this.core.trigger(Events.MEDIACONTROL_SHOW)
   }
 
+  checkMouseActivity() {
+    clearTimeout(this._hideId)
+    clearTimeout(this._mouseStopId)
+
+    this._mouseStopId = setTimeout(() => this.delayedHide(), 300)
+  }
+
+  delayedHide() {
+    this._hideId = setTimeout(() => this.hide(), 2000)
+  }
+
   hide() {
-    if (!this.isVideoStarted) return
+    if (!this.isVideoStarted || !this._isVisible) return
+
     this.$el[0].classList.add('media-control--hide')
     this.core.trigger(Events.MEDIACONTROL_HIDE)
+    this._isVisible = false
   }
 
   setVideoStartedStatus() {
     this.isVideoStarted = true
-    !this.disableBeforeVideoStarts && this.hide()
+
+    if (!this.disableBeforeVideoStarts) {
+      this._isVisible = true // bypass this check to force hide calls
+      this.hide()
+    }
   }
 
   resetVideoStartedStatus() {

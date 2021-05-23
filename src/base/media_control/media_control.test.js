@@ -17,6 +17,7 @@ const setupTest = (options = {}, fullSetup = false) => {
 describe('MediaControl Plugin', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    jest.clearAllTimers()
   })
 
   test('is loaded on core plugins array', () => {
@@ -257,6 +258,14 @@ describe('MediaControl Plugin', () => {
   })
 
   describe('show method', () => {
+    test('calls checkMouseActivity method', () => {
+      const { plugin } = setupTest()
+      jest.spyOn(plugin, 'checkMouseActivity')
+      plugin.show()
+
+      expect(plugin.checkMouseActivity).toHaveBeenCalledTimes(1)
+    })
+
     test('ignores the invocation if isVideoStarted flag is false', () => {
       const { plugin } = setupTest()
       const cb = jest.fn()
@@ -266,37 +275,24 @@ describe('MediaControl Plugin', () => {
       expect(cb).not.toHaveBeenCalledTimes(1)
     })
 
-    test('calls hide method after 2 seconds', () => {
-      jest.useFakeTimers()
-
+    test('ignores the invocation if _isVisible internal flag is true', () => {
       const { plugin } = setupTest()
-      jest.spyOn(plugin, 'hide')
+      const cb = jest.fn()
+      plugin.listenToOnce(plugin.core, Events.MEDIACONTROL_SHOW, cb)
       plugin.isVideoStarted = true
+      plugin._isVisible = true
       plugin.show()
 
-      expect(plugin.hide).not.toHaveBeenCalled()
-
-      jest.advanceTimersByTime(2000)
-
-      expect(plugin.hide).toHaveBeenCalledTimes(1)
+      expect(cb).not.toHaveBeenCalledTimes(1)
     })
 
-    test('resets hide timer if new call occurs', () => {
-      jest.useFakeTimers()
-
+    test('sets _isVisible internal flag with true value', () => {
       const { plugin } = setupTest()
-      jest.spyOn(plugin, 'hide')
       plugin.isVideoStarted = true
+      plugin._isVisible = false
       plugin.show()
-      jest.advanceTimersByTime(1000)
-      plugin.show()
-      jest.advanceTimersByTime(1000)
 
-      expect(plugin.hide).not.toHaveBeenCalled()
-
-      jest.advanceTimersByTime(1000)
-
-      expect(plugin.hide).toHaveBeenCalledTimes(1)
+      expect(plugin._isVisible).toBeTruthy()
     })
 
     test('removes \'.media-control--hide\' css class from plugin DOM element', () => {
@@ -321,11 +317,76 @@ describe('MediaControl Plugin', () => {
     })
   })
 
+  describe('checkMouseActivity method', () => {
+    test('resets mouse stop timer if new call occurs', () => {
+      jest.useFakeTimers()
+
+      const { plugin } = setupTest()
+      jest.spyOn(plugin, 'delayedHide')
+
+      plugin.checkMouseActivity()
+      jest.advanceTimersByTime(100)
+      plugin.checkMouseActivity()
+      jest.advanceTimersByTime(200)
+
+      expect(plugin.delayedHide).not.toHaveBeenCalled()
+
+      jest.advanceTimersByTime(100)
+
+      expect(plugin.delayedHide).toHaveBeenCalledTimes(1)
+    })
+
+    test('resets delayedHide timer if new call occurs', () => {
+      jest.useFakeTimers()
+
+      const { plugin } = setupTest()
+      jest.spyOn(plugin, 'hide')
+
+      plugin.checkMouseActivity()
+      jest.advanceTimersByTime(1000)
+      plugin.checkMouseActivity()
+      jest.advanceTimersByTime(2000)
+
+      expect(plugin.hide).not.toHaveBeenCalled()
+
+      jest.advanceTimersByTime(2000)
+
+      expect(plugin.hide).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('delayedHide method', () => {
+    test('calls hide method after 2 seconds', () => {
+      jest.useFakeTimers()
+
+      const { plugin } = setupTest()
+      jest.spyOn(plugin, 'hide')
+      plugin.isVideoStarted = true
+      plugin.delayedHide()
+
+      expect(plugin.hide).not.toHaveBeenCalled()
+
+      jest.advanceTimersByTime(2000)
+
+      expect(plugin.hide).toHaveBeenCalledTimes(1)
+    })
+  })
+
   describe('hide method', () => {
     test('ignores the invocation if isVideoStarted flag is false', () => {
       const { plugin } = setupTest()
       const cb = jest.fn()
       plugin.listenToOnce(plugin.core, Events.MEDIACONTROL_HIDE, cb)
+      plugin.hide()
+
+      expect(cb).not.toHaveBeenCalledTimes(1)
+    })
+
+    test('ignores the invocation if _isVisible internal flag is false', () => {
+      const { plugin } = setupTest()
+      const cb = jest.fn()
+      plugin.listenToOnce(plugin.core, Events.MEDIACONTROL_HIDE, cb)
+      plugin.isVideoStarted = true
       plugin.hide()
 
       expect(cb).not.toHaveBeenCalledTimes(1)
@@ -337,6 +398,7 @@ describe('MediaControl Plugin', () => {
       expect(plugin.$el[0].classList.contains('media-control--hide')).toBeFalsy()
 
       plugin.isVideoStarted = true
+      plugin._isVisible = true
       plugin.hide()
 
       expect(plugin.$el[0].classList.contains('media-control--hide')).toBeTruthy()
@@ -347,9 +409,19 @@ describe('MediaControl Plugin', () => {
       const cb = jest.fn()
       plugin.listenToOnce(plugin.core, Events.MEDIACONTROL_HIDE, cb)
       plugin.isVideoStarted = true
+      plugin._isVisible = true
       plugin.hide()
 
       expect(cb).toHaveBeenCalledTimes(1)
+    })
+
+    test('sets _isVisible internal flag with false value', () => {
+      const { plugin } = setupTest()
+      plugin.isVideoStarted = true
+      plugin._isVisible = true
+      plugin.hide()
+
+      expect(plugin._isVisible).toBeFalsy()
     })
   })
 
@@ -366,7 +438,14 @@ describe('MediaControl Plugin', () => {
 
     test('calls hide method if options.mediaControl.disableBeforeVideoStarts is falsy', () => {
       const { plugin } = setupTest()
+      jest.spyOn(plugin, 'disableBeforeVideoStarts', 'get').mockReturnValueOnce(true)
       jest.spyOn(plugin, 'hide')
+      plugin.setVideoStartedStatus()
+
+      expect(plugin.hide).not.toHaveBeenCalled()
+
+      jest.spyOn(plugin, 'disableBeforeVideoStarts', 'get').mockReturnValueOnce(false)
+
       plugin.setVideoStartedStatus()
 
       expect(plugin.hide).toHaveBeenCalledTimes(1)
