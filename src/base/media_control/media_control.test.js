@@ -1,4 +1,4 @@
-import { Events, Core, Container, Playback, version } from '@clappr/core'
+import { Browser, Events, Core, Container, Playback, version } from '@clappr/core'
 import MediaControlPlugin from './media_control'
 import MediaControlComponentPlugin from '../media_control_component/media_control_component'
 import defaultTemplate from './public/default_template.html'
@@ -88,6 +88,37 @@ describe('MediaControl Plugin', () => {
   test('disableBeforeVideoStarts getter returns the options.mediaControl.disableBeforeVideoStarts config', () => {
     const { plugin } = setupTest({ mediaControl: { disableBeforeVideoStarts: true } })
     expect(plugin.disableBeforeVideoStarts).toEqual(plugin.options.mediaControl.disableBeforeVideoStarts)
+  })
+
+  test('have a getter called events', () => {
+    const { plugin } = setupTest()
+    expect(Object.getOwnPropertyDescriptor(Object.getPrototypeOf(plugin), 'events').get).toBeTruthy()
+  })
+
+  describe('events getter', () => {
+    test('returns specific events/callbacks dictionary for mobile devices', () => {
+      const oldValue = Browser.isMobile
+      Browser.isMobile = true
+      const { plugin } = setupTest()
+
+      expect(plugin.events).toEqual({
+        'touchstart .media-control__elements': 'setKeepVisible',
+        'touchend .media-control__elements': 'removeKeepVisible',
+      })
+      Browser.isMobile = oldValue
+    })
+
+    test('returns specific events/callbacks dictionary for desktop devices', () => {
+      const oldValue = Browser.isMobile
+      Browser.isMobile = false
+      const { plugin } = setupTest()
+
+      expect(plugin.events).toEqual({
+        'mouseenter .media-control__elements': 'setKeepVisible',
+        'mouseleave .media-control__elements': 'removeKeepVisible',
+      })
+      Browser.isMobile = oldValue
+    })
   })
 
   test('constructor hides plugin adding CSS class if options.mediaControl.disableBeforeVideoStarts config is true', () => {
@@ -257,6 +288,53 @@ describe('MediaControl Plugin', () => {
     })
   })
 
+  describe('setKeepVisible method', () => {
+    test('ignores the invocation if _isVisible internal flag is false', () => {
+      const { plugin } = setupTest()
+      plugin._keepVisible = false
+      plugin.setKeepVisible()
+
+      expect(plugin._keepVisible).toBeFalsy()
+    })
+
+    test('sets _keepVisible internal flag with true value if _isVisible internal flag is true', () => {
+      const { plugin } = setupTest()
+      plugin._isVisible = true
+      plugin._keepVisible = false
+      plugin.setKeepVisible()
+
+      expect(plugin._keepVisible).toBeTruthy()
+    })
+  })
+
+  describe('removeKeepVisible method', () => {
+    test('ignores the invocation if _isVisible internal flag is false', () => {
+      const { plugin } = setupTest()
+      plugin._keepVisible = true
+      plugin.removeKeepVisible()
+
+      expect(plugin._keepVisible).toBeTruthy()
+    })
+
+    test('sets _keepVisible internal flag with false value if _isVisible internal flag is true', () => {
+      const { plugin } = setupTest()
+      plugin._isVisible = true
+      plugin._keepVisible = true
+      plugin.removeKeepVisible()
+
+      expect(plugin._keepVisible).toBeFalsy()
+    })
+
+    test('calls delayedHide method if _isVisible internal flag is true', () => {
+      const { plugin } = setupTest()
+      jest.spyOn(plugin, 'delayedHide')
+      plugin._isVisible = true
+      plugin.removeKeepVisible()
+
+      expect(plugin.delayedHide).toHaveBeenCalledTimes(1)
+    })
+  })
+
   describe('show method', () => {
     test('calls checkMouseActivity method', () => {
       const { plugin } = setupTest()
@@ -387,6 +465,18 @@ describe('MediaControl Plugin', () => {
       const cb = jest.fn()
       plugin.listenToOnce(plugin.core, Events.MEDIACONTROL_HIDE, cb)
       plugin.isVideoStarted = true
+      plugin.hide()
+
+      expect(cb).not.toHaveBeenCalledTimes(1)
+    })
+
+    test('ignores the invocation if _keepVisible internal flag is true', () => {
+      const { plugin } = setupTest()
+      const cb = jest.fn()
+      plugin.listenToOnce(plugin.core, Events.MEDIACONTROL_HIDE, cb)
+      plugin.isVideoStarted = true
+      plugin._isVisible = true
+      plugin._keepVisible = true
       plugin.hide()
 
       expect(cb).not.toHaveBeenCalledTimes(1)

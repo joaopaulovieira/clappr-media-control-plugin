@@ -1,4 +1,4 @@
-import { UICorePlugin, Events, Styler, template, version } from '@clappr/core'
+import { Browser, Events, UICorePlugin, Styler, template, version } from '@clappr/core'
 import MediaControlComponentPlugin from '../media_control_component/media_control_component'
 
 import pluginStyle from './public/media_control.scss'
@@ -20,6 +20,19 @@ export default class MediaControlPlugin extends UICorePlugin {
   get layersSettings() { return this.config && this.config.layersConfig }
 
   get disableBeforeVideoStarts() { return this.config && this.config.disableBeforeVideoStarts }
+
+  get events() {
+    const mouseOnlyEvents = {
+      'mouseenter .media-control__elements': 'setKeepVisible',
+      'mouseleave .media-control__elements': 'removeKeepVisible',
+    }
+    const touchOnlyEvents = {
+      'touchstart .media-control__elements': 'setKeepVisible',
+      'touchend .media-control__elements': 'removeKeepVisible',
+    }
+
+    return Browser.isMobile ? touchOnlyEvents : mouseOnlyEvents
+  }
 
   get cll() {
     if (this._cll) return this._cll
@@ -67,6 +80,17 @@ export default class MediaControlPlugin extends UICorePlugin {
     this.playback && playbackEventListenerData.forEach(item => this.listenToOnce(item.object, item.event, item.callback))
   }
 
+  setKeepVisible() {
+    if (!this._isVisible) return
+    this._keepVisible = true
+  }
+
+  removeKeepVisible() {
+    if (!this._isVisible) return
+    this._keepVisible = false
+    this.delayedHide()
+  }
+
   show() {
     this.checkMouseActivity()
 
@@ -89,7 +113,7 @@ export default class MediaControlPlugin extends UICorePlugin {
   }
 
   hide() {
-    if (!this.isVideoStarted || !this._isVisible) return
+    if (!this.isVideoStarted || !this._isVisible || this._keepVisible) return
 
     this.$el[0].classList.add('media-control--hide')
     this.core.trigger(Events.MEDIACONTROL_HIDE)
