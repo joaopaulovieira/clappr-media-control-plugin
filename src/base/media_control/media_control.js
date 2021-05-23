@@ -4,6 +4,9 @@ import MediaControlComponentPlugin from '../media_control_component/media_contro
 import pluginStyle from './public/media_control.scss'
 import defaultTemplateHtml from './public/default_template.html'
 
+const DESKTOP_HIDE_DELAY = 2000
+const MOBILE_HIDE_DELAY = 3000
+
 export default class MediaControlPlugin extends UICorePlugin {
   get name() { return 'media_control' }
 
@@ -109,7 +112,8 @@ export default class MediaControlPlugin extends UICorePlugin {
   }
 
   delayedHide() {
-    this._hideId = setTimeout(() => this.hide(), 2000)
+    const delay = Browser.isMobile ? MOBILE_HIDE_DELAY : DESKTOP_HIDE_DELAY
+    this._hideId = setTimeout(() => this.hide(), delay)
   }
 
   hide() {

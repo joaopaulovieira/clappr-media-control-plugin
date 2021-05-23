@@ -102,7 +102,7 @@ describe('MediaControl Plugin', () => {
       const { plugin } = setupTest()
 
       expect(plugin.events).toEqual({
-        'touchstart .media-control__elements': 'setKeepVisible',
+        'touchstart .media-control__elements': 'onTouchStart',
         'touchend .media-control__elements': 'removeKeepVisible',
       })
       Browser.isMobile = oldValue
@@ -414,7 +414,7 @@ describe('MediaControl Plugin', () => {
       expect(plugin.delayedHide).toHaveBeenCalledTimes(1)
     })
 
-    test('resets delayedHide timer if new call occurs', () => {
+    test('resets hide timer if new call occurs', () => {
       jest.useFakeTimers()
 
       const { plugin } = setupTest()
@@ -434,7 +434,10 @@ describe('MediaControl Plugin', () => {
   })
 
   describe('delayedHide method', () => {
-    test('calls hide method after 2 seconds', () => {
+    test('calls hide method after 2 seconds for desktop devices', () => {
+      const oldValue = Browser.isMobile
+      Browser.isMobile = false
+
       jest.useFakeTimers()
 
       const { plugin } = setupTest()
@@ -447,6 +450,32 @@ describe('MediaControl Plugin', () => {
       jest.advanceTimersByTime(2000)
 
       expect(plugin.hide).toHaveBeenCalledTimes(1)
+
+      Browser.isMobile = oldValue
+    })
+
+    test('calls hide method after 3 seconds for desktop devices', () => {
+      const oldValue = Browser.isMobile
+      Browser.isMobile = true
+
+      jest.useFakeTimers()
+
+      const { plugin } = setupTest()
+      jest.spyOn(plugin, 'hide')
+      plugin.isVideoStarted = true
+      plugin.delayedHide()
+
+      expect(plugin.hide).not.toHaveBeenCalled()
+
+      jest.advanceTimersByTime(2000)
+
+      expect(plugin.hide).not.toHaveBeenCalled()
+
+      jest.advanceTimersByTime(1000)
+
+      expect(plugin.hide).toHaveBeenCalledTimes(1)
+
+      Browser.isMobile = oldValue
     })
   })
 
