@@ -27,10 +27,20 @@ export default class FullscreenButtonPlugin extends MediaControlComponentPlugin 
     return events
   }
 
+  bindCustomEvents() {
+    this.boundedCheckFullscreenTarget = this.checkFullscreenTarget.bind(this)
+    document.addEventListener('fullscreenchange', this.boundedCheckFullscreenTarget)
+  }
+
+  checkFullscreenTarget(ev) {
+    ev.target === this.core.$el[0] && this.changeIcon()
+  }
+
   bindEvents() {
     const coreEventListenerData = [{ object: this.core, event: Events.CORE_ACTIVE_CONTAINER_CHANGED, callback: this.onContainerChanged }]
     coreEventListenerData.forEach(item => this.stopListening(item.object, item.event, item.callback))
     coreEventListenerData.forEach(item => this.listenTo(item.object, item.event, item.callback))
+    this.bindCustomEvents()
   }
 
   onContainerChanged() {
@@ -48,7 +58,6 @@ export default class FullscreenButtonPlugin extends MediaControlComponentPlugin 
   toggle() {
     this.container.fullscreen()
     this.core.toggleFullscreen()
-    this.changeIcon()
   }
 
   changeIcon() {
@@ -65,5 +74,10 @@ export default class FullscreenButtonPlugin extends MediaControlComponentPlugin 
     this.changeIcon()
     this.isRendered = true
     super.render()
+  }
+
+  destroy() {
+    document.removeEventListener('fullscreenchange', this.boundedCheckFullscreenTarget)
+    super.destroy()
   }
 }

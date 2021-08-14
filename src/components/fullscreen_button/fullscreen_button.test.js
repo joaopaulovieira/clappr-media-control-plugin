@@ -25,6 +25,9 @@ describe('FullscreenButtonPlugin', function() {
     this.core.activeContainer = this.container
     this.plugin = response.plugin
   })
+  afterEach(() => {
+    this.core.destroy()
+  })
 
   test('is loaded on core plugins array', () => {
     expect(this.core.getPlugin(this.plugin.name).name).toEqual('fullscreen_button')
@@ -97,6 +100,21 @@ describe('FullscreenButtonPlugin', function() {
 
   test('attributes getter returns all attributes that will be added on the plugin DOM element', () => {
     expect(this.plugin.$el[0].className).toEqual('fullscreen-button media-control__button media-control__elements')
+  })
+
+  describe('checkFullscreenTarget method', () => {
+    test('calls changeIcon method if the received event has target value equals to core.el', () => {
+      jest.spyOn(this.plugin, 'changeIcon')
+      jest.spyOn(Core.prototype, 'handleFullscreenChange').mockImplementation(() => {})
+      const ev1 = new Event('fullscreenchange')
+      const ev2 = new Event('fullscreenchange')
+      Object.defineProperty(ev1, 'target', { writable: false, value: document.createElement('div') })
+      Object.defineProperty(ev2, 'target', { writable: false, value: this.core.el })
+      document.dispatchEvent(ev1)
+      document.dispatchEvent(ev2)
+
+      expect(this.plugin.changeIcon).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('bindEvents method', () => {
@@ -185,11 +203,6 @@ describe('FullscreenButtonPlugin', function() {
       this.plugin.toggle()
       expect(this.core.toggleFullscreen).toHaveBeenCalledTimes(1)
     })
-
-    test('calls changeIcon method', () => {
-      this.plugin.toggle()
-      expect(this.plugin.changeIcon).toHaveBeenCalledTimes(1)
-    })
   })
 
   describe('changeIcon method', () => {
@@ -253,6 +266,18 @@ describe('FullscreenButtonPlugin', function() {
       this.plugin.render()
 
       expect(this.plugin.changeIcon).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('destroy method', () => {
+    test('removes listener for fullscreenchange event', () => {
+      const { plugin } = setupTest()
+      jest.spyOn(Core.prototype, 'handleFullscreenChange').mockImplementation(() => {})
+      plugin.destroy()
+      jest.spyOn(plugin, 'checkFullscreenTarget')
+      document.dispatchEvent(new Event('fullscreenchange'))
+
+      expect(plugin.checkFullscreenTarget).not.toHaveBeenCalled()
     })
   })
 })
