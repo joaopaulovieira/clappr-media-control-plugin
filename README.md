@@ -18,16 +18,6 @@
 ## Demo
 https://joaopaulovieira.github.io/clappr-media-control-plugin/
 
-## Table of Contents
-- [Features](https://github.com/joaopaulovieira/clappr-media-control-plugin#Features)
-- [Structure](https://github.com/joaopaulovieira/clappr-media-control-plugin#Structure)
-- [Media Control Components](https://github.com/joaopaulovieira/clappr-media-control-plugin#media-control-components)
-- [Usage](https://github.com/joaopaulovieira/clappr-media-control-plugin#Usage)
-- [Configuration](https://github.com/joaopaulovieira/clappr-media-control-plugin#Configuration)
-- [Examples](https://github.com/joaopaulovieira/clappr-media-control-plugin#Examples)
-- [Advanced Usage](https://github.com/joaopaulovieira/clappr-media-control-plugin#advanced-usage)
-- [Development](https://github.com/joaopaulovieira/clappr-media-control-plugin#Development)
-
 ## Features
 ### :sparkles: Simple structure
 With a structure with few abstractions (layers, sections, and elements), understanding how to build a media control is easier and helps to achieve the wanted experience in the video consumption.
