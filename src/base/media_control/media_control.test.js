@@ -956,7 +956,7 @@ describe('MediaControl Plugin', () => {
   describe('appendMediaControlComponent method', () => {
     const testContainer = document.createElement('div')
     const itemsList = []
-    for (let index = 1; index <= 10; index++) {
+    for (let index = 1; index <= 25; index++) {
       const item = document.createElement('div')
       item.setAttribute('id', index)
       item.classList.add('media-control__elements', `media-control__element-${index}`)
@@ -974,15 +974,10 @@ describe('MediaControl Plugin', () => {
       const renderedItems = testContainer.querySelectorAll('.media-control__elements')
 
       expect(renderedItems[0]).toEqual(testContainer.querySelector('.media-control__element-1'))
-      expect(renderedItems[1]).toEqual(testContainer.querySelector('.media-control__element-2'))
-      expect(renderedItems[2]).toEqual(testContainer.querySelector('.media-control__element-3'))
-      expect(renderedItems[3]).toEqual(testContainer.querySelector('.media-control__element-4'))
-      expect(renderedItems[4]).toEqual(testContainer.querySelector('.media-control__element-5'))
-      expect(renderedItems[5]).toEqual(testContainer.querySelector('.media-control__element-6'))
-      expect(renderedItems[6]).toEqual(testContainer.querySelector('.media-control__element-7'))
-      expect(renderedItems[7]).toEqual(testContainer.querySelector('.media-control__element-8'))
-      expect(renderedItems[8]).toEqual(testContainer.querySelector('.media-control__element-9'))
-      expect(renderedItems[9]).toEqual(testContainer.querySelector('.media-control__element-10'))
+      expect(renderedItems[12]).toEqual(testContainer.querySelector('.media-control__element-13'))
+      expect(renderedItems[18]).toEqual(testContainer.querySelector('.media-control__element-19'))
+      expect(renderedItems[22]).toEqual(testContainer.querySelector('.media-control__element-23'))
+      expect(renderedItems[24]).toEqual(testContainer.querySelector('.media-control__element-25'))
     })
   })
 
